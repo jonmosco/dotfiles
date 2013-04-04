@@ -1,0 +1,82 @@
+! $Id: Xresources 52 2013-04-01 00:08:56Z jmosco $
+
+! .Xdefaults
+! TODO
+! - cursor settings
+! - Load this file with xrdb
+
+! XTerm Resource settings
+!XTerm*termName:          xterm-xfree86
+XTerm*termName:		 xterm-16color
+!XTerm*termName:          xterm-256color
+!XTerm*background:        grey10
+XTerm*background:	 #002b36
+XTerm*foreground:        #839496
+
+! Solarized 
+!XTerm*background:	 #1c1c1c
+!XTerm*background:	 #002b36
+!XTerm*foreground:	 #839496
+
+XTerm*saveLines:         1024
+XTerm*geometry:          80x25
+!XTerm*faceName:          Courier 10 Pitch:pixelsize=18
+!XTerm*faceName:		 Monaco:pixelsize=14
+!XTerm*faceName:	 	SKYHOOK MONO
+XTerm*faceName:		 Monaco 14
+!XTerm*faceName:          Andale Mono
+XTerm*dynamicColors:     true
+XTerm*loginShell:        true
+XTerm*colorULMode:       true
+XTerm*colorBLMode:       true
+XTerm*colorBDMode:       true
+XTerm*colorUL:           #fdfa60
+XTerm*colorBL:           #987654
+XTerm*colorBD:           #7a92ff
+XTerm*visualBell:        false
+XTerm*bellIsUgrent:      false
+XTerm*bellOnReset:       false
+XTerm*charClass:         33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48,35:48,58:48,63:48,61:48,44:48,38:48,59:48
+XTerm*underLine:         true
+XTerm*font: 		 fixed
+XTerm*boldFont: 	 fixed
+XTerm*fading:		 40
+XTerm*fadeColor:	 #002b36	
+XTerm*pointerColorBackground:	#586e75
+XTerm*pointerColorForeground:   #93a1a1
+XTerm*cursorColor:		#93a1a1
+
+! Colors: 0-7 are the normal colors
+! 8-15 are the bright counterparts
+
+! Black and Dark Grey
+XTerm*color0:		#073642
+XTerm*color8:		#002b36
+
+! Red
+XTerm*color1:		#dc322f
+XTerm*color9:		#cb4b16
+
+! Green
+XTerm*color2: 		#859900
+XTerm*color10:		#586e75
+
+! Yellow
+XTerm*color3:		#b58900
+XTerm*color11: 		#657b83
+
+! Blue
+XTerm*color4:            #268bd2
+XTerm*color12:           #839496
+
+! Magenta
+XTerm*color5:		#d33682
+XTerm*color13:		#6c71c4
+
+! Cyan
+XTerm*color6:            #2aa198
+XTerm*color14:		 #93a1a1
+
+! White
+XTerm*color7:		#073642
+XTerm*color15:		#002b36
