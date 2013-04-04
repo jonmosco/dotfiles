@@ -1,0 +1,30 @@
+# $Id: screenrc 51 2013-03-20 12:33:39Z jmosco $
+# .screenrc
+#
+# TODO
+# - everything
+# - Better coloring [DONE 1/30/12]
+
+# autodetach session on hangup instead of terminating 
+autodetach on
+deflogin on
+startup_message off
+vbell off
+defscrollback 30000
+msgwait 1
+
+# Needs some work. Read section "STRING ESCAPES" 
+hardstatus alwayslastline "%{=b}%{G} Screens: %{c}%w %=%{G}%C%A %D, %M %d "
+
+# Change the window size to the size of the current region
+fit
+
+#defbce "on"
+
+# login shell.  This should be all we need to have a proper palet
+#shell -$SHELL
+#attrcolor b ".I"  # Bold colors
+
+term $TERM        # Use our default shell
+
+bind s            # C-a s freezes the windows.  No thanks.
