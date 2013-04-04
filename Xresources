@@ -66,16 +66,16 @@ XTerm*color3:		#b58900
 XTerm*color11: 		#657b83
 
 ! Blue
-XTerm*color4:            #268bd2
-XTerm*color12:           #839496
+XTerm*color4:           #268bd2
+XTerm*color12:          #839496
 
 ! Magenta
 XTerm*color5:		#d33682
 XTerm*color13:		#6c71c4
 
 ! Cyan
-XTerm*color6:            #2aa198
-XTerm*color14:		 #93a1a1
+XTerm*color6:           #2aa198
+XTerm*color14:	        #93a1a1
 
 ! White
 XTerm*color7:		#073642
