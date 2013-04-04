@@ -6,11 +6,10 @@
 # - SVN commit [DONE 1/3/12]
 # - loop for different OSs and their handeling
 #   of colors [DONE 1/5/12, 12/18/12]
-#   - Turn into case statment 
 # - Better terminal detection [DONE 1/5/12]
 # - Prompt coloring with varible definitions 
-#   for ANSI colors
 # - SVN Id tags [DONE 1/5/12]
+# - Change OS detection to a more specific Case statement
 
 # General settings
 set -o noclobber
@@ -76,7 +75,6 @@ fi
 
 # Mac OS
 if [ "`uname`" = "Darwin" ]; then
-        #export PATH=$HOME/bin:/opt/local/bin:/opt/local/libexec/gnubin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/opt/local/sbin:/usr/X11/bin
 	export PATH=$HOME/bin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/opt/local/sbin:/usr/X11/bin
         export CLICOLOR=1
         #export LSCOLORS=GxFxCxDxBxDxDxxbadacad
@@ -100,8 +98,7 @@ if [ -f ~/.dircolors ]; then
         alias test2='echo dir color applied'
 fi
 
-# Some prompt foo
-
+# Git prompt
 if [ -f ~/.git-prompt.sh ]; then
 	source ~/.git-prompt.sh
 fi
@@ -116,7 +113,6 @@ fi
 # New (and good!)
 PS1='\[\e[0;34m\][\T]\[\e[0;32m\][\u@\h \[\e[0;33m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;32m\]]\$ \[\e[0m\]'
 
-#PS1="\[\033[34;40m[\033[1;31;40m\u@\h:\w\033[1;34;40m]\033[1;37;40m $\033[0;37;0m\]" 
 PS2='> '
 
 # Nagios configuration check alias
