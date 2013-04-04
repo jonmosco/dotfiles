@@ -10,8 +10,18 @@ Dependencies:
 -------------------------------------------------------------------------------
 - Bash
 - Xterm
+- Mutt (Provided you will want to use mutt as your MUA)
 - Git Prompt: https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 - Solarized theme: http://ethanschoonover.com/solarized
+
+Motivation:
+-------------------------------------------------------------------------------
+
+I found myself having to administer several Unix servers and had one offs for 
+configuration on almost all but one.  I decieded to version my dotfiles and 
+put them into subversion to be able to have consistency across all the servers
+I log into.  Now having to administer several remote sites I needed to have an 
+accessable repository, hence thie github repo!  
 
 Installation:
 -------------------------------------------------------------------------------
