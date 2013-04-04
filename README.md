@@ -7,6 +7,15 @@ TODO:
 
 Dependencies:
 -------------------------------------------------------------------------------
-Bash
-- Git Prompt:
-- https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
+- Bash
+- Git Prompt: https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
+- Solarized theme: http://ethanschoonover.com/solarized
+
+Installation:
+-------------------------------------------------------------------------------
+
+- Checkout the git repo: $ git clone https://github.com/jonmosco/dotfiles.git .dotfiles
+- Run dotlink.sh to create symlinks: $ ./dotlink.sh
+- Answer questions regarding email setup.
+- Logout and log back in
+- Enjoy (or criticize) 
