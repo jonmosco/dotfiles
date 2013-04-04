@@ -18,8 +18,7 @@ Installation:
 - Run dotlink.sh to create symlinks: 
 
         $ cd .dotfiles 
-	
-	$ ./dotlink.sh
+        $ ./dotlink.sh
 
 - Answer questions regarding email setup.
 - Logout and log back in
