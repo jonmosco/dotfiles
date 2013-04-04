@@ -1,4 +1,4 @@
-" $Id: vimrc 52 2013-04-01 00:08:56Z jmosco $
+" $Id: vimrc 53 2013-04-04 19:29:23Z jmosco $
 
 " Very early .vimrc
 " I have gone over to the dark side.  
