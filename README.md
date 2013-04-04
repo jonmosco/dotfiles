@@ -16,8 +16,10 @@ Installation:
 
 - Checkout the git repo: $ git clone https://github.com/jonmosco/dotfiles.git .dotfiles
 - Run dotlink.sh to create symlinks: 
-	$ cd .dotfiles 
+
+        $ cd .dotfiles 
 	$ ./dotlink.sh
+
 - Answer questions regarding email setup.
 - Logout and log back in
 - Enjoy (or criticize) 
