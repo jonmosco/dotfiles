@@ -1,4 +1,4 @@
-# $Id: bashrc 52 2013-04-01 00:08:56Z jmosco $
+# $Id: bashrc 53 2013-04-04 19:29:23Z jmosco $
 
 # Very early bashrc.  Much more to come.
 #
@@ -50,8 +50,8 @@ export HISTCONTROL=ignoreboth
 export HISTFILESIZE=2048
 export HISTTIMEFORMAT="%D %I:%M "
 export PAGER=less
-export LESS='-i -g'
-export GREP_COLOR='1;37;41'
+export LESS='-R -i -g'
+export GREP_COLORS='1;37;41'
 export MAIL=$HOME/.mail
 
 # alias definitions
@@ -101,6 +101,10 @@ fi
 # Git prompt
 if [ -f ~/.git-prompt.sh ]; then
 	source ~/.git-prompt.sh
+	PS1='\[\e[0;34m\][\T]\[\e[0;32m\][\u@\h \[\e[0;33m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;32m\]]\$ \[\e[0m\]'
+else
+	# Prompt without git
+	PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'
 fi
 
 # Regular Prompt
@@ -111,7 +115,7 @@ fi
 
 # Git branch support
 # New (and good!)
-PS1='\[\e[0;34m\][\T]\[\e[0;32m\][\u@\h \[\e[0;33m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;32m\]]\$ \[\e[0m\]'
+#PS1='\[\e[0;34m\][\T]\[\e[0;32m\][\u@\h \[\e[0;33m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;32m\]]\$ \[\e[0m\]'
 
 PS2='> '
 
