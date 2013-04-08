@@ -1,4 +1,4 @@
-" $Id: vimrc 53 2013-04-04 19:29:23Z jmosco $
+" $Id: vimrc 54 2013-04-07 01:27:49Z jmosco $
 
 " Very early .vimrc
 " I have gone over to the dark side.  
@@ -18,7 +18,6 @@
 " - Fix indenting for Puppet [DONE 2/21/2013]
 
 " Global Settings
-"syntax enable
 set number
 set showmode
 set nocompatible                " always Vim mode
@@ -28,7 +27,6 @@ set hlsearch
 set incsearch                   " search as you type
 set ruler                       " show the cursor position
 "set background=dark
-"colorscheme peaksea            " Finally found one I like
 set vb t_vb=                    " go away BELLS
 set noerrorbells                " Please be quiet
 set sc                          " show current command
@@ -57,9 +55,11 @@ call pathogen#infect()
 " Solarized theme
 syntax enable
 "let g:solarized_termcolors=256
-"let g:solarized_termtrans = 1
 set background=dark
 colorscheme solarized
+
+" NERDtree
+let g:NERDTreeWinPos = "right"
 
 " Create backups.  This was learned the hard way.
 set backup

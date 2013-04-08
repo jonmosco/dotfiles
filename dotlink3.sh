@@ -11,6 +11,7 @@
 DOTFILES="bashrc
 bash_profile
 inputrc
+git-prompt.sh
 screenrc
 vimrc
 Xresources"

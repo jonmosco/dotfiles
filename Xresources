@@ -1,4 +1,4 @@
-! $Id: Xresources 52 2013-04-01 00:08:56Z jmosco $
+! $Id: Xresources 54 2013-04-07 01:27:49Z jmosco $
 
 ! .Xdefaults
 ! TODO
@@ -78,5 +78,6 @@ XTerm*color6:           #2aa198
 XTerm*color14:	        #93a1a1
 
 ! White
-XTerm*color7:		#073642
-XTerm*color15:		#002b36
+!XTerm*color7:		#073642
+XTerm*color7:		#eee8d5
+XTerm*color15:		#fdf6e3

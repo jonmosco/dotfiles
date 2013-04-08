@@ -25,8 +25,8 @@ remotely accessable repository, hence this github repo!
 
 Installation:
 -------------------------------------------------------------------------------
-Vim customization relies on several plugins:
-- https://github.com/scrooloose/syntastic
+Vim setup relies on several plugins:
+- Syntastic: https://github.com/scrooloose/syntastic
 - Solarized Vim: https://github.com/altercation/vim-colors-solarized
 
 Follow the installation instructions in both of those links
