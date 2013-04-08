@@ -99,8 +99,9 @@ if [ -f ~/.dircolors ]; then
 fi
 
 # Git prompt
-if [ -f ~/.git-prompt.sh ]; then
-	source ~/.git-prompt.sh
+if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
+#	source ~/.git-prompt.sh
+	source ~/.git-prompt.sh && source ~/.git-completion.bash
 	PS1='\[\e[0;34m\][\T]\[\e[0;32m\][\u@\h \[\e[0;33m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;32m\]]\$ \[\e[0m\]'
 else
 	# Prompt without git
@@ -117,6 +118,7 @@ fi
 # New (and good!)
 #PS1='\[\e[0;34m\][\T]\[\e[0;32m\][\u@\h \[\e[0;33m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;32m\]]\$ \[\e[0m\]'
 
+#PS1='\[\e[0;34m\][\T]\[\e[0;32m\][\u@\h \[\e[0;33m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;32m\]]\$ \[\e[0m\]'
 PS2='> '
 
 # Nagios configuration check alias
