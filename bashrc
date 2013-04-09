@@ -102,7 +102,7 @@ fi
 if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
 #	source ~/.git-prompt.sh
 	source ~/.git-prompt.sh && source ~/.git-completion.bash
-	PS1='\[\e[0;34m\][\T]\[\e[0;32m\][\u@\h \[\e[0;33m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;32m\]]\$ \[\e[0m\]'
+	PS1='\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]'
 else
 	# Prompt without git
 	PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'
