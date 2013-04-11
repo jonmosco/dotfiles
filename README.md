@@ -14,6 +14,10 @@ Dependencies:
 - Git Prompt: https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 - Solarized theme: http://ethanschoonover.com/solarized
 
+Vim Plugins:
+- Tabular
+- NERDtree
+
 Motivation:
 -------------------------------------------------------------------------------
 
