@@ -54,7 +54,7 @@ if [ -d ~/.vim/bundle ]; then
 else
 	mkdir -p ~/.vim/autoload ~/.vim/bundle
 	cd ~/.vim/bundle
-	echo "Vim bundle directory created.  Proceding to checkout plugins..."
+	echo "Vim autoload and bundle directory created.  Proceding to checkout plugins..."
 	$GIT clone https://github.com/scrooloose/nerdtree.git
 	$GIT clone git://github.com/godlygeek/tabular.git
 	$GIT clone https://github.com/scrooloose/syntastic.git
