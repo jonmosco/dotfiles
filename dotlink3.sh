@@ -6,8 +6,10 @@
 #
 # - check if file already exists, exit if so
 # - create sym link for each file 
-# - ask if email will be read on this box
 # - checkout vim plugins with git
+# - ask if email will be read on this box
+#
+# TODO
 
 DOTFILES="bashrc
 bash_profile
@@ -46,17 +48,19 @@ else
 fi
 
 # Checkout Vim plugins
-# Solarized, Syntastix and Tabular
+# Pathogen, Solarized, Syntastix and Tabular
 if [ -d ~/.vim/bundle ]; then
 	echo "bundle dir already exists."
 else
-	mkdir -p ~/.vim/bundle
+	mkdir -p ~/.vim/autoload ~/.vim/bundle
 	cd ~/.vim/bundle
 	echo "Vim bundle directory created.  Proceding to checkout plugins..."
 	$GIT clone https://github.com/scrooloose/nerdtree.git
 	$GIT clone git://github.com/godlygeek/tabular.git
 	$GIT clone https://github.com/scrooloose/syntastic.git
 	$GIT clone git://github.com/altercation/vim-colors-solarized.git
+        curl -Sso ~/.vim/autoload/pathogen.vim \
+        https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
 fi
 
 # Mutt anyone?
