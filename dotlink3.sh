@@ -50,7 +50,7 @@ fi
 if [ -d ~/.vim/bundle ]; then
 	echo "bundle dir already exists."
 else
-	mkdir ~/.vim/bundle
+	mkdir -p ~/.vim/bundle
 	cd ~/.vim/bundle
 	echo "Vim bundle directory created.  Proceding to checkout plugins..."
 	$GIT clone git://github.com/godlygeek/tabular.git
