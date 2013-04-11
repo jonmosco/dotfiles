@@ -31,11 +31,6 @@ remotely accessable repository, hence this github repo!
 
 Installation:
 -------------------------------------------------------------------------------
-Vim setup relies on several plugins:
-- Syntastic: https://github.com/scrooloose/syntastic
-- Solarized Vim: https://github.com/altercation/vim-colors-solarized
-
-Follow the installation instructions in both of those links
 
 - Checkout the git repo: $ git clone https://github.com/jonmosco/dotfiles.git .dotfiles
 - Run dotlink3.sh to create symlinks: 
