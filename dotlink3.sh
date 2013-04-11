@@ -7,6 +7,7 @@
 # - check if file already exists, exit if so
 # - create sym link for each file 
 # - ask if email will be read on this box
+# - checkout vim plugins with git
 
 DOTFILES="bashrc
 bash_profile
@@ -17,6 +18,14 @@ screenrc
 vimrc
 Xresources"
 MUTTDIR=~/.mutt
+
+# See what version of git to use since distros like to ship
+# ancient software :)
+if [ -e /usr/local/bin/git ]; then
+	GIT=/usr/local/bin/git
+else
+	GIT=/usr/bin/git
+fi
 
 for dotfiles in $DOTFILES
 do
@@ -34,6 +43,18 @@ if [ -d ~/.backups ]; then
 else
         mkdir ~/.backups
         echo "Vim backup directory created."
+fi
+
+# Checkout Vim plugins
+# Solarized, Syntastix and Tabular
+if [ -d ~/.vim/bundle ]; then
+	echo "bundle dir already exists."
+else
+	mkdir ~/.vim/bundle
+	echo "Vim bundle directory created.  Proceding to checkout plugins..."
+	$GIT clone git://github.com/godlygeek/tabular.git
+	$GIT clone https://github.com/scrooloose/syntastic.git
+	$GIT clone git://github.com/altercation/vim-colors-solarized.git
 fi
 
 # Mutt anyone?
