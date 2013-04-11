@@ -24,7 +24,7 @@ MUTTDIR=~/.mutt
 if [ -e /usr/local/bin/git ]; then
 	GIT=/usr/local/bin/git
 else
-	GIT=/usr/bin/git
+	GIT=`which git`
 fi
 
 for dotfiles in $DOTFILES

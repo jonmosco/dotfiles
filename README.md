@@ -15,10 +15,10 @@ Dependencies:
 - Solarized theme: http://ethanschoonover.com/solarized
 
 Vim Plugins:
-- Tabular
-- NERDtree
+- Tabular: https://github.com/godlygeek/tabular
+- NERDtree: https://github.com/scrooloose/nerdtree
 - Solarized Theme: https://github.com/altercation/solarized
-- Syntastic
+- Syntastic: https://github.com/scrooloose/syntastic
 
 Motivation:
 -------------------------------------------------------------------------------
