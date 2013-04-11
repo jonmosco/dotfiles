@@ -41,16 +41,18 @@ set hidden
 set autoindent
 set nosi                        " Disable 'smart'-indenting
 filetype on
-filetype indent on
-filetype plugin on
+"filetype indent on
+filetype plugin indent on
+
+" Set the size of the window
+if has("gui_running")
+	set guifont=Monaco:h14		
+	set lines=25
+	set columns=80
+endif
 
 " Pathogen
 call pathogen#infect()
-
-" Set colorscheme if we have it available
-"if filereadable("$HOME/.vim/colors/peaksea.vim")
-"        colorscheme peaksea
-"endif
 
 " Solarized theme
 syntax enable
@@ -102,11 +104,6 @@ autocmd FileType ruby setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 " Allow % to bounce between angles too
 set matchpairs+=<:>
 
-" Make Vim behave normally when we are using screen
-"if match($TERM, "screen")!=-1
-"        set term=xterm
-"endif
-
 " Perldoc Plugin
 "autocmd BufNewFile,BufRead *.p? map <F1> :Perldoc<cword><CR>
 autocmd BufNewFile,BufRead *.p? setf perl
@@ -129,6 +126,8 @@ if system('uname') =~ 'Darwin'
         nmap y :.w !pbcopy<CR><CR>      
         nmap p :r !pbpaste<CR>:set nopaste<CR> 
 endif
+
+" set clipboard=unnamed
 
 " CFEngine syntax highlighting
 autocmd BufRead,BufNewFile *.cf set ft=cf3
