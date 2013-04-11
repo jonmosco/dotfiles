@@ -16,6 +16,7 @@ Dependencies:
 
 Vim Plugins:
 - Tabular
+- NERDtree
 
 Motivation:
 -------------------------------------------------------------------------------
