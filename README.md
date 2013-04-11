@@ -17,6 +17,7 @@ Dependencies:
 Vim Plugins:
 - Tabular
 - NERDtree
+- Solarized Theme
 - Syntastic
 
 Motivation:
