@@ -66,7 +66,7 @@ alias rm='rm -i'
 
 # Linux
 if [ "`uname`" = "Linux" ]; then
-        export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+        export PATH=/bin:/usr/local/bin:/sbin:/usr/bin:/usr/sbin:bin:/usr/local/sbin
         export LS_OPTIONS='--color=auto'
         export LSCOLORS=GxFxCxDxbxDxDxxbadacad
         alias ls='ls -F --color'

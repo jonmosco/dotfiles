@@ -13,6 +13,7 @@
 " - move comments to the right 
 " - screen color support [DONE 1/30/12]
 " - copy/paste for Mac OS X [DONE 1/7/12]
+"   MacVim handles this perfectly
 " - Fix indenting for Python [DONE 1/8/12]
 " - Fix indenting
 " - Fix indenting for Puppet [DONE 2/21/2013]
