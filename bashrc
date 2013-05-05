@@ -75,7 +75,7 @@ fi
 
 # Mac OS
 if [ "`uname`" = "Darwin" ]; then
-	export PATH=$HOME/bin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/opt/local/sbin:/usr/X11/bin
+	export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin
         export CLICOLOR=1
         #export LSCOLORS=GxFxCxDxBxDxDxxbadacad
 	# Solarized colors
@@ -108,6 +108,10 @@ else
 	PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'
 fi
 
+# bash-completion
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+	. $(brew --prefix)/etc/bash_completion
+fi
 # Regular Prompt
 #PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'
 
@@ -125,3 +129,16 @@ PS2='> '
 if [ "`hostname`" = "beam.forkedprocess.net" ]; then
         alias ncheck='/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg'
 fi
+
+# color manpages
+# Needs some work
+man() {
+    env LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+	LESS_TERMCAP_md=$(printf "\e[1;31m") \
+	LESS_TERMCAP_me=$(printf "\e[0m") \
+	LESS_TERMCAP_se=$(printf "\e[0m") \
+	LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+	LESS_TERMCAP_ue=$(printf "\e[0m") \
+	LESS_TERMCAP_us=$(printf "\e[1;32m") \
+	man "$@"
+}

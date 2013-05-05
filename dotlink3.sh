@@ -39,6 +39,12 @@ do
         fi
 done
 
+# Xrdb
+if [ -L ~/.Xresources]; then
+	echo "Merging Xresources"
+	xrdb -merge ~/.Xresourses
+fi
+
 # Vim backup directory
 if [ -d ~/.backups ]; then
         echo "backups directory already exists."
