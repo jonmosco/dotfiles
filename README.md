@@ -18,10 +18,14 @@ remotely accessable repository, hence this github repo!
 
 Dependencies:
 -------------------------------------------------------------------------------
+Linux:
 - Bash
-- Xterm
+- XTerm
 - Mutt (Provided you will want to use mutt as your MUA)
+
+Mac OSX: 
 - iTerm2
+- Homebrew
 
 Vim Plugins:
 - NERDtree: https://github.com/scrooloose/nerdtree
