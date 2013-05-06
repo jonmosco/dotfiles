@@ -5,6 +5,7 @@ TODO:
 - Describe structure and direction
 - Describe intallation [DONE]
 - Add dircolors 
+- Add iTerm2 Settings
 
 Motivation:
 -------------------------------------------------------------------------------
@@ -20,6 +21,7 @@ Dependencies:
 - Bash
 - Xterm
 - Mutt (Provided you will want to use mutt as your MUA)
+- iTerm2
 
 Vim Plugins:
 - NERDtree: https://github.com/scrooloose/nerdtree
