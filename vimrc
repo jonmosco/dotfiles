@@ -48,8 +48,8 @@ filetype plugin indent on
 " Set the size of the window
 if has("gui_running")
 	set guifont=Monaco:h14		
-	set lines=25
-	set columns=80
+	set lines=30
+	set columns=110
 endif
 
 " Pathogen
