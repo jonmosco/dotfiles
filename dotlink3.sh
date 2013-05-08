@@ -40,6 +40,10 @@ if [ `which curl` ]; then
 	WGET=/usr/bin/curl -Sso
 elif [ `which wget` ]; then
 	WGET=`which wget`
+else
+	echo "pathogen.vim will not be installed.  Please browse to \
+		https://github.com/tpope/vim-pathogen and follow the installation \
+		instructions."
 fi
 
 for dotfiles in $DOTFILES
@@ -78,8 +82,10 @@ else
 	$GIT clone git://github.com/godlygeek/tabular.git
 	$GIT clone https://github.com/scrooloose/syntastic.git
 	$GIT clone git://github.com/altercation/vim-colors-solarized.git
-        $WGET ~/.vim/autoload/pathogen.vim \
-        https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+	if [ -n $WGET ]; then
+        	$WGET ~/.vim/autoload/pathogen.vim \
+        	https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+	fi
 fi
 
 # Mutt anyone?
