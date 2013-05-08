@@ -14,6 +14,7 @@
 # - make sure all programs (git, curl) are installed.  Compensate
 #   if they are not:
 #   if which `wget`, if which `curl`, then set the appropiate command
+# - Only apply Xresources if using X Windows
 
 DOTFILES="bashrc
 bash_profile
@@ -30,16 +31,16 @@ MUTTDIR=~/.mutt
 if [ -e /usr/local/bin/git ]; then
 	GIT=/usr/local/bin/git
 else
-	GIT=`which git`
+	GIT=`command -v git`
 fi
 
 # check if we have curl or wget
 # TODO:
 # need to have a default of NEITHER exists
-if [ `which curl` ]; then
-	WGET=/usr/bin/curl -Sso
-elif [ `which wget` ]; then
-	WGET=`which wget`
+if [ -e /usr/bin/curl ]; then
+	WGET="/usr/bin/curl -Sso"
+elif [ -e /usr/bin/wget ]; then
+	WGET=/usr/bin/wget
 else
 	echo "pathogen.vim will not be installed.  Please browse to \
 		https://github.com/tpope/vim-pathogen and follow the installation \
@@ -82,10 +83,8 @@ else
 	$GIT clone git://github.com/godlygeek/tabular.git
 	$GIT clone https://github.com/scrooloose/syntastic.git
 	$GIT clone git://github.com/altercation/vim-colors-solarized.git
-	if [ -n $WGET ]; then
-        	$WGET ~/.vim/autoload/pathogen.vim \
-        	https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
-	fi
+       	$WGET ~/.vim/autoload/pathogen.vim \
+       		https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
 fi
 
 # Mutt anyone?
