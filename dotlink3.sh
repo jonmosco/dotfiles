@@ -10,6 +10,10 @@
 # - ask if email will be read on this box
 #
 # TODO
+# - iTerm Support?
+# - make sure all programs (git, curl) are installed.  Compensate
+#   if they are not:
+#   if which `wget`, if which `curl`, then set the appropiate command
 
 DOTFILES="bashrc
 bash_profile
@@ -27,6 +31,15 @@ if [ -e /usr/local/bin/git ]; then
 	GIT=/usr/local/bin/git
 else
 	GIT=`which git`
+fi
+
+# check if we have curl or wget
+# TODO:
+# need to have a default of NEITHER exists
+if [ `which curl` ]; then
+	WGET=/usr/bin/curl -Sso
+elif [ `which wget` ]; then
+	WGET=`which wget`
 fi
 
 for dotfiles in $DOTFILES
@@ -65,7 +78,7 @@ else
 	$GIT clone git://github.com/godlygeek/tabular.git
 	$GIT clone https://github.com/scrooloose/syntastic.git
 	$GIT clone git://github.com/altercation/vim-colors-solarized.git
-        curl -Sso ~/.vim/autoload/pathogen.vim \
+        $WGET ~/.vim/autoload/pathogen.vim \
         https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
 fi
 
