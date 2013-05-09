@@ -40,7 +40,7 @@ fi
 if [ -e /usr/bin/curl ]; then
 	WGET="/usr/bin/curl -Sso"
 elif [ -e /usr/bin/wget ]; then
-	WGET=/usr/bin/wget
+	WGET="/usr/bin/wget -O"
 else
 	echo "pathogen.vim will not be installed.  Please browse to \
 		https://github.com/tpope/vim-pathogen and follow the installation \

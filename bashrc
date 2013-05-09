@@ -84,9 +84,9 @@ if [ "`uname`" = "Darwin" ]; then
         alias la='ls -ltr'
         alias ostest='echo Darwin settings applied!'
 
-		if [ -f $(brew --prefix)/etc/bash_completion ]; then
-			. $(brew --prefix)/etc/bash_completion
-		fi
+	if [ -f $(brew --prefix)/etc/bash_completion ]; then
+		. $(brew --prefix)/etc/bash_completion
+	fi
 fi
 
 # {Net,Free,Open}BSD
@@ -116,6 +116,7 @@ fi
 #if [ -f $(brew --prefix)/etc/bash_completion ]; then
 #	. $(brew --prefix)/etc/bash_completion
 #fi
+
 # Regular Prompt
 #PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'
 
