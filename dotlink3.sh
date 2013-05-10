@@ -22,8 +22,7 @@ inputrc
 git-prompt.sh
 git-completion.bash
 screenrc
-vimrc
-Xresources"
+vimrc"
 MUTTDIR=~/.mutt
 
 # See what version of git to use since distros like to ship
@@ -58,9 +57,10 @@ do
 done
 
 # Xrdb
-if [ -n $DISPLAY ]; then
+if [ -z $DISPLAY ]; then
 	if [ -L ~/.Xresources]; then
-		echo "Merging Xresources"
+		ln -s ~/.dotfiles/Xresources ~/.Xresources
+		echo "Xresources symlink created....Merging Xresources"
 		xrdb -merge ~/.Xresourses
 	fi
 else
