@@ -58,9 +58,13 @@ do
 done
 
 # Xrdb
-if [ -L ~/.Xresources]; then
-	echo "Merging Xresources"
-	xrdb -merge ~/.Xresourses
+if [ -n $DISPLAY ]; then
+	if [ -L ~/.Xresources]; then
+		echo "Merging Xresources"
+		xrdb -merge ~/.Xresourses
+	fi
+else
+	echo "Not running a display, no need for Xresources."
 fi
 
 # Vim backup directory
