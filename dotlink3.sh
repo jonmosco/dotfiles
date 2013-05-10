@@ -59,6 +59,8 @@ done
 # Xrdb
 if [ -z $DISPLAY ]; then
 	if [ -L ~/.Xresources ]; then
+		echo "Sym link for Xresources already exists."
+	else
 		ln -s ~/.dotfiles/Xresources ~/.Xresources
 		echo "Xresources symlink created....Merging Xresources"
 		xrdb -merge ~/.Xresourses
