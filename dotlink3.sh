@@ -14,7 +14,8 @@
 # - make sure all programs (git, curl) are installed.  Compensate
 #   if they are not:
 #   if which `wget`, if which `curl`, then set the appropiate command
-# - Only apply Xresources if using X Windows
+#   NOTE: use `command -v` instead of which
+# - Only apply Xresources if using X Windows [DONE 5/9/13]
 
 DOTFILES="bashrc
 bash_profile
@@ -67,7 +68,6 @@ else
 		echo "Xresources symlink created....Merging Xresources"
 		xrdb -merge ~/.Xresourses
 	fi
-	echo "Not running a display, no need for Xresources."
 fi
 
 # Vim backup directory

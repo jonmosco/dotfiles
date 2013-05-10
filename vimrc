@@ -7,6 +7,7 @@
 " - fix color scheme [DONE 1/5/12]
 "   lettuce does not work in screen
 " - create own color scheme
+"   NOTE: Switched to Solarized
 " - Better Perl support
 " - SVN [DONE 1/3/12]
 " - comment everything!
@@ -107,9 +108,9 @@ set matchpairs+=<:>
 
 " Perldoc Plugin
 "autocmd BufNewFile,BufRead *.p? map <F1> :Perldoc<cword><CR>
-autocmd BufNewFile,BufRead *.p? setf perl
-autocmd BufNewFile,BufRead *.p? let g:perldoc_program='/usr/bin/perldoc'
-autocmd BufNewFile,BufRead *.p? source ~/.vim/ftplugin/perl_doc.vim
+"autocmd BufNewFile,BufRead *.p? setf perl
+"autocmd BufNewFile,BufRead *.p? let g:perldoc_program='/usr/bin/perldoc'
+"autocmd BufNewFile,BufRead *.p? source ~/.vim/ftplugin/perl_doc.vim
 
 " This should not be a replacement for a properly configured 
 " TERM type.
