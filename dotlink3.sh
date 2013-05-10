@@ -58,6 +58,8 @@ done
 
 # Xrdb
 if [ -z $DISPLAY ]; then
+	echo "Not running a display, no need for Xresources."
+else
 	if [ -L ~/.Xresources ]; then
 		echo "Sym link for Xresources already exists."
 	else
@@ -65,7 +67,6 @@ if [ -z $DISPLAY ]; then
 		echo "Xresources symlink created....Merging Xresources"
 		xrdb -merge ~/.Xresourses
 	fi
-else
 	echo "Not running a display, no need for Xresources."
 fi
 
