@@ -47,7 +47,7 @@ _ostype () {
 			echo "Mac OSX"
 			;;
 		Linux)
-			PATH=/bin:/usr/local/bin:/usr/bin:/usr/X11/bin
+			PATH=/bin:/usr/bin:/usr/local/bin:/usr/bin:/usr/X11/bin
 			GIT=`command -v git`
 			WGET=`command -v wget`
 			CURL=`command -v curl`
