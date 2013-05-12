@@ -1,7 +1,7 @@
 Overview
 ===============================================================================
 
-Home for my dotfiles.
+Home for my (Jon) dotfiles and environment configuration.
 
 TODO:
 - Describe structure and direction [DONE]
