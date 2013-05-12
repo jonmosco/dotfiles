@@ -64,7 +64,7 @@ _base () {
 	.bash_profile"
 	for skel in $SKEL
 	do
-		if [ -f ~./$skel ]; then
+		if [ -f ~/.$skel ]; then
 			echo "Skeleton files exist..removing.."
 			rm ~/.$skel
 		fi
