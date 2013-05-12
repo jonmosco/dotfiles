@@ -60,9 +60,9 @@ _base () {
 	_ostype
 
 	# remove /etc/skel files if they exist
-	if [ -f ~./bashrc && -f ~./bash_profile ]; then
+	if [ -f ~./bashrc ]; then
 		echo "Bash profile was set up by /etc/skel...removing..."
-		rm ~/.bash*
+		rm ~/.bashrc
 	fi
 
 	for dotfiles in $DOTFILES
