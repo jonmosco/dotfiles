@@ -12,7 +12,7 @@
 # - if .bashrc and .bash_profile are NOT symbolic links, remove them 
 #   and link to ours
 #   NOTE: On some default Linux installs, profiles are set up for new users
-#         out of /etc/skel.  We dont want this on our profile.
+#         out of /etc/skel.  We don't want this.
 
 # Our profile configuration
 DOTFILES="bashrc
@@ -60,10 +60,15 @@ _base () {
 	_ostype
 
 	# remove /etc/skel files if they exist
-	if [ -f ~./bashrc ]; then
-		echo "Bash profile was set up by /etc/skel...removing..."
-		rm ~/.bashrc
-	fi
+	SKEL=".bashrc
+	.bash_profile"
+	for skel in $SKEL
+	do
+		if [ -f ~./$SKEL ]; then
+			echo "Skeleton files exist..removing.."
+			rm ~/.$SKEL
+		fi
+	done
 
 	for dotfiles in $DOTFILES
 	do
