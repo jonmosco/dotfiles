@@ -11,6 +11,8 @@
 # TODO:
 # - if .bashrc and .bash_profile are NOT symbolic links, remove them 
 #   and link to ours
+#   NOTE: On some default Linux installs, profiles are set up for new users
+#         out of /etc/skel.  We dont want this on our profile.
 
 # Our profile configuration
 DOTFILES="bashrc
