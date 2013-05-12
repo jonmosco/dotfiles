@@ -146,8 +146,10 @@ while getopts bmXh opt; do
 		b)
 			_base;;
 		m) 
+			_base
 			_mutt;;
 		X)
+			_base
 			_xwindows;;
 		h)
 			_usage 
