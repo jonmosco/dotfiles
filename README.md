@@ -45,15 +45,15 @@ Installation:
 -------------------------------------------------------------------------------
 
 - Checkout the git repo: $ git clone https://github.com/jonmosco/dotfiles.git .dotfiles
-- Run dotlink4.sh to create symlinks: 
+- Run dotlink4.sh to download dependencies and set up links:
 
         $ cd .dotfiles 
         $ ./dotlink4.sh -h
         usage: dotlink4.sh -[bmXh]
-	-b Base install
-	-m Mutt configuration
-	-X Xwindows configuration
-	-h print this message
+        -b Base install
+        -m Mutt configuration
+        -X Xwindows configuration
+        -h print this message
 
 - Pick the correct option based on profile needs
 - Logout and log back in
