@@ -62,7 +62,7 @@ _base () {
 	# remove /etc/skel files if they exist
 	if [ -f ~./bashrc && -f ~./bash_profile ]; then
 		echo "Bash profile was set up by /etc/skel...removing..."
-		rm ~/.bashrc
+		rm ~/.bash*
 	fi
 
 	for dotfiles in $DOTFILES
