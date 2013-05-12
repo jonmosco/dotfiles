@@ -23,8 +23,9 @@ git-completion.bash
 screenrc
 vimrc"
 
-SKEL="~/.bashrc
-~/.bash_profile"
+# Possible skeleton files
+SKEL="bashrc
+bash_profile"
 
 # OS
 OSTYPE=`uname`
@@ -67,9 +68,9 @@ _base () {
 #	~/.bash_profile"
 	for skel in $SKEL
 	do
-		if [ -e $skel ]; then
+		if [ -e ~/.$skel ]; then
 			echo "Skeleton files exist..removing.."
-			rm $skel
+			rm ~/.$skel
 		fi
 	done
 
