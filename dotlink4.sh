@@ -7,12 +7,10 @@
 # Provides usage statement
 # Choose what portions of profile to set
 # Set the PATH based on OS
-
-# Defaults needed for our script
-#PATH=/usr/local/bin:/bin:/sbin:/usr/bin:/usr/sbin
-#GIT=`command -v git`
-#WGET=`command -v wget`
-#CURL=`command -v curl`
+#
+# TODO:
+# - if .bashrc and .bash_profile are NOT symbolic links, remove them 
+#   and link to ours
 
 # Our profile configuration
 DOTFILES="bashrc
