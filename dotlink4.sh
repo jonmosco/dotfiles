@@ -60,13 +60,13 @@ _base () {
 	_ostype
 
 	# remove /etc/skel files if they exist
-	SKEL=".bashrc
-	.bash_profile"
+	SKEL="~/.bashrc
+	~/.bash_profile"
 	for skel in $SKEL
 	do
-		if [ -f ~/.$skel ]; then
+		if [ -e $skel ]; then
 			echo "Skeleton files exist..removing.."
-			rm ~/.$skel
+			rm $skel
 		fi
 	done
 
