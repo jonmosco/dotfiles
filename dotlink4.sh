@@ -64,8 +64,6 @@ _base () {
 	_ostype
 
 	# remove /etc/skel files if they exist
-#	SKEL="~/.bashrc
-#	~/.bash_profile"
 	for skel in $SKEL
 	do
 		if [ -e ~/.$skel ]; then
