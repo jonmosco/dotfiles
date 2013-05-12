@@ -39,7 +39,7 @@ _usage () {
 _ostype () {
 	case $OSTYPE in
 		Darwin) 
-			PATH=/usr/local/bin:/opt/local/bin:/usr/bin:/usr/X11/bin
+			PATH=/bin:/usr/local/bin:/opt/local/bin:/usr/bin:/usr/X11/bin
 			GIT=`command -v git`
 			WGET=`command -v wget`
 			CURL=`command -v curl`
@@ -47,7 +47,7 @@ _ostype () {
 			echo "Mac OSX"
 			;;
 		Linux)
-			PATH=/usr/local/bin:/usr/bin:/usr/X11/bin
+			PATH=/bin:/usr/local/bin:/usr/bin:/usr/X11/bin
 			GIT=`command -v git`
 			WGET=`command -v wget`
 			CURL=`command -v curl`
