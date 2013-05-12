@@ -23,6 +23,9 @@ git-completion.bash
 screenrc
 vimrc"
 
+SKEL="~/.bashrc
+~/.bash_profile"
+
 # OS
 OSTYPE=`uname`
 
@@ -60,8 +63,8 @@ _base () {
 	_ostype
 
 	# remove /etc/skel files if they exist
-	SKEL="~/.bashrc
-	~/.bash_profile"
+#	SKEL="~/.bashrc
+#	~/.bash_profile"
 	for skel in $SKEL
 	do
 		if [ -e $skel ]; then
