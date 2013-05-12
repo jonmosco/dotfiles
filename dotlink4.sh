@@ -10,7 +10,7 @@
 #
 # TODO:
 # - if .bashrc and .bash_profile are NOT symbolic links, remove them 
-#   and link to ours
+#   and link to ours [DONE 5/11/13]
 #   NOTE: On some default Linux installs, profiles are set up for new users
 #         out of /etc/skel.  We don't want this.
 
@@ -101,15 +101,17 @@ _base () {
 		$GIT clone git://github.com/godlygeek/tabular.git
 		$GIT clone https://github.com/scrooloose/syntastic.git
 		$GIT clone git://github.com/altercation/vim-colors-solarized.git
-	if [ -n "$CURL" ]; then
-		PATHOGEN="$CURL -Sso"
-	elif [ -n "$WGET" ]; then
-		PATHOGEN="$WGET -O"
-	else
-		echo "pathogen.vim will not be installed.  Please browse to 
-			https://github.com/tpope/vim-pathogen and follow the installation 
-			instructions."
-	fi
+
+		if [ -n "$CURL" ]; then
+			PATHOGEN="$CURL -Sso"
+		elif [ -n "$WGET" ]; then
+			PATHOGEN="$WGET -O"
+		else
+			echo "pathogen.vim will not be installed.  Please browse to 
+				https://github.com/tpope/vim-pathogen and follow the installation 
+				instructions."
+		fi
+
 	       	$PATHOGEN ~/.vim/autoload/pathogen.vim \
 	       		https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
 	fi
