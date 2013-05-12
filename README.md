@@ -1,5 +1,7 @@
-Future home for my dotfiles.
+Overview
 ===============================================================================
+
+Home for my dotfiles.
 
 TODO:
 - Describe structure and direction
@@ -18,6 +20,11 @@ remotely accessable repository, hence this github repo!
 
 Dependencies:
 -------------------------------------------------------------------------------
+
+The script dotlink4.sh will now take arguments that will configure the proper
+profile based on what you will be needing on the particular system it is being set
+up on.
+
 Linux:
 - Bash
 - XTerm
@@ -33,17 +40,22 @@ Vim Plugins:
 - Syntastic: https://github.com/scrooloose/syntastic
 - Tabular: https://github.com/godlygeek/tabular
 
-All other dependencies are fulfilled by dotlink3.sh
+All other dependencies are fulfilled by dotlink4.sh
 
 Installation:
 -------------------------------------------------------------------------------
 
 - Checkout the git repo: $ git clone https://github.com/jonmosco/dotfiles.git .dotfiles
-- Run dotlink3.sh to create symlinks: 
+- Run dotlink4.sh to create symlinks: 
 
         $ cd .dotfiles 
-        $ ./dotlink3.sh
+        $ ./dotlink4.sh -h
+	usage: dotlink4.sh -[bmXh]
+	-b Base install
+	-m Mutt configuration
+	-X Xwindows configuration
+	-h print this message
 
-- Answer questions regarding email setup.
+- Pick the correct option based on profile needs
 - Logout and log back in
 - Enjoy (or criticize) 
