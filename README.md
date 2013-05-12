@@ -4,7 +4,7 @@ Overview
 Home for my dotfiles.
 
 TODO:
-- Describe structure and direction
+- Describe structure and direction [DONE]
 - Describe intallation [DONE]
 - Add dircolors 
 - Add iTerm2 Settings
@@ -21,9 +21,8 @@ remotely accessable repository, hence this github repo!
 Dependencies:
 -------------------------------------------------------------------------------
 
-The script dotlink4.sh will now take arguments that will configure the proper
-profile based on what you will be needing on the particular system it is being set
-up on.
+The script dotlink4.sh will now take arguments to set up the appropriate 
+environment based on what is needed.
 
 Linux:
 - Bash
@@ -50,7 +49,7 @@ Installation:
 
         $ cd .dotfiles 
         $ ./dotlink4.sh -h
-	usage: dotlink4.sh -[bmXh]
+        usage: dotlink4.sh -[bmXh]
 	-b Base install
 	-m Mutt configuration
 	-X Xwindows configuration
