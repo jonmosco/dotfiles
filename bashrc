@@ -61,7 +61,7 @@ alias p='ps -ef'
 alias h='history'
 alias ..='cd ..'
 alias grep='grep --color'
-alias Xdefaults='xrdb -merge ~/.Xdefaults'
+#alias Xdefaults='xrdb -merge ~/.Xdefaults'
 alias rm='rm -i'
 
 # Linux
@@ -111,11 +111,6 @@ else
 	# Prompt without git
 	PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'
 fi
-
-# bash-completion
-#if [ -f $(brew --prefix)/etc/bash_completion ]; then
-#	. $(brew --prefix)/etc/bash_completion
-#fi
 
 # Regular Prompt
 #PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'

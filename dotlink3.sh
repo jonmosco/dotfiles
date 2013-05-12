@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: dotlink3.sh 48 2013-01-08 20:14:17Z jmosco $
 #
 # Create symlinks to dotfiles in .dotfiles repository
@@ -16,6 +16,8 @@
 #   if which `wget`, if which `curl`, then set the appropiate command
 #   NOTE: use `command -v` instead of which
 # - Only apply Xresources if using X Windows [DONE 5/9/13]
+# - Have commandline argument that will configure mutt to reduce 
+#   interaction
 
 DOTFILES="bashrc
 bash_profile
