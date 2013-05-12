@@ -26,6 +26,7 @@ vimrc"
 # OS
 OSTYPE=`uname`
 
+# Usage 
 _usage () {
 	echo "usage: $0 -[bmXh]"
 	echo "-b Base install"
@@ -43,16 +44,12 @@ _ostype () {
 			GIT=`command -v git`
 			WGET=`command -v wget`
 			CURL=`command -v curl`
-			# Test
-			echo "Mac OSX"
 			;;
 		Linux)
 			PATH=/bin:/usr/bin:/usr/local/bin:/usr/bin:/usr/X11/bin
 			GIT=`command -v git`
 			WGET=`command -v wget`
 			CURL=`command -v curl`
-			# Test
-			echo "Linux"
 			;;
 	esac
 }
@@ -61,6 +58,13 @@ _ostype () {
 _base () {
 	# Set OS specific setting
 	_ostype
+
+	# remove /etc/skel files if they exist
+	if [ -f ~./bashrc && -f ~./bash_profile ]; then
+		echo "Bash profile was set up by /etc/skel...removing..."
+		rm ~/.bashrc
+	fi
+
 	for dotfiles in $DOTFILES
 	do
 	        if [ -L ~/.$dotfiles ]; then
@@ -70,8 +74,6 @@ _base () {
 	                echo "$dotfiles symlink created."
 	        fi
 	done
-	# Test
-	echo "base profile"
 
 	# Vim setup
 	# backup directory
