@@ -1,11 +1,11 @@
 Overview
 ===============================================================================
 
-Home for my (Jon) dotfiles and environment configuration.
+Home for my (Jon) dotfiles and environment configuration
 
 TODO:
 - Describe structure and direction [DONE]
-- Describe intallation [DONE]
+- Describe installation [DONE]
 - Add dircolors 
 - Add iTerm2 Settings
 

@@ -61,7 +61,6 @@ alias p='ps -ef'
 alias h='history'
 alias ..='cd ..'
 alias grep='grep --color'
-#alias Xdefaults='xrdb -merge ~/.Xdefaults'
 alias rm='rm -i'
 
 # Linux
