@@ -10,9 +10,11 @@
 #
 # TODO:
 # - if .bashrc and .bash_profile are NOT symbolic links, remove them 
-#   and link to ours [DONE 5/11/13]
-#   NOTE: On some default Linux installs, profiles are set up for new users
-#         out of /etc/skel.  We don't want this.
+#   and link to .dotfiles/ bash configuration [DONE 5/11/13]
+#
+# Caveats:
+# -On some default Linux installs, profiles are set up for new users
+#  out of /etc/skel.  We don't want this.
 
 # Our profile configuration
 DOTFILES="bashrc
@@ -144,6 +146,7 @@ _xwindows () {
 		ln -s ~/.dotfiles/Xresources ~/.Xresources
 		echo "Xresources symlink created....Merging Xresources"
 		xrdb -merge ~/.Xresourses
+		echo "XWindows settings initialized"
 	fi
 }
 
