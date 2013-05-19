@@ -72,6 +72,7 @@ _base () {
 		if [ -e ~/.$skel ]; then
 			echo "Skeleton files exist..removing.."
 			rm ~/.$skel
+			echo "Zapped skeleton files"
 		fi
 	done
 
