@@ -28,7 +28,8 @@ SKEL="bashrc
 bash_profile"
 
 # OS
-OSTYPE=`uname`
+#OSTYPE=`uname`
+OSTYPE=$( uname )
 
 # Usage 
 _usage () {
