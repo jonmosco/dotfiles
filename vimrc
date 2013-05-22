@@ -139,3 +139,7 @@ nnoremap <CR>   :noh<CR><CR>
 
 " pathogen
 " call pathogen#infect()
+
+" End of Line niceness
+set list
+set listchars=eol:¬
