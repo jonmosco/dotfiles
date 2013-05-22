@@ -143,3 +143,6 @@ nnoremap <CR>   :noh<CR><CR>
 " End of Line niceness
 set list
 set listchars=eol:¬
+
+" Undo path
+nnoremap <F5> :GundoToggle<CR>

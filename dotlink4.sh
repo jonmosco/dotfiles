@@ -105,6 +105,7 @@ _base () {
 		$GIT clone git://github.com/godlygeek/tabular.git
 		$GIT clone https://github.com/scrooloose/syntastic.git
 		$GIT clone git://github.com/altercation/vim-colors-solarized.git
+		$GIT clone http://github.com/sjl/gundo.vim.git
 
 		if [ -n "$CURL" ]; then
 			PATHOGEN="$CURL -Sso"
