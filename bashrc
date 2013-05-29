@@ -74,6 +74,10 @@ fi
 
 # Mac OS
 if [ "`uname`" = "Darwin" ]; then
+	if [ -d /opt/boxen ]; then
+		source /opt/boxen/env.sh
+	fi
+
 	export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin
         export CLICOLOR=1
         #export LSCOLORS=GxFxCxDxBxDxDxxbadacad

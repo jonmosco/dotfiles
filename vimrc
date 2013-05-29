@@ -1,6 +1,5 @@
 " $Id: vimrc 54 2013-04-07 01:27:49Z jmosco $
-
-" Very early .vimrc
+"
 " I have gone over to the dark side.  
 "
 " TODO
@@ -141,8 +140,8 @@ nnoremap <CR>   :noh<CR><CR>
 " call pathogen#infect()
 
 " End of Line niceness
-set list
-set listchars=eol:¬
+"set list
+"set listchars=eol:¬
 
 " Undo path
 nnoremap <F5> :GundoToggle<CR>
