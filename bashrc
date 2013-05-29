@@ -74,10 +74,6 @@ fi
 
 # Mac OS
 if [ "`uname`" = "Darwin" ]; then
-	if [ -d /opt/boxen ]; then
-		source /opt/boxen/env.sh
-	fi
-
 	export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin
         export CLICOLOR=1
         #export LSCOLORS=GxFxCxDxBxDxDxxbadacad
@@ -87,6 +83,12 @@ if [ "`uname`" = "Darwin" ]; then
         alias la='ls -ltr'
         alias ostest='echo Darwin settings applied!'
 
+	# Check if we are using Boxen
+	if [ -d /opt/boxen ]; then
+		source /opt/boxen/env.sh
+	fi
+
+	# Homebrew
 	if [ -f $(brew --prefix)/etc/bash_completion ]; then
 		. $(brew --prefix)/etc/bash_completion
 	fi
