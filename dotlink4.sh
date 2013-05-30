@@ -10,7 +10,9 @@
 #
 # TODO:
 # - if .bashrc and .bash_profile are NOT symbolic links, remove them 
-#   and link to .dotfiles/ bash configuration [DONE 5/11/13]
+#   and link to .dotfiles/ bash configuration [DONE 6/11/13]
+# - Add argument (-U) that will cleanup already installed profile, updating
+#   the plugins?
 #
 # Caveats:
 # -On some default Linux installs, profiles are set up for new users
@@ -55,7 +57,7 @@ _ostype () {
 		Linux)
 			PATH=/bin:/usr/bin:/usr/local/bin:/usr/bin:/usr/X11/bin
 			GIT=`command -v git`
-			WGET=`command -v wget`
+		WGET=`command -v wget`
 			CURL=`command -v curl`
 			;;
 	esac

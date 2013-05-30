@@ -5,7 +5,6 @@
 "
 " TODO
 " - fix color scheme [DONE 1/5/12]
-"   lettuce does not work in screen
 " - create own color scheme
 "   NOTE: Switched to Solarized
 " - Better Perl support
@@ -141,8 +140,9 @@ nnoremap <CR>   :noh<CR><CR>
 " call pathogen#infect()
 
 " End of Line niceness
-set list
-set listchars=eol:¬
+"set list
+"set listchars=tab:▸\,eol:¬
+"set listchars=tab:▸\ ,eol:¬
 
 " Undo path
 nnoremap <F5> :GundoToggle<CR>
