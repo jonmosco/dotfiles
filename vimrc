@@ -1,6 +1,5 @@
 " $Id: vimrc 54 2013-04-07 01:27:49Z jmosco $
-
-" Very early .vimrc
+"
 " I have gone over to the dark side.  
 "
 " TODO
@@ -141,8 +140,12 @@ nnoremap <CR>   :noh<CR><CR>
 
 " End of Line niceness
 "set list
+<<<<<<< HEAD
 "set listchars=tab:▸\,eol:¬
 "set listchars=tab:▸\ ,eol:¬
+=======
+"set listchars=eol:¬
+>>>>>>> db7d82068d9bf335c1bdc047f10e1f2d7f69ae18
 
 " Undo path
 nnoremap <F5> :GundoToggle<CR>

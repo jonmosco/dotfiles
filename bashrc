@@ -83,6 +83,12 @@ if [ "`uname`" = "Darwin" ]; then
         alias la='ls -ltr'
         alias ostest='echo Darwin settings applied!'
 
+	# Check if we are using Boxen
+	if [ -d /opt/boxen ]; then
+		source /opt/boxen/env.sh
+	fi
+
+	# Homebrew
 	if [ -f $(brew --prefix)/etc/bash_completion ]; then
 		. $(brew --prefix)/etc/bash_completion
 	fi

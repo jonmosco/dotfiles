@@ -4,9 +4,10 @@
 # Updates: Complete rewrite to be more specific on the function
 # of the system we are installing on
 # 
-# Provides usage statement
-# Choose what portions of profile to set
-# Set the PATH based on OS
+# FEATURES:
+# - Provides usage statement
+# - Choose what portions of profile to set
+# - Set the PATH based on OS
 #
 # TODO:
 # - if .bashrc and .bash_profile are NOT symbolic links, remove them 
@@ -18,7 +19,7 @@
 # -On some default Linux installs, profiles are set up for new users
 #  out of /etc/skel.  We don't want this.
 
-# Our profile configuration
+# Profile configuration files
 DOTFILES="bashrc
 bash_profile
 inputrc
