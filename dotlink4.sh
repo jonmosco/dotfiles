@@ -111,6 +111,7 @@ _base () {
 		$GIT clone https://github.com/scrooloose/syntastic.git
 		$GIT clone git://github.com/altercation/vim-colors-solarized.git
 		$GIT clone http://github.com/sjl/gundo.vim.git
+		$GIT clone https://github.com/rodjek/vim-puppet.git puppet
 
 		if [ -n "$CURL" ]; then
 			PATHOGEN="$CURL -Sso"
