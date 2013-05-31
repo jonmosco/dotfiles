@@ -140,12 +140,7 @@ nnoremap <CR>   :noh<CR><CR>
 
 " End of Line niceness
 "set list
-<<<<<<< HEAD
 "set listchars=tab:▸\,eol:¬
-"set listchars=tab:▸\ ,eol:¬
-=======
-"set listchars=eol:¬
->>>>>>> db7d82068d9bf335c1bdc047f10e1f2d7f69ae18
 
 " Undo path
 nnoremap <F5> :GundoToggle<CR>

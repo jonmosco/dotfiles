@@ -14,6 +14,8 @@
 #   and link to .dotfiles/ bash configuration [DONE 6/11/13]
 # - Add argument (-U) that will cleanup already installed profile, updating
 #   the plugins?
+# - For skeleton files, only remote if files are not symbolic links since we
+#   are creating them
 #
 # Caveats:
 # -On some default Linux installs, profiles are set up for new users
@@ -72,7 +74,7 @@ _base () {
 	# remove /etc/skel files if they exist
 	for skel in $SKEL
 	do
-		if [ -e ~/.$skel ]; then
+		if [ ! -L ~/.$skel ]; then
 			echo "Skeleton files exist..removing.."
 			rm ~/.$skel
 			echo "Zapped skeleton files"
