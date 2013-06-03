@@ -48,7 +48,7 @@ alias rm='rm -i'
 OSTYPE=$( uname )
 
 case $OSTYPE in 
-	DARWIN)
+	Darwin)
 		export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin
         	export CLICOLOR=1
         	#export LSCOLORS=GxFxCxDxBxDxDxxbadacad
