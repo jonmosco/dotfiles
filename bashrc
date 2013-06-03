@@ -35,6 +35,15 @@ export LESS='-R -i -g'
 export GREP_COLORS='1;37;41'
 export MAIL=$HOME/.mail
 
+# alias definitions
+alias l='ls -lFha'
+alias lt='ls -ltr'
+alias p='ps -ef'
+alias h='history'
+alias ..='cd ..'
+alias grep='grep --color'
+alias rm='rm -i'
+
 # Set OS specific settings
 OSTYPE=$( uname )
 
