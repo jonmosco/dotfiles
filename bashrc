@@ -68,7 +68,7 @@ case $OSTYPE in
 			. $(brew --prefix)/etc/bash_completion
 		fi
 	;;
-	LINUX)
+	Linux)
         	export PATH=/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin
         	export LS_OPTIONS='--color=auto'
         	export LSCOLORS=GxFxCxDxbxDxDxxbadacad
