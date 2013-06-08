@@ -16,6 +16,8 @@
 " - Fix indenting for Python [DONE 1/8/12]
 " - Fix indenting
 " - Fix indenting for Puppet [DONE 2/21/2013]
+" - Better keybindings
+" - Remove old junk!
 
 " Global Settings
 set number
@@ -26,7 +28,6 @@ set statusline=%t\ %y\ format:\ %{&ff};\ [%c,%l]
 set hlsearch
 set incsearch                   " search as you type
 set ruler                       " show the cursor position
-"set background=dark
 set vb t_vb=                    " go away BELLS
 set noerrorbells                " Please be quiet
 set sc                          " show current command
@@ -120,12 +121,13 @@ set matchpairs+=<:>
 
 "hi LineNr ctermbg=235           " Color around line numbers
 
+" This is no longer needed because of iTerm and MacVim
 " OS X paste hack
 " y to copy to buffer.  p to paste from pasteboard
-if system('uname') =~ 'Darwin'
-        nmap y :.w !pbcopy<CR><CR>      
-        nmap p :r !pbpaste<CR>:set nopaste<CR> 
-endif
+"if system('uname') =~ 'Darwin'
+"        nmap y :.w !pbcopy<CR><CR>      
+"        nmap p :r !pbpaste<CR>:set nopaste<CR> 
+"endif
 
 " set clipboard=unnamed
 
@@ -135,12 +137,15 @@ autocmd BufRead,BufNewFile *.cf set ft=cf3
 " Unset the last search pattern by hitting return
 nnoremap <CR>   :noh<CR><CR>
 
-" pathogen
-" call pathogen#infect()
-
 " End of Line niceness
 "set list
 "set listchars=tab:▸\,eol:¬
 
 " Undo path
 nnoremap <F5> :GundoToggle<CR>
+
+" NERDtree options
+map <C-n> :NERDTreeToggle<CR>
+
+" Close Vim if the only window left is the NERDtree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif

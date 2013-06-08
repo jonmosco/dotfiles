@@ -38,6 +38,7 @@ Vim Plugins:
 - Solarized Theme: https://github.com/altercation/solarized
 - Syntastic: https://github.com/scrooloose/syntastic
 - Tabular: https://github.com/godlygeek/tabular
+- vim-puppet: Puppet Syntax highlighting
 
 All other dependencies are fulfilled by dotlink4.sh
 
