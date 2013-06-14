@@ -149,3 +149,9 @@ map <C-n> :NERDTreeToggle<CR>
 
 " Close Vim if the only window left is the NERDtree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" Teach Vim to syntax highlight Vagrantfiles properly.
+augroup vagrant
+au!
+	au BufRead,BufNewFile Vagrantfile set filetype=ruby
+augroup END
