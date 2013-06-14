@@ -1,4 +1,5 @@
 [user]
+	name = Jon Mosco
 	email = jonny.mosco@gmail.com
 [credential]
 	helper = osxkeychain

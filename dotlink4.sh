@@ -25,6 +25,7 @@
 DOTFILES="bashrc
 bash_profile
 inputrc
+gitconfig
 git-prompt.sh
 git-completion.bash
 screenrc
