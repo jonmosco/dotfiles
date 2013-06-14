@@ -1,0 +1,6 @@
+[user]
+	email = jonny.mosco@gmail.com
+[credential]
+	helper = osxkeychain
+[color]
+	ui = true
