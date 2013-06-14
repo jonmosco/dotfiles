@@ -43,6 +43,7 @@ alias h='history'
 alias ..='cd ..'
 alias grep='grep --color'
 alias rm='rm -i'
+alias gp='git push'
 
 # Set OS specific settings
 OSTYPE=$( uname )
