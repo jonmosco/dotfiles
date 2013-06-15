@@ -13,7 +13,7 @@ Motivation:
 -------------------------------------------------------------------------------
 
 I found myself having to administer several Unix servers and had one-offs for 
-configuration on almost all but one.  I decided to version my dotfiles and 
+configuration on almost all of them.  I decided to version my dotfiles and 
 put them into subversion to be able to have consistency across all the servers
 I log into.  Now, having to administer several remote sites I needed to have a 
 remotely accessible repository, hence this github repo!  
@@ -28,17 +28,18 @@ Linux:
 - Bash
 - XTerm
 - Mutt (Provided you will want to use mutt as your MUA)
+- Git
 
 Mac OSX: 
 - iTerm2
-- Homebrew
+- Homebrew (for updated programs)
 
 Vim Plugins:
 - NERDtree: https://github.com/scrooloose/nerdtree
 - Solarized Theme: https://github.com/altercation/solarized
 - Syntastic: https://github.com/scrooloose/syntastic
 - Tabular: https://github.com/godlygeek/tabular
-- vim-puppet: Puppet Syntax highlighting
+- vim-puppet: https://github.com/rodjek/vim-puppet
 
 All dependencies are fulfilled by dotlink4.sh
 
