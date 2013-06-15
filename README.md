@@ -40,7 +40,7 @@ Vim Plugins:
 - Tabular: https://github.com/godlygeek/tabular
 - vim-puppet: Puppet Syntax highlighting
 
-All other dependencies are fulfilled by dotlink4.sh
+All dependencies are fulfilled by dotlink4.sh
 
 Installation:
 -------------------------------------------------------------------------------
