@@ -44,6 +44,7 @@ alias ..='cd ..'
 alias grep='grep --color'
 alias rm='rm -i'
 alias gp='git push'
+alias vd='vagrant destroy --force'
 
 # Set OS specific settings
 OSTYPE=$( uname )
