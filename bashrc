@@ -28,7 +28,7 @@ shopt -s login_shell
 export LANG=en_US.UTF-8
 export EDITOR=vim
 export HISTCONTROL=ignoreboth
-export HISTFILESIZE=4096
+export HISTFILESIZE=8192
 export HISTTIMEFORMAT="%D %I:%M "
 export PAGER=less
 export LESS='-R -i -g'
