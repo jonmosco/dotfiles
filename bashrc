@@ -7,6 +7,8 @@
 #
 # TODO:
 # - Needs testing
+#   - BSD and Solaris
+# - Better way to notice what host we are on, perhaps a different color?
 #
 ###############################################################################
 
