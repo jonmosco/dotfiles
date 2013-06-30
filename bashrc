@@ -6,8 +6,8 @@
 # statements
 #
 # TODO:
-# - Needs testing
-#   - BSD and Solaris
+# - Needs testing on the following platforms:
+#   * BSD and Solaris
 # - Better way to notice what host we are on, perhaps a different color?
 #
 ###############################################################################

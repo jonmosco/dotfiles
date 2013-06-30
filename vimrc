@@ -46,6 +46,8 @@ filetype on
 filetype plugin indent on
 
 " Set the size of the window
+" Not sure if this can detech which monitor we are on
+" - if using desktop, increase font size
 if has("gui_running")
 	set guifont=Monaco:h14		
 	set lines=30
