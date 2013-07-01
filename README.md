@@ -35,11 +35,11 @@ Mac OSX:
 - Homebrew (for updated programs)
 
 Vim Plugins:
-- NERDtree: https://github.com/scrooloose/nerdtree
-- Solarized Theme: https://github.com/altercation/solarized
-- Syntastic: https://github.com/scrooloose/syntastic
-- Tabular: https://github.com/godlygeek/tabular
-- vim-puppet: https://github.com/rodjek/vim-puppet
+- NERDtree: <https://github.com/scrooloose/nerdtree>
+- Solarized <Theme: https://github.com/altercation/solarized>
+- Syntastic: <https://github.com/scrooloose/syntastic>
+- Tabular: <https://github.com/godlygeek/tabular>
+- vim-puppet: <https://github.com/rodjek/vim-puppet>
 
 All dependencies are fulfilled by dotlink4.sh
 
@@ -47,9 +47,13 @@ Installation:
 -------------------------------------------------------------------------------
 
 - Checkout the git repo: $ git clone https://github.com/jonmosco/dotfiles.git .dotfiles
+- NOTE: From the Advanced Bash Scripting guide:
+  Caution: invoking a Bash script by sh scriptname turns off Bash-specific 
+  extensions, and the script may therefore fail to execute. 
 - Run dotlink4.sh to download dependencies and set up links:
 
         $ cd .dotfiles 
+        $ chmod u+rx dotlink4.sh
         $ ./dotlink4.sh -h
         usage: dotlink4.sh -[bmXh]
         -b Base install
