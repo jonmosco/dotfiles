@@ -40,7 +40,7 @@ export MAIL=$HOME/.mail
 # alias definitions
 alias l='ls -lFha'
 alias lt='ls -ltr'
-alias p='ps -ef'
+#alias p='ps -ef'
 alias h='history'
 alias ..='cd ..'
 alias grep='grep --color'
@@ -61,6 +61,8 @@ case $OSTYPE in
 		export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
         	#alias ls='ls --color=always -F'
         	alias la='ls -ltr'
+		alias p='ps aux'
+		alias reggie='mount -t nfs 172.16.2.2:/Uploads ~/mnt'
         	alias ostest='echo Darwin settings applied!'
 
 		# Check if we are using Boxen
@@ -78,6 +80,7 @@ case $OSTYPE in
         	export LS_OPTIONS='--color=auto'
         	export LSCOLORS=GxFxCxDxbxDxDxxbadacad
         	alias ls='ls -F --color'
+		alias p='ps -ef'
         	alias ostest='echo Linux settings applied!'
 	;;
 	*BSD)
