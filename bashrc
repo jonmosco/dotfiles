@@ -9,6 +9,7 @@
 # - Needs testing on the following platforms:
 #   * BSD and Solaris
 # - Better way to notice what host we are on, perhaps a different color?
+# - Add variables for colors used with prompt; makes it way easier to read
 #
 ###############################################################################
 
@@ -101,6 +102,7 @@ case $OSTYPE in
 esac
 
 # Primary prompt with Git prompt
+# See TODO
 if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
 	source ~/.git-prompt.sh && source ~/.git-completion.bash
 	PS1='\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]'
