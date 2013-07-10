@@ -60,7 +60,7 @@ case $OSTYPE in
 		# Solarized colors
 		export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 		# Thank you http://www.johnnypez.com/design-development/unable-to-find-a-java_home-at-on-mac-osx/
-		export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/java
+		export JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
 
         	#alias ls='ls --color=always -F'
         	alias la='ls -ltr'
