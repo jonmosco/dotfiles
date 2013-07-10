@@ -59,6 +59,9 @@ case $OSTYPE in
         	#export LSCOLORS=GxFxCxDxBxDxDxxbadacad
 		# Solarized colors
 		export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+		# Thank you http://www.johnnypez.com/design-development/unable-to-find-a-java_home-at-on-mac-osx/
+		export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/java
+
         	#alias ls='ls --color=always -F'
         	alias la='ls -ltr'
 		alias p='ps aux'
@@ -73,6 +76,11 @@ case $OSTYPE in
 		# Homebrew
 		if [ -f $(brew --prefix)/etc/bash_completion ]; then
 			. $(brew --prefix)/etc/bash_completion
+		fi
+
+		# AWS Credentials
+		if [ -f ~/.aws ]; then
+			source $HOME/.aws
 		fi
 	;;
 	Linux)

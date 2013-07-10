@@ -1,6 +1,8 @@
 [user]
 	name = Jon Mosco
 	email = jonny.mosco@gmail.com
+[github]
+	user = jonmosco
 [credential]
 	helper = osxkeychain
 [color]
