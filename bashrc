@@ -80,8 +80,15 @@ case $OSTYPE in
 		fi
 
 		# AWS Credentials
-		if [ -f ~/.aws ]; then
+		if [ -f $HOME/.aws ]; then
 			source $HOME/.aws
+			# Add the EC2 bin to $PATH
+			export PATH=$PATH:$EC2_HOME/bin
+		fi
+
+		# VMware fusion
+		if [ -d "/Applications/VMware Fusion.app" ]; then
+			export PATH="$PATH:/Applications/VMware Fusion.app/Contents/Library"
 		fi
 	;;
 	Linux)
