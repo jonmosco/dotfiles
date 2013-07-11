@@ -9,7 +9,9 @@
 # - Needs testing on the following platforms:
 #   * BSD and Solaris
 # - Better way to notice what host we are on, perhaps a different color?
-# - Add variables for colors used with prompt; makes it way easier to read
+# - Add variables for colors used with prompt; makes it way easier to read 
+#   [DONE 7/11/13]
+# - Possibly put prompt info into a separate file ?
 #
 ###############################################################################
 
@@ -108,11 +110,22 @@ case $OSTYPE in
 	;;
 esac
 
+###############################################################################
+# Prompt
+# Colors
+BROWN="\[\e[0;33m\]"
+BLUE="\[\e[0;34m\]"
+PURPLE="\[\e[0;35m\]"
+CYAN="\[\e[0;36m\]"
+
 # Primary prompt with Git prompt
 # See TODO
 if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
 	source ~/.git-prompt.sh && source ~/.git-completion.bash
 	PS1='\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]'
+	
+	# First attempt
+	#PS1="$BLUE[\T]\$BROWN[\u@\h $CYAN\w $PURPLE$(__git_ps1) $BROWN]\$ \[\e[0m\]"
 else
 	# Prompt without git
 	PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'
@@ -120,6 +133,8 @@ fi
 
 # Secondary prompt
 PS2='> '
+
+###############################################################################
 
 # color manpages
 # Needs some work
