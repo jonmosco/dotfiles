@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # dotlink4.sh: The fourth version of my profile setup script.
 # Updates: Complete rewrite to be more specific on the function

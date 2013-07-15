@@ -12,6 +12,7 @@
 # - Add variables for colors used with prompt; makes it way easier to read 
 #   [DONE 7/11/13]
 # - Possibly put prompt info into a separate file ?
+#   ~/.bash.d/
 #
 ###############################################################################
 
@@ -46,6 +47,7 @@ alias lt='ls -ltr'
 #alias p='ps -ef'
 alias h='history'
 alias ..='cd ..'
+alias gc='git commit'
 alias grep='grep --color'
 alias rm='rm -i'
 alias gp='git push'
@@ -57,7 +59,7 @@ OSTYPE=$( uname )
 
 case $OSTYPE in 
 	Darwin)
-		export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin
+		export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$PATH
         	export CLICOLOR=1
         	#export LSCOLORS=GxFxCxDxBxDxDxxbadacad
 		# Solarized colors
@@ -125,7 +127,7 @@ if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
 	PS1='\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]'
 	
 	# First attempt
-	#PS1="$BLUE[\T]\$BROWN[\u@\h $CYAN\w $PURPLE$(__git_ps1) $BROWN]\$ \[\e[0m\]"
+	#PS1="$BLUE[\T]$BROWN[\u@\h $CYAN\w $PURPLE$(__git_ps1) $BROWN]\$ \[\e[0m\]"
 else
 	# Prompt without git
 	PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'
@@ -148,3 +150,5 @@ man() {
 	LESS_TERMCAP_us=$(printf "\e[1;32m") \
 	man "$@"
 }
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

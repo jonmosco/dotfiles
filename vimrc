@@ -87,7 +87,7 @@ let perl_include_pod = 1
 "set textwidth=80
 
 " Puppet Mode
-au BufRead,BufNewFile *.pp              set filetype=puppet
+"au BufRead,BufNewFile *.pp              set filetype=puppet
 
 " Python tabs
 autocmd FileType python setl shiftwidth=4 tabstop=4
@@ -101,7 +101,7 @@ set tabstop=8
 set shiftwidth=8
 
 " Tabs for Puppet for following style guide
-autocmd FileType puppet setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+"autocmd FileType puppet setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 autocmd FileType ruby setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 " Allow % to bounce between angles too
