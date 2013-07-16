@@ -40,6 +40,7 @@ Vim Plugins:
 - Syntastic: <https://github.com/scrooloose/syntastic>
 - Tabular: <https://github.com/godlygeek/tabular>
 - vim-puppet: <https://github.com/rodjek/vim-puppet>
+- Powerline: <https://github.com/Lokaltog/powerline>
 
 All dependencies are fulfilled by dotlink4.sh
 

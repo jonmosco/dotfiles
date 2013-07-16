@@ -18,13 +18,15 @@
 " - Fix indenting for Puppet [DONE 2/21/2013]
 " - Better keybindings
 " - Remove old junk!
+" - Use powerline
 
 " Global Settings
+"set encoding=utf-8
 set number
 set showmode
 set nocompatible                " always Vim mode
 set ls=2
-set statusline=%t\ %y\ format:\ %{&ff};\ [%c,%l]
+"set statusline=%t\ %y\ format:\ %{&ff};\ [%c,%l]
 set hlsearch
 set incsearch                   " search as you type
 set ruler                       " show the cursor position
@@ -62,6 +64,7 @@ syntax enable
 "let g:solarized_termcolors=256
 set background=dark
 colorscheme solarized
+let g:Powerline_colorscheme = 'solarized'
 
 " NERDtree
 let g:NERDTreeWinPos = "right"
