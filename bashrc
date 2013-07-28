@@ -32,6 +32,7 @@ shopt -s cdspell
 shopt -s login_shell
 
 export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 export EDITOR=vim
 export HISTCONTROL=ignoreboth
 export HISTFILESIZE=8192
@@ -53,6 +54,7 @@ alias rm='rm -i'
 alias gp='git push'
 alias vd='vagrant destroy --force'
 alias vu='vagrant up'
+alias vf='vagrant up --provider=vmware_fusion'
 
 # Set OS specific settings
 OSTYPE=$( uname )
@@ -91,9 +93,18 @@ case $OSTYPE in
 		fi
 
 		# VMware fusion
-		if [ -d "/Applications/VMware Fusion.app" ]; then
-			export PATH="$PATH:/Applications/VMware Fusion.app/Contents/Library"
-		fi
+		#if [ -d "/Applications/VMware Fusion.app" ]; then
+		#	export PATH="$PATH:/Applications/VMware Fusion.app/Contents/Library"
+		#fi
+
+		vmboot()
+		{
+			# VMware fusion
+			if [ -d "/Applications/VMware Fusion.app" ]; then
+				export PATH="$PATH:/Applications/VMware Fusion.app/Contents/Library"
+				command vmrun "$@" nogui
+			fi
+		}
 	;;
 	Linux)
         	export PATH=/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin
@@ -125,10 +136,10 @@ CYAN="\[\e[0;36m\]"
 # See TODO
 if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
 	source ~/.git-prompt.sh && source ~/.git-completion.bash
-	#PS1='\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w \[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]'
+	PS1='\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]'
 	
 	# First attempt
-	PS1="$BLUE[\T]$BROWN[\u@\h $CYAN\w $PURPLE$(__git_ps1) $BROWN]\$ \[\e[0m\]"
+	#PS1="${BLUE}[\T]${BROWN}[\u@\h ${CYAN}\w ${PURPLE}\$(__git_ps1) ${BROWN}]\$ \[\e[0m\]"
 else
 	# Prompt without git
 	PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'

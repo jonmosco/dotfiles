@@ -21,9 +21,9 @@
 " - Use powerline
 
 " Global Settings
-"set encoding=utf-8
+set encoding=utf-8
 set number
-set showmode
+set noshowmode			" No need since we are using powerline
 set nocompatible                " always Vim mode
 set ls=2
 "set statusline=%t\ %y\ format:\ %{&ff};\ [%c,%l]
@@ -51,9 +51,12 @@ filetype plugin indent on
 " Not sure if this can detech which monitor we are on
 " - if using desktop, increase font size
 if has("gui_running")
-	set guifont=Monaco:h14		
+	let s:uname = system("uname")
+	if s:uname == "Darwin\n"
+	set guifont=Monaco\ For\ Powerline:h14		
 	set lines=30
 	set columns=110
+	endif
 endif
 
 " Pathogen
@@ -64,7 +67,17 @@ syntax enable
 "let g:solarized_termcolors=256
 set background=dark
 colorscheme solarized
-let g:Powerline_colorscheme = 'solarized'
+
+" Powerline settings
+" This will need a writeup since it is a massive pain in the ass
+"set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
+let g:Powerline_colorscheme = 'solarized256'
+"let g:Powerline_theme = 'solarized'
+"let g:powerline_theme_overrides__{solarized}
+let g:Powerline_symbols = 'fancy'
+"let g:Powerline_symbols = 'unicode'
+let g:Powerline_stl_path_style = 'full'
+"let g:powerline_theme_overrides = {"default":{ "solarized" }}
 
 " NERDtree
 let g:NERDTreeWinPos = "right"
@@ -160,3 +173,8 @@ augroup vagrant
 au!
 	au BufRead,BufNewFile Vagrantfile set filetype=ruby
 augroup END
+
+" Custom bindings
+" mostly stollen from the Internets
+map <C-K> :bprev<CR>	" previous buffer
+map <C-J> :bnext<CR>	" next buffer
