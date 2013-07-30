@@ -12,11 +12,7 @@ TODO:
 Motivation:
 -------------------------------------------------------------------------------
 
-I found myself having to administer several Unix servers and had one-offs for 
-configuration on almost all of them.  I decided to version my dotfiles and 
-put them into subversion to be able to have consistency across all the servers
-I log into.  Now, having to administer several remote sites I needed to have a 
-remotely accessible repository, hence this github repo!  
+Consistency.
 
 Dependencies:
 -------------------------------------------------------------------------------
@@ -40,7 +36,9 @@ Vim Plugins:
 - Syntastic: <https://github.com/scrooloose/syntastic>
 - Tabular: <https://github.com/godlygeek/tabular>
 - vim-puppet: <https://github.com/rodjek/vim-puppet>
-- Powerline: <https://github.com/Lokaltog/powerline>
+- Powerline: <https://github.com/Lokaltog/powerline> *
+
+* Powerline will not look fancy unless you install patched fonts
 
 All dependencies are fulfilled by dotlink4.sh
 
@@ -63,5 +61,5 @@ Installation:
         -h print this message
 
 - Pick the correct option based on profile needs
-- Logout and log back in
+- Logout and log back in (or . .bashrc)
 - Enjoy (or criticize) 

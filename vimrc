@@ -111,9 +111,9 @@ autocmd FileType python setl shiftwidth=4 tabstop=4
 " Make Backspaces delete sensibly
 set backspace=indent,eol,start
 
-" Tabs
+" Tabs: Needs some work
 set tabstop=8
-"set expandtab
+set expandtab
 set shiftwidth=8
 
 " Tabs for Puppet for following style guide
@@ -123,12 +123,6 @@ autocmd FileType ruby setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 " Allow % to bounce between angles too
 set matchpairs+=<:>
 
-" Perldoc Plugin
-"autocmd BufNewFile,BufRead *.p? map <F1> :Perldoc<cword><CR>
-"autocmd BufNewFile,BufRead *.p? setf perl
-"autocmd BufNewFile,BufRead *.p? let g:perldoc_program='/usr/bin/perldoc'
-"autocmd BufNewFile,BufRead *.p? source ~/.vim/ftplugin/perl_doc.vim
-
 " This should not be a replacement for a properly configured 
 " TERM type.
 "if $TERM =~ "xterm"
@@ -136,21 +130,6 @@ set matchpairs+=<:>
 "        set t_Sb=m      " bg color escape seq
 "        set t_Sf=m      " fg color escape seq
 "endif
-
-"hi LineNr ctermbg=235           " Color around line numbers
-
-" This is no longer needed because of iTerm and MacVim
-" OS X paste hack
-" y to copy to buffer.  p to paste from pasteboard
-"if system('uname') =~ 'Darwin'
-"        nmap y :.w !pbcopy<CR><CR>      
-"        nmap p :r !pbpaste<CR>:set nopaste<CR> 
-"endif
-
-" set clipboard=unnamed
-
-" CFEngine syntax highlighting
-autocmd BufRead,BufNewFile *.cf set ft=cf3
 
 " Unset the last search pattern by hitting return
 nnoremap <CR>   :noh<CR><CR>
