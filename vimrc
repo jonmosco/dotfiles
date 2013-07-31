@@ -18,7 +18,7 @@
 " - Fix indenting for Puppet [DONE 2/21/2013]
 " - Better keybindings
 " - Remove old junk!
-" - Use powerline
+" - Use powerline [DONE 7/30/13]
 
 " Global Settings
 set encoding=utf-8
@@ -43,6 +43,8 @@ set linebreak
 set hidden
 set autoindent
 set nosi                        " Disable 'smart'-indenting
+set cursorline
+
 filetype on
 "filetype indent on
 filetype plugin indent on
@@ -69,15 +71,12 @@ set background=dark
 colorscheme solarized
 
 " Powerline settings
-" This will need a writeup since it is a massive pain in the ass
-"set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 let g:Powerline_colorscheme = 'solarized256'
 "let g:Powerline_theme = 'solarized'
 "let g:powerline_theme_overrides__{solarized}
 let g:Powerline_symbols = 'fancy'
 "let g:Powerline_symbols = 'unicode'
 let g:Powerline_stl_path_style = 'full'
-"let g:powerline_theme_overrides = {"default":{ "solarized" }}
 
 " NERDtree
 let g:NERDTreeWinPos = "right"
@@ -101,9 +100,6 @@ autocmd BufReadPost *
 let perl_extended_vars = 1
 let perl_include_pod = 1
 "set textwidth=80
-
-" Puppet Mode
-"au BufRead,BufNewFile *.pp              set filetype=puppet
 
 " Python tabs
 autocmd FileType python setl shiftwidth=4 tabstop=4
