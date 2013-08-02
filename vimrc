@@ -1,7 +1,3 @@
-" $Id: vimrc 54 2013-04-07 01:27:49Z jmosco $
-"
-" I have gone over to the dark side.  
-"
 " TODO
 " - fix color scheme [DONE 1/5/12]
 " - create own color scheme
@@ -9,7 +5,7 @@
 " - Better Perl support
 " - SVN [DONE 1/3/12]
 " - comment everything!
-" - move comments to the right 
+" - move comments to the right
 " - screen color support [DONE 1/30/12]
 " - copy/paste for Mac OS X [DONE 1/7/12]
 "   MacVim handles this perfectly
@@ -19,11 +15,11 @@
 " - Better keybindings
 " - Remove old junk!
 " - Use powerline [DONE 7/30/13]
+" - Use Softabs?
 
 " Global Settings
 set encoding=utf-8
 set number
-set noshowmode			" No need since we are using powerline
 set nocompatible                " always Vim mode
 set ls=2
 "set statusline=%t\ %y\ format:\ %{&ff};\ [%c,%l]
@@ -44,6 +40,8 @@ set hidden
 set autoindent
 set nosi                        " Disable 'smart'-indenting
 set cursorline
+set noshowmode			" No need since we are using powerline
+"set textwidth=80
 
 filetype on
 "filetype indent on
@@ -73,7 +71,6 @@ colorscheme solarized
 " Powerline settings
 let g:Powerline_colorscheme = 'solarized256'
 "let g:Powerline_theme = 'solarized'
-"let g:powerline_theme_overrides__{solarized}
 let g:Powerline_symbols = 'fancy'
 "let g:Powerline_symbols = 'unicode'
 let g:Powerline_stl_path_style = 'full'
@@ -91,7 +88,7 @@ set writebackup
 autocmd BufReadPost *
 \ if ! exists("g:leave_my_cursor_position_alone") |
 \ if line("'\"") > 0 && line ("'\"") <= line("$") |
-\ exe "normal g'\"" | 
+\ exe "normal g'\"" |
 \ endif | endif
 
 " Tips from Damian Conway for formatting
@@ -99,7 +96,6 @@ autocmd BufReadPost *
 " color complex things
 let perl_extended_vars = 1
 let perl_include_pod = 1
-"set textwidth=80
 
 " Python tabs
 autocmd FileType python setl shiftwidth=4 tabstop=4
@@ -108,12 +104,10 @@ autocmd FileType python setl shiftwidth=4 tabstop=4
 set backspace=indent,eol,start
 
 " Tabs: Needs some work
-set tabstop=8
+set softtabstop=4
 set expandtab
-set shiftwidth=8
+"set shiftwidth=8
 
-" Tabs for Puppet for following style guide
-"autocmd FileType puppet setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 autocmd FileType ruby setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 " Allow % to bounce between angles too
@@ -131,8 +125,9 @@ set matchpairs+=<:>
 nnoremap <CR>   :noh<CR><CR>
 
 " End of Line niceness
-"set list
-"set listchars=tab:▸\,eol:¬
+set list
+"set listchars=tab:▸\ ,eol:¬
+set listchars=tab:▸\ ,trail:◇
 
 " Undo path
 nnoremap <F5> :GundoToggle<CR>

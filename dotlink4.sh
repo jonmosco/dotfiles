@@ -10,7 +10,7 @@
 # - Set the PATH based on OS
 #
 # TODO:
-# - if .bashrc and .bash_profile are NOT symbolic links, remove them 
+# - if .bashrc and .bash_profile are NOT symbolic links, remove them
 #   and link to .dotfiles/ bash configuration [DONE 6/11/13]
 # - Add argument (-U) that will cleanup already installed profile, updating
 #   the plugins?
@@ -39,7 +39,7 @@ bash_profile"
 #OSTYPE=`uname`
 OSTYPE=$( uname )
 
-# Usage 
+# Usage
 _usage () {
 	echo "usage: $0 -[bmXh]"
 	echo "-b Base install"
@@ -52,7 +52,7 @@ _usage () {
 # Determine the location of our programs
 _ostype () {
 	case $OSTYPE in
-		Darwin) 
+		Darwin)
 			PATH=/bin:/usr/local/bin:/opt/local/bin:/usr/bin:/usr/X11/bin
 			GIT=`command -v git`
 			WGET=`command -v wget`
@@ -171,13 +171,13 @@ while getopts bmXh opt; do
 	case $opt in
 		b)
 			_base;;
-		m) 
+		m)
 			_base
 			_mutt;;
 		X)
 			_base
 			_xwindows;;
 		h)
-			_usage 
+			_usage
 	esac
 done

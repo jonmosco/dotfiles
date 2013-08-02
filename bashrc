@@ -1,15 +1,15 @@
 ###############################################################################
-# 
+#
 # Total rewrite of bashrc
-# 
-# OS Loop will be handled by a case statement instead of a series of if 
+#
+# OS Loop will be handled by a case statement instead of a series of if
 # statements
 #
 # TODO:
 # - Needs testing on the following platforms:
 #   * BSD and Solaris
 # - Better way to notice what host we are on, perhaps a different color?
-# - Add variables for colors used with prompt; makes it way easier to read 
+# - Add variables for colors used with prompt; makes it way easier to read
 #   [DONE 7/11/13]
 # - Possibly put prompt info into a separate file ?
 #   ~/.bash.d/
@@ -59,7 +59,7 @@ alias vf='vagrant up --provider=vmware_fusion'
 # Set OS specific settings
 OSTYPE=$( uname )
 
-case $OSTYPE in 
+case $OSTYPE in
 	Darwin)
 		export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$PATH
         	export CLICOLOR=1

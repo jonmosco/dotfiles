@@ -13,7 +13,7 @@ XTerm*termName:		 xterm-16color
 XTerm*background:	 #002b36
 XTerm*foreground:        #839496
 
-! Solarized 
+! Solarized
 !XTerm*background:	 #1c1c1c
 !XTerm*background:	 #002b36
 !XTerm*foreground:	 #839496
