@@ -15,7 +15,7 @@
 " - Better keybindings
 " - Remove old junk!
 " - Use powerline [DONE 7/30/13]
-" - Use Softabs?
+" - Use Softabs [DONE 8/2/13]
 
 " Global Settings
 set encoding=utf-8
@@ -31,7 +31,7 @@ set noerrorbells                " Please be quiet
 set sc                          " show current command
 set directory=~/.backups/       " swap file location
 set redraw optimize             " Keep the screen tidy
-set history=10000               " history lines
+set history=15000               " history lines
 set title                       " Inherit the term title from Vim
 set titleold=""                 " No "Thanks for Flying Vim" message
 set clipboard=unnamed
@@ -40,23 +40,23 @@ set hidden
 set autoindent
 set nosi                        " Disable 'smart'-indenting
 set cursorline
-set noshowmode			" No need since we are using powerline
+set noshowmode                " No need since we are using powerline
 "set textwidth=80
 
 filetype on
-"filetype indent on
 filetype plugin indent on
 
 " Set the size of the window
 " Not sure if this can detech which monitor we are on
 " - if using desktop, increase font size
 if has("gui_running")
-	let s:uname = system("uname")
-	if s:uname == "Darwin\n"
-	set guifont=Monaco\ For\ Powerline:h14		
-	set lines=30
-	set columns=110
-	endif
+  let s:uname = system("uname")
+  if s:uname == "Darwin\n"
+  "set guifont=Monaco\ For\ Powerline:h14
+  set guifont=Inconsolata-Dz\ For\ Powerline:h16
+  set lines=30
+  set columns=110
+  endif
 endif
 
 " Pathogen
@@ -69,14 +69,18 @@ set background=dark
 colorscheme solarized
 
 " Powerline settings
-let g:Powerline_colorscheme = 'solarized256'
-"let g:Powerline_theme = 'solarized'
-let g:Powerline_symbols = 'fancy'
-"let g:Powerline_symbols = 'unicode'
-let g:Powerline_stl_path_style = 'full'
+"let g:Powerline_symbols = 'fancy'
+"let g:Powerline_stl_path_style = 'full'
+let g:airline_enable_branch=1
+let g:airline_enable_syntastic=1
+let g:airline_theme='solarized'
+let g:airline_powerline_fonts=1
 
 " NERDtree
+autocmd vimenter * NERDTree
+autocmd VimEnter * wincmd p
 let g:NERDTreeWinPos = "right"
+map <C-n> :NERDTreeToggle<CR>
 
 " Create backups.  This was learned the hard way.
 set backup
@@ -104,47 +108,38 @@ autocmd FileType python setl shiftwidth=4 tabstop=4
 set backspace=indent,eol,start
 
 " Tabs: Needs some work
-set softtabstop=4
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 set expandtab
-"set shiftwidth=8
 
+" Ruby
 autocmd FileType ruby setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 " Allow % to bounce between angles too
 set matchpairs+=<:>
-
-" This should not be a replacement for a properly configured 
-" TERM type.
-"if $TERM =~ "xterm"
-"        set t_Co=256    " Enable colors (256 for my color scheme)
-"        set t_Sb=m      " bg color escape seq
-"        set t_Sf=m      " fg color escape seq
-"endif
 
 " Unset the last search pattern by hitting return
 nnoremap <CR>   :noh<CR><CR>
 
 " End of Line niceness
 set list
-"set listchars=tab:▸\ ,eol:¬
-set listchars=tab:▸\ ,trail:◇
+set listchars=tab:▸\ ,trail:☠
 
 " Undo path
 nnoremap <F5> :GundoToggle<CR>
 
-" NERDtree options
-map <C-n> :NERDTreeToggle<CR>
-
 " Close Vim if the only window left is the NERDtree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
-" Teach Vim to syntax highlight Vagrantfiles properly.
-augroup vagrant
-au!
-	au BufRead,BufNewFile Vagrantfile set filetype=ruby
-augroup END
+" Turn off the annoying auto comment feature
+autocmd FileType * setlocal formatoptions-=ro
+
+" Teach Vim to syntax highlight Vagrantfiles and Gemfiles properly.
+autocmd BufNewFile,BufRead Vagrantfile set filetype=ruby
+autocmd BufNewFile,BufRead Gemfile set filetype=ruby
 
 " Custom bindings
 " mostly stollen from the Internets
-map <C-K> :bprev<CR>	" previous buffer
-map <C-J> :bnext<CR>	" next buffer
+map <C-K> :bprev<CR>  " previous buffer
+map <C-J> :bnext<CR>  " next buffer

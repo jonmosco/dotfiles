@@ -49,118 +49,137 @@ alias lt='ls -ltr'
 alias h='history'
 alias ..='cd ..'
 alias gc='git commit'
+alias gs='git status'
 alias grep='grep --color'
 alias rm='rm -i'
 alias gp='git push'
 alias vd='vagrant destroy --force'
 alias vu='vagrant up'
 alias vf='vagrant up --provider=vmware_fusion'
+alias mod='mkdir -p {manifests,templates,files,lib}'
 
 # Set OS specific settings
 OSTYPE=$( uname )
 
 case $OSTYPE in
-	Darwin)
-		export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$PATH
-        	export CLICOLOR=1
-        	#export LSCOLORS=GxFxCxDxBxDxDxxbadacad
-		# Solarized colors
-		export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
-		# Thank you http://www.johnnypez.com/design-development/unable-to-find-a-java_home-at-on-mac-osx/
-		export JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+  Darwin)
+    export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$PATH
+    export CLICOLOR=1
+    #export LSCOLORS=GxFxCxDxBxDxDxxbadacad
+    # Solarized colors
+    export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+    # Thank you http://www.johnnypez.com/design-development/unable-to-find-a-java_home-at-on-mac-osx/
+    export JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
 
-        	#alias ls='ls --color=always -F'
-        	alias la='ls -ltr'
-		alias p='ps aux'
-		alias reggie='mount -t nfs 172.16.2.2:/Uploads ~/mnt'
-        	alias ostest='echo Darwin settings applied!'
+    #alias ls='ls --color=always -F'
+    alias la='ls -ltr'
+    alias p='ps aux'
+    alias reggie='mount -t nfs 172.16.2.2:/Uploads ~/mnt'
+    alias ostest='echo Darwin settings applied!'
 
-		# Check if we are using Boxen
-		if [ -d /opt/boxen ]; then
-			source /opt/boxen/env.sh
-		fi
+    # Check if we are using Boxen
+    if [ -d /opt/boxen ]; then
+      source /opt/boxen/env.sh
+    fi
 
-		# Homebrew
-		if [ -f $(brew --prefix)/etc/bash_completion ]; then
-			. $(brew --prefix)/etc/bash_completion
-		fi
+    # Homebrew
+    if [ -f $(brew --prefix)/etc/bash_completion ]; then
+      . $(brew --prefix)/etc/bash_completion
+    fi
 
-		# AWS Credentials
-		if [ -f $HOME/.aws ]; then
-			source $HOME/.aws
-			# Add the EC2 bin to $PATH
-			export PATH=$PATH:$EC2_HOME/bin
-		fi
+    # AWS Credentials
+    if [ -f $HOME/.aws ]; then
+      source $HOME/.aws
+      # Add the EC2 bin to $PATH
+      export PATH=$PATH:$EC2_HOME/bin
+    fi
 
-		# VMware fusion
-		#if [ -d "/Applications/VMware Fusion.app" ]; then
-		#	export PATH="$PATH:/Applications/VMware Fusion.app/Contents/Library"
-		#fi
+    # VMware fusion
+    #if [ -d "/Applications/VMware Fusion.app" ]; then
+    # export PATH="$PATH:/Applications/VMware Fusion.app/Contents/Library"
+    #fi
 
-		vmboot()
-		{
-			# VMware fusion
-			if [ -d "/Applications/VMware Fusion.app" ]; then
-				export PATH="$PATH:/Applications/VMware Fusion.app/Contents/Library"
-				command vmrun "$@" nogui
-			fi
-		}
-	;;
-	Linux)
-        	export PATH=/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin
-        	export LS_OPTIONS='--color=auto'
-        	export LSCOLORS=GxFxCxDxbxDxDxxbadacad
-        	alias ls='ls -F --color'
-		alias p='ps -ef'
-        	alias ostest='echo Linux settings applied!'
-	;;
-	*BSD)
-		if [ -e /usr/local/bin/colors ]; then
-        		export LSCOLORS=GxFxCxDxBxDxDxxbadacad
-        		alias ls='colorls -FG'
-        		alias ostest='echo BSD settings applied!'
-		fi
-	;;
+    vmboot()
+    {
+      # VMware fusion
+      if [ -d "/Applications/VMware Fusion.app" ]; then
+        export PATH="$PATH:/Applications/VMware Fusion.app/Contents/Library"
+        command vmrun "$@" nogui
+      fi
+    }
+    ;;
+  Linux)
+    export PATH=/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin
+    export LS_OPTIONS='--color=auto'
+    export LSCOLORS=GxFxCxDxbxDxDxxbadacad
+    alias ls='ls -F --color'
+    alias p='ps -ef'
+    alias ostest='echo Linux settings applied!'
+    ;;
+  *BSD)
+    if [ -e /usr/local/bin/colors ]; then
+      export LSCOLORS=GxFxCxDxBxDxDxxbadacad
+      alias ls='colorls -FG'
+      alias ostest='echo BSD settings applied!'
+    fi
+    ;;
 esac
 
 ###############################################################################
 # Prompt
+# Change the color of our prompt if $? is not equal to 0
+# Im not going to lie, I love this function
 
-# Colors
-BROWN="\[\e[0;33m\]"
-BLUE="\[\e[0;34m\]"
-PURPLE="\[\e[0;35m\]"
-CYAN="\[\e[0;36m\]"
+function _exitstatus {
 
-# Primary prompt with Git prompt
-# See TODO
-if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
-	source ~/.git-prompt.sh && source ~/.git-completion.bash
-	PS1='\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]'
-	
-	# First attempt
-	#PS1="${BLUE}[\T]${BROWN}[\u@\h ${CYAN}\w ${PURPLE}\$(__git_ps1) ${BROWN}]\$ \[\e[0m\]"
-else
-	# Prompt without git
-	PS1='\[\e[1;33m\][\T]\[\e[32m\][\u@\h \[\e[1;36m\]\w \[\e[1;33m\]]\$ \[\e[0m\]'
-fi
+    EXITSTATUS="$?"
 
-# Secondary prompt
-PS2='> '
+    BROWN="\[\e[0;33m\]"
+    BLUE="\[\e[0;34m\]"
+    PURPLE="\[\e[0;35m\]"
+    CYAN="\[\e[0;36m\]"
+    RED="\033[0;31m"
+    GREEN="\[\e[0;32m\]"
+    GREY="\e[0;38m\]"
+
+    #GITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
+    GITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\e[1;35m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
+    NOGITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w\[\e[0;33m\]]\$ \[\e[0m\]"
+    ERRORPROMPT="\[\e[37;41m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\e[1;35m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
+
+    if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
+      source ~/.git-prompt.sh && source ~/.git-completion.bash
+      PROMPT="${GITPROMPT}"
+    else
+      # Prompt without git
+      PROMPT="${NOGITPROMPT}"
+    fi
+
+    if [ "${EXITSTATUS}" -ne 0 ]; then
+      PS1="${ERRORPROMPT}"
+    else
+      PS1="${PROMPT}"
+    fi
+
+    # Secondary prompt
+    PS2='> '
+}
+
+PROMPT_COMMAND=_exitstatus
 
 ###############################################################################
 
 # color manpages
 # Needs some work
 man() {
-    env LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-	LESS_TERMCAP_md=$(printf "\e[1;31m") \
-	LESS_TERMCAP_me=$(printf "\e[0m") \
-	LESS_TERMCAP_se=$(printf "\e[0m") \
-	LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-	LESS_TERMCAP_ue=$(printf "\e[0m") \
-	LESS_TERMCAP_us=$(printf "\e[1;32m") \
-	man "$@"
+  env LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+    LESS_TERMCAP_md=$(printf "\e[1;31m") \
+    LESS_TERMCAP_me=$(printf "\e[0m") \
+    LESS_TERMCAP_se=$(printf "\e[0m") \
+    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+    LESS_TERMCAP_ue=$(printf "\e[0m") \
+    LESS_TERMCAP_us=$(printf "\e[1;32m") \
+    man "$@"
 }
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
