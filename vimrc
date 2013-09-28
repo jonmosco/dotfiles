@@ -141,5 +141,17 @@ autocmd BufNewFile,BufRead Gemfile set filetype=ruby
 
 " Custom bindings
 " mostly stollen from the Internets
-map <C-K> :bprev<CR>  " previous buffer
-map <C-J> :bnext<CR>  " next buffer
+"map <C-K> :bprev<CR>  " previous buffer
+"map <C-J> :bnext<CR>  " next buffer
+
+" tabline colors
+hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
+hi TabLineFill  ctermfg=Black  ctermbg=Blue     cterm=NONE
+hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
+
+" Switch Tabs
+map <C-K> gt
+map <C-J> gT
+
+" Tabs
+"map <D-M-left> gt

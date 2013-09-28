@@ -16,8 +16,6 @@
 #
 ###############################################################################
 
-# Add functions for common tasks
-
 # General settings
 set -o noclobber
 set -o ignoreeof
@@ -35,7 +33,8 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export EDITOR=vim
 export HISTCONTROL=ignoreboth
-export HISTFILESIZE=8192
+export HISTFILESIZE=15000
+export HISTSIZE=15000
 export HISTTIMEFORMAT="%D %I:%M "
 export PAGER=less
 export LESS='-R -i -g'
@@ -129,8 +128,10 @@ esac
 # Prompt
 # Change the color of our prompt if $? is not equal to 0
 # Im not going to lie, I love this function
+###############################################################################
 
-function _exitstatus {
+_exitstatus ()
+{
 
     EXITSTATUS="$?"
 
@@ -142,10 +143,9 @@ function _exitstatus {
     GREEN="\[\e[0;32m\]"
     GREY="\e[0;38m\]"
 
-    #GITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
-    GITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\e[1;35m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
+    GITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
     NOGITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w\[\e[0;33m\]]\$ \[\e[0m\]"
-    ERRORPROMPT="\[\e[37;41m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\e[1;35m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
+    ERRORPROMPT="\[\e[37;41m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
 
     if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
       source ~/.git-prompt.sh && source ~/.git-completion.bash
@@ -167,6 +167,8 @@ function _exitstatus {
 
 PROMPT_COMMAND=_exitstatus
 
+##############################################################################
+# End Prompt
 ###############################################################################
 
 # color manpages

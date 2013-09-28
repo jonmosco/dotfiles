@@ -29,6 +29,7 @@ gitconfig
 git-prompt.sh
 git-completion.bash
 screenrc
+tmux.conf
 vimrc"
 
 # Possible skeleton files
