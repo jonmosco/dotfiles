@@ -1,0 +1,4 @@
+set from      = "admin@forkedprocess.com"
+set sendmail  = "/usr/bin/msmtp -a forkedprocess"
+set mbox      = "+forkedprocess/archive"
+set postponed = "+forkedprocess/drafts"

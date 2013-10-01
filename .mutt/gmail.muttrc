@@ -1,0 +1,4 @@
+set from      = "jonny.mosco@gmail.com"
+set sendmail  = "/usr/bin/msmtp -a gmail"
+set mbox      = "+gmail/archive"
+set postponed = "+gmail/drafts"
