@@ -77,10 +77,10 @@ let g:airline_theme='solarized'
 let g:airline_powerline_fonts=1
 
 " NERDtree
-autocmd vimenter * NERDTree
-autocmd VimEnter * wincmd p
-let g:NERDTreeWinPos = "right"
-map <C-n> :NERDTreeToggle<CR>
+"autocmd vimenter * NERDTree
+"autocmd VimEnter * wincmd p
+"let g:NERDTreeWinPos = "right"
+"map <C-n> :NERDTreeToggle<CR>
 
 " Create backups.  This was learned the hard way.
 set backup
