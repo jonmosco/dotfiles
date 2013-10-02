@@ -1,6 +1,6 @@
 # Colors and other personal configurations
 source ~/.mutt/colors/solarized16.muttrc
-source ~/.mutt/personal/forkedprocess.muttrc
+#source ~/.mutt/personal/forkedprocess.muttrc
 
 # Locations
 set folder           = ~/.mail
@@ -64,16 +64,25 @@ unset markers              # no ugly plus signs
 set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
 alternative_order text/plain text/enriched text/html
 
+set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
+alternative_order text/plain text/enriched text/html
+
 # Accounts
 # This is the default account that opens when we start mutt
-set spoolfile = "+forkedprocess/INBOX"
+set spoolfile = "+gmail/INBOX"
 
-mailboxes +---ForkedProcess--- \
+mailboxes +---Gmail--- \
+          +gmail/INBOX \
+          +gmail/Accounts \
+          +gmail/Bills \
+          +gmail/Misc \
+          +gmail/Forkedprocess \
+          +gmail/Puppet \
+          +gmail/Orders \
+          +---ForkedProcess--- \
           +forkedprocess/INBOX \
-          +forkedprocess/logwatch \
-          +---Gmail--- \
 
-source ~/.mutt/forkedprocess.muttrc
+source ~/.mutt/gmail.muttrc
 
 folder-hook forkedprocess/* source ~/.mutt/forkedprocess.muttrc
 folder-hook gmail/*   source ~/.mutt/gmail.muttrc
@@ -81,3 +90,23 @@ folder-hook gmail/*   source ~/.mutt/gmail.muttrc
 
 # Open URLs
 macro pager \Cu "|urlview<enter>" "call urlview to open links"
+
+# Keybindings
+bind index <tab>    sync-mailbox
+#bind index,pager \ck sidebar-prev
+#bind index,pager \cj sidebar-next
+#bind index \Ce sidebar-open
+bind index \CP sidebar-prev
+bind index \CN sidebar-next
+bind index \Ce sidebar-open
+bind pager \CP sidebar-prev
+bind pager \CN sidebar-next
+bind pager \Ce sidebar-open
+bind pager k  previous-line
+bind pager j  next-line
+bind pager gg top
+bind pager G  bottom
+macro index O "<shell-escape>offlineimap<enter>"           "run offlineimap to sync all mail"
+macro index o "<shell-escape>offlineimap -qf INBOX<enter>" "run offlineimap to sync inbox"
+macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"
+macro index M "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"

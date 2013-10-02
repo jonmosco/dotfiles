@@ -1,3 +1,5 @@
+.mutt/cache
 .mutt/personal/
 .mutt/sig
-.mutt/cache
+.mutt/temp
+.mutt/offlineimap.pyc
