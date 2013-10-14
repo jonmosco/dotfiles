@@ -3,3 +3,4 @@ set sendmail  = "/usr/local/bin/msmtp -a forkedprocess"
 set mbox      = "+forkedprocess/sent"
 unset record
 set postponed = "+forkedprocess/Drafts"
+set signature = ~/.mutt/sig_fp

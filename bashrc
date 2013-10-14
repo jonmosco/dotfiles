@@ -143,12 +143,17 @@ _exitstatus ()
     GREEN="\[\e[0;32m\]"
     GREY="\e[0;38m\]"
 
-    GITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
+    GITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " (%s)") \[\e[0;33m\]]\$ \[\e[0m\]"
     NOGITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w\[\e[0;33m\]]\$ \[\e[0m\]"
     ERRORPROMPT="\[\e[37;41m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
 
     if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
       source ~/.git-prompt.sh && source ~/.git-completion.bash
+      #GIT_PS1_SHOWUNTRACKEDFILES=true
+      GIT_PS1_SHOWDIRTYSTATE=true
+      GIT_PS1_SHOWCOLORHINTS=true
+      GIT_PS1_DESCRIBE_STYLE=default
+      #GIT_PS1_SHOWUPSTREAM=verbose
       PROMPT="${GITPROMPT}"
     else
       # Prompt without git

@@ -75,6 +75,7 @@ let g:airline_enable_branch=1
 let g:airline_enable_syntastic=1
 let g:airline_theme='solarized'
 let g:airline_powerline_fonts=1
+set fillchars+=stl:\ ,stlnc:\
 
 " NERDtree
 "autocmd vimenter * NERDTree
@@ -145,9 +146,9 @@ autocmd BufNewFile,BufRead Gemfile set filetype=ruby
 "map <C-J> :bnext<CR>  " next buffer
 
 " tabline colors
-hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
-hi TabLineFill  ctermfg=Black  ctermbg=Blue     cterm=NONE
-hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
+"hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
+"hi TabLineFill  ctermfg=Black  ctermbg=Blue     cterm=NONE
+"hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
 
 " Switch Tabs
 map <C-K> gt
@@ -155,3 +156,21 @@ map <C-J> gT
 
 " Tabs
 "map <D-M-left> gt
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+"let g:airline#extensions#tabline#buffer_min_count = 1
+let g:airline#extensions#tabline#tab_min_count = 2
+let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
+let g:airline#extensions#tabline#show_buffers = 0
+
+let g:tagbar_type_puppet = {
+    \ 'ctagstype': 'puppet',
+    \ 'kinds': [
+        \'c:class',
+        \'s:site',
+        \'n:node',
+        \'d:definition'
+      \]
+    \}
