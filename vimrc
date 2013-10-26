@@ -40,8 +40,8 @@ set hidden
 set autoindent
 set nosi                        " Disable 'smart'-indenting
 set cursorline
-set noshowmode                " No need since we are using powerline
-"set textwidth=80
+set noshowmode                  " No need since we are using powerline
+set tw=80
 
 filetype on
 filetype plugin indent on
@@ -68,14 +68,22 @@ syntax enable
 set background=dark
 colorscheme solarized
 
-" Powerline settings
-"let g:Powerline_symbols = 'fancy'
-"let g:Powerline_stl_path_style = 'full'
 let g:airline_enable_branch=1
 let g:airline_enable_syntastic=1
 let g:airline_theme='solarized'
 let g:airline_powerline_fonts=1
 set fillchars+=stl:\ ,stlnc:\
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#tab_nr_show = 0
+"let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#buffer_nr_format = '%s: '
+let g:airline#extensions#tabline#buffer_min_count = 2
+let g:airline#extensions#tabline#tab_min_count = 2
+
+let g:airline#extensions#tabline#tab_nr_type = 0 " tab number
+"let g:airline#extensions#tabline#show_buffers = 0
 
 " NERDtree
 "autocmd vimenter * NERDTree
@@ -131,7 +139,7 @@ set listchars=tab:▸\ ,trail:☠
 nnoremap <F5> :GundoToggle<CR>
 
 " Close Vim if the only window left is the NERDtree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " Turn off the annoying auto comment feature
 autocmd FileType * setlocal formatoptions-=ro
@@ -141,6 +149,7 @@ autocmd BufNewFile,BufRead Vagrantfile set filetype=ruby
 autocmd BufNewFile,BufRead Gemfile set filetype=ruby
 
 " Custom bindings
+
 " mostly stollen from the Internets
 "map <C-K> :bprev<CR>  " previous buffer
 "map <C-J> :bnext<CR>  " next buffer
@@ -157,20 +166,5 @@ map <C-J> gT
 " Tabs
 "map <D-M-left> gt
 
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-"let g:airline#extensions#tabline#buffer_min_count = 1
-let g:airline#extensions#tabline#tab_min_count = 2
-let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
-let g:airline#extensions#tabline#show_buffers = 0
-
-let g:tagbar_type_puppet = {
-    \ 'ctagstype': 'puppet',
-    \ 'kinds': [
-        \'c:class',
-        \'s:site',
-        \'n:node',
-        \'d:definition'
-      \]
-    \}
+" Easy Expansion of the Active File Directory
+cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'

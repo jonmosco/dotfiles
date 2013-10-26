@@ -15,6 +15,7 @@ set tmpdir           = ~/.mutt/temp          # where to keep temp files
 set sidebar_visible = yes
 set sidebar_delim   = '  │'
 set sidebar_width   = 32
+color sidebar_new yellow default
 
 # Status Bar
 set status_chars  = " *%A"
@@ -40,6 +41,7 @@ set beep_new             # bell on new mails
 set pipe_decode          # strip headers and eval mimes when piping
 set thorough_search      # strip headers and eval mimes before searching
 set menu_scroll
+auto_view text/html
 
 # Compose options
 set realname = "Jon Mosco"
@@ -82,7 +84,9 @@ mailboxes +---Gmail--- \
           +gmail/PhillyDevOps \
           +gmail/Puppet \
           +gmail/Orders \
+          +gmail/archive \
           +gmail/Sent \
+          +gmail/Drafts \
           +---ForkedProcess--- \
           +forkedprocess/INBOX \
           +forkedprocess/Logwatch \
@@ -103,7 +107,6 @@ source ~/.mutt/gmail.muttrc
 folder-hook forkedprocess/* source ~/.mutt/forkedprocess.muttrc
 folder-hook gmail/*   source ~/.mutt/gmail.muttrc
 
-
 # Open URLs
 macro pager \Cu "|urlview<enter>" "call urlview to open links"
 
@@ -122,6 +125,8 @@ bind pager G  bottom
 bind index R        group-reply
 macro index O "<shell-escape>offlineimap<enter>"           "run offlineimap to sync all mail"
 macro index o "<shell-escape>offlineimap -qf INBOX<enter>" "run offlineimap to sync inbox"
+bind compose p postpone-message
+bind index p recall-message
 
 # Move messages
 macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"

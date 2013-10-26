@@ -14,7 +14,7 @@ status_backend = sqlite
 type = Maildir
 localfolders = ~/.mail/gmail
 nametrans = lambda folder: {'drafts':  '[Gmail]/Drafts',
-                            'Sent':    '[Gmail]/Sent Mail',
+                            'sent':    '[Gmail]/Sent Mail',
                             'flagged': '[Gmail]/Starred',
                             'trash':   '[Gmail]/Trash',
                             'archive': '[Gmail]/All Mail',
@@ -28,7 +28,7 @@ remoteuser = jonny.mosco@gmail.com
 remotepasseval = get_keychain_pass(account="jonny.mosco@gmail.com", server="imap.gmail.com")
 realdelete = no
 nametrans = lambda folder: {'[Gmail]/Drafts':    'drafts',
-                            '[Gmail]/Sent Mail': 'Sent',
+                            '[Gmail]/Sent Mail': 'sent',
                             '[Gmail]/Starred':   'flagged',
                             '[Gmail]/Trash':     'trash',
                             '[Gmail]/All Mail':  'archive',
