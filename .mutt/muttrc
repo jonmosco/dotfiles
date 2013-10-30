@@ -81,7 +81,9 @@ mailboxes +---Gmail--- \
           +gmail/Jobs \
           +gmail/Misc \
           +gmail/Forkedprocess \
+          +gmail/IntoAction \
           +gmail/PhillyDevOps \
+          +gmail/PMI \
           +gmail/Puppet \
           +gmail/Orders \
           +gmail/archive \
