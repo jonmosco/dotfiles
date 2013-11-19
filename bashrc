@@ -28,6 +28,8 @@ shopt -s histappend
 shopt -s checkwinsize
 shopt -s cdspell
 shopt -s login_shell
+shopt -s extglob
+shopt -s globstar
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -40,6 +42,7 @@ export PAGER=less
 export LESS='-R -i -g'
 export GREP_COLORS='1;37;41'
 export MAIL=$HOME/.mail
+export RI="--format ansi --width 70"
 
 # alias definitions
 alias l='ls -lFha'
@@ -81,7 +84,7 @@ case $OSTYPE in
     #  source /opt/boxen/env.sh
     #fi
 
-    # Homebrew
+    # Bash completion via homebrew
     if [ -f $(brew --prefix)/etc/bash_completion ]; then
       . $(brew --prefix)/etc/bash_completion
     fi
@@ -149,7 +152,8 @@ _exitstatus ()
     #GITPROMPT="\[\e[0;34m\][\T] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]: \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " [%s]") \[\e[0;33m\]\$ \[\e[0m\]"
     NOGITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w\[\e[0;33m\]]\$ \[\e[0m\]"
     #ERRORPROMPT="\[\e[37;41m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
-    ERRORPROMPT="\[\e[37;41m\][${EXITSTATUS}][\T]\[\e[0;33m\] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " [%s]") \[\e[0;33m\]\$ \[\e[0m\]"
+    #ERRORPROMPT="\[\e[37;41m\][${EXITSTATUS}][\T]\[\e[0;33m\] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " [%s]") \[\e[0;33m\]\$ \[\e[0m\]"
+    ERRORPROMPT="\[\e[37;41m\][${EXITSTATUS}][\T]\[\e[0;33m\] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " [%s]") \[\e[0;33m\]» \[\e[0m\]"
 
     if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
       source ~/.git-prompt.sh && source ~/.git-completion.bash

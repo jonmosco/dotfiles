@@ -41,7 +41,7 @@ set autoindent
 set nosi                        " Disable 'smart'-indenting
 set cursorline
 set noshowmode                  " No need since we are using powerline
-set tw=80
+"set tw=80
 
 filetype on
 filetype plugin indent on
@@ -91,6 +91,7 @@ let g:airline#extensions#tabline#tab_nr_type = 0 " tab number
 "autocmd VimEnter * wincmd p
 "let g:NERDTreeWinPos = "right"
 "map <C-n> :NERDTreeToggle<CR>
+let NERDTreeMapOpenInTab='\r'
 
 " Create backups.  This was learned the hard way.
 set backup
@@ -118,6 +119,7 @@ autocmd FileType python setl shiftwidth=4 tabstop=4
 set backspace=indent,eol,start
 
 " Tabs: Needs some work
+" soft tabs, or tabs made up of space characters
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
@@ -169,3 +171,7 @@ map <C-J> gT
 
 " Easy Expansion of the Active File Directory
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+
+" Enable profiling
+nnoremap <silent> <leader>DD :exe ":profile start profile.log"<cr>:exe ":profile func *"<cr>:exe ":profile file *"<cr>
+nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>

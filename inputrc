@@ -1,1 +1,4 @@
-Tab: menu-complete
+set mark-directories on
+set mark-symlinked-directories on
+set show-all-if-ambiguous on
+set visible-stats on
