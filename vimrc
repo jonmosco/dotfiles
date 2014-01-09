@@ -19,11 +19,10 @@
 
 " Global Settings
 set encoding=utf-8
-set number
+set number                      " line numbers
 set nocompatible                " always Vim mode
-set ls=2
-"set statusline=%t\ %y\ format:\ %{&ff};\ [%c,%l]
-set hlsearch
+set ls=2                        " show the status line
+set hlsearch                    " search highlighting
 set incsearch                   " search as you type
 set ruler                       " show the cursor position
 set vb t_vb=                    " go away BELLS
@@ -39,9 +38,15 @@ set linebreak
 set hidden
 set autoindent
 set nosi                        " Disable 'smart'-indenting
-set cursorline
+set cursorline                  " Highlight the entire line the cursor is on
 set noshowmode                  " No need since we are using powerline
 "set tw=80
+" Create backups.  This was learned the hard way.
+set backup
+set backupdir=~/.backups/
+set backupext=.bak              "Append .bak to backup files
+set writebackup
+set backspace=indent,eol,start  " Make Backspaces delete sensibly
 
 filetype on
 filetype plugin indent on
@@ -64,9 +69,10 @@ call pathogen#infect()
 
 " Solarized theme
 syntax enable
-"let g:solarized_termcolors=256
 set background=dark
 colorscheme solarized
+"let g:solarized_termcolors=16
+let g:solarized_diffmode="high"
 
 let g:airline_enable_branch=1
 let g:airline_enable_syntastic=1
@@ -82,22 +88,19 @@ let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#buffer_min_count = 2
 let g:airline#extensions#tabline#tab_min_count = 2
 let g:airline#extensions#bufferline#enabled = 1
+let g:airline#extensions#tabline#fnamecollapse = 1
 
 let g:airline#extensions#tabline#tab_nr_type = 0 " tab number
 "let g:airline#extensions#tabline#show_buffers = 0
 
 " NERDtree
-"autocmd vimenter * NERDTree
-"autocmd VimEnter * wincmd p
-"let g:NERDTreeWinPos = "right"
-"map <C-n> :NERDTreeToggle<CR>
+map <C-n> :NERDTreeToggle<CR>
 let NERDTreeMapOpenInTab='\r'
-
-" Create backups.  This was learned the hard way.
-set backup
-set backupdir=~/.backups/
-set backupext=.bak              "Append .bak to backup files
-set writebackup
+let NERDChristmasTree=1
+let NERDTreeShowHidden=1
+let NERDTreeMinimalUI=1
+map <Leader>n :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " Open where we last edited
 autocmd BufReadPost *
@@ -114,9 +117,6 @@ let perl_include_pod = 1
 
 " Python tabs
 autocmd FileType python setl shiftwidth=4 tabstop=4
-
-" Make Backspaces delete sensibly
-set backspace=indent,eol,start
 
 " Tabs: Needs some work
 " soft tabs, or tabs made up of space characters
@@ -141,9 +141,6 @@ set listchars=tab:▸\ ,trail:☠
 " Undo path
 nnoremap <F5> :GundoToggle<CR>
 
-" Close Vim if the only window left is the NERDtree
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-
 " Turn off the annoying auto comment feature
 autocmd FileType * setlocal formatoptions-=ro
 
@@ -151,27 +148,30 @@ autocmd FileType * setlocal formatoptions-=ro
 autocmd BufNewFile,BufRead Vagrantfile set filetype=ruby
 autocmd BufNewFile,BufRead Gemfile set filetype=ruby
 
-" Custom bindings
-
-" mostly stollen from the Internets
-"map <C-K> :bprev<CR>  " previous buffer
-"map <C-J> :bnext<CR>  " next buffer
-
 " tabline colors
 "hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
 "hi TabLineFill  ctermfg=Black  ctermbg=Blue     cterm=NONE
 "hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
 
+" Easy switching for buffers since I use them the most
 " Switch Tabs
-map <C-K> gt
-map <C-J> gT
-
-" Tabs
-"map <D-M-left> gt
+"map <C-K> gt
+"map <C-J> gT
+map <C-J> :bprev<CR>  " previous buffer
+map <C-K> :bnext<CR>  " next buffer
 
 " Easy Expansion of the Active File Directory
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 " Enable profiling
-nnoremap <silent> <leader>DD :exe ":profile start profile.log"<cr>:exe ":profile func *"<cr>:exe ":profile file *"<cr>
-nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
+"nnoremap <silent> <leader>DD :exe ":profile start profile.log"<cr>:exe ":profile func *"<cr>:exe ":profile file *"<cr>
+"nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
+
+" change cursor to flat bar like gvim
+let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+
+" mute highlighting
+nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>

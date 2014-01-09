@@ -19,6 +19,7 @@
 # General settings
 set -o noclobber
 set -o ignoreeof
+#set -o vi
 
 # options that control the shell behavior
 # don't overwrite the history file, add to it.
@@ -59,6 +60,7 @@ alias vd='vagrant destroy --force'
 alias vu='vagrant up'
 alias vf='vagrant up --provider=vmware_fusion'
 alias mod='mkdir -p {manifests,templates,files,lib}'
+alias tree='tree -C'
 
 # Set OS specific settings
 OSTYPE=$( uname )
@@ -71,18 +73,14 @@ case $OSTYPE in
     # Solarized colors
     export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
     # Thank you http://www.johnnypez.com/design-development/unable-to-find-a-java_home-at-on-mac-osx/
-    export JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+    #export JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+    export JAVA_HOME=$(/usr/libexec/java_home)
 
     #alias ls='ls --color=always -F'
     alias la='ls -ltr'
     alias p='ps aux'
     alias reggie='mount -t nfs 172.16.2.2:/Uploads ~/mnt'
     alias ostest='echo Darwin settings applied!'
-
-    # Check if we are using Boxen
-    #if [ -d /opt/boxen ]; then
-    #  source /opt/boxen/env.sh
-    #fi
 
     # Bash completion via homebrew
     if [ -f $(brew --prefix)/etc/bash_completion ]; then
@@ -109,6 +107,25 @@ case $OSTYPE in
         command vmrun "$@" nogui
       fi
     }
+
+    # Puppet Environment
+    export ENVPUPPET_BASEDIR=~/REPOS/
+    alias puppet='~/REPOS/puppet/ext/envpuppet puppet'
+    alias facter='~/REPOS/puppet/ext/envpuppet facter'
+
+    # Test the syntax of ERB templates
+    erbtest() {
+      erb -x -T '-' $1 | ruby -c
+    }
+
+    # update vagrant plugins
+    vp()
+    {
+      if [ "$(command -v vagrant)" ]; then
+        for i in `vagrant plugin list | awk {'print $1'}`; do vagrant plugin update $i; done
+      fi
+    }
+
     ;;
   Linux)
     export PATH=/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin

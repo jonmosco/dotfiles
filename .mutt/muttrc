@@ -74,6 +74,7 @@ set spoolfile = "+gmail/INBOX"
 
 mailboxes +---Gmail--- \
           +gmail/INBOX \
+          +gmail/401K \
           +gmail/Accounts \
           +gmail/Bills \
           +gmail/HMS \
@@ -83,8 +84,10 @@ mailboxes +---Gmail--- \
           +gmail/Forkedprocess \
           +gmail/IntoAction \
           +gmail/PhillyDevOps \
+          +gmail/PearsonVUE \
           +gmail/PMI \
           +gmail/Puppet \
+          +gmail/USENIX \
           +gmail/Orders \
           +gmail/archive \
           +gmail/Sent \
