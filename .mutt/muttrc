@@ -91,6 +91,7 @@ mailboxes +---Gmail--- \
           +gmail/Orders \
           +gmail/archive \
           +gmail/Sent \
+          +gmail/School \
           +gmail/Drafts \
           +---ForkedProcess--- \
           +forkedprocess/INBOX \
