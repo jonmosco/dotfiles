@@ -1,9 +1,13 @@
 [user]
-	name = Jon Mosco
-	email = jonny.mosco@gmail.com
-[github]
-	user = jonmosco
+  name = Jon Mosco
+  email = jonny.mosco@gmail.com
 [credential]
-	helper = osxkeychain
+  helper = osxkeychain
 [color]
-	ui = true
+  ui = true
+[alias]
+  # See http://cat.pdx.edu/~hunner/git-lg.png for an example
+  lg = "log --pretty=format:'%C(yellow)%h%C(reset) %C(blue)%an%C(reset) %C(cyan)%cr%C(reset) %s %C(green)%d%C(reset)' --graph --date-order"
+  co = checkout
+  s  = status
+  st = status --short --branch

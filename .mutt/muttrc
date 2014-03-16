@@ -88,7 +88,8 @@ mailboxes +---Gmail--- \
           +gmail/PMI \
           +gmail/Puppet \
           +gmail/USENIX \
-          +gmail/Orders \
+          +gmail/orders \
+          +gmail/OpenBSD \
           +gmail/archive \
           +gmail/Sent \
           +gmail/School \

@@ -1,6 +1,8 @@
+" -----------------------------------------------------------------------------
 " TODO
+" -----------------------------------------------------------------------------
+
 " - fix color scheme [DONE 1/5/12]
-" - create own color scheme
 "   NOTE: Switched to Solarized
 " - Better Perl support
 " - SVN [DONE 1/3/12]
@@ -17,7 +19,10 @@
 " - Use powerline [DONE 7/30/13]
 " - Use Softabs [DONE 8/2/13]
 
+" -----------------------------------------------------------------------------
 " Global Settings
+" -----------------------------------------------------------------------------
+
 set encoding=utf-8
 set number                      " line numbers
 set nocompatible                " always Vim mode
@@ -48,11 +53,11 @@ set backupext=.bak              "Append .bak to backup files
 set writebackup
 set backspace=indent,eol,start  " Make Backspaces delete sensibly
 
+execute pathogen#infect()
 filetype on
 filetype plugin indent on
 
 " Set the size of the window
-" Not sure if this can detech which monitor we are on
 " - if using desktop, increase font size
 if has("gui_running")
   let s:uname = system("uname")
@@ -64,8 +69,9 @@ if has("gui_running")
   endif
 endif
 
-" Pathogen
-call pathogen#infect()
+" ------------------------------------------------------------------------------
+" Colors, themes, airline
+" ------------------------------------------------------------------------------
 
 " Solarized theme
 syntax enable
@@ -93,7 +99,10 @@ let g:airline#extensions#tabline#fnamecollapse = 1
 let g:airline#extensions#tabline#tab_nr_type = 0 " tab number
 "let g:airline#extensions#tabline#show_buffers = 0
 
+" ------------------------------------------------------------------------------
 " NERDtree
+" ------------------------------------------------------------------------------
+
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeMapOpenInTab='\r'
 let NERDChristmasTree=1
@@ -102,18 +111,16 @@ let NERDTreeMinimalUI=1
 map <Leader>n :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
+" ------------------------------------------------------------------------------
+" Misc formatting
+" ------------------------------------------------------------------------------
+
 " Open where we last edited
 autocmd BufReadPost *
 \ if ! exists("g:leave_my_cursor_position_alone") |
 \ if line("'\"") > 0 && line ("'\"") <= line("$") |
 \ exe "normal g'\"" |
 \ endif | endif
-
-" Tips from Damian Conway for formatting
-" from Perl Best Practices, and the Perl Monks
-" color complex things
-let perl_extended_vars = 1
-let perl_include_pod = 1
 
 " Python tabs
 autocmd FileType python setl shiftwidth=4 tabstop=4
@@ -127,6 +134,8 @@ set expandtab
 
 " Ruby
 autocmd FileType ruby setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+autocmd BufNewFile,BufRead Vagrantfile set filetype=ruby
+autocmd BufNewFile,BufRead Gemfile set filetype=ruby
 
 " Allow % to bounce between angles too
 set matchpairs+=<:>
@@ -144,22 +153,19 @@ nnoremap <F5> :GundoToggle<CR>
 " Turn off the annoying auto comment feature
 autocmd FileType * setlocal formatoptions-=ro
 
-" Teach Vim to syntax highlight Vagrantfiles and Gemfiles properly.
-autocmd BufNewFile,BufRead Vagrantfile set filetype=ruby
-autocmd BufNewFile,BufRead Gemfile set filetype=ruby
+" ------------------------------------------------------------------------------
+" Mappings
+" ------------------------------------------------------------------------------
 
-" tabline colors
-"hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
-"hi TabLineFill  ctermfg=Black  ctermbg=Blue     cterm=NONE
-"hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
-
-" Easy switching for buffers since I use them the most
 " Switch Tabs
 "map <C-K> gt
 "map <C-J> gT
+
 map <C-J> :bprev<CR>  " previous buffer
 map <C-K> :bnext<CR>  " next buffer
 
+" mute highlighting
+nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>
 " Easy Expansion of the Active File Directory
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
@@ -172,6 +178,3 @@ let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
 let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-
-" mute highlighting
-nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
