@@ -123,7 +123,7 @@ autocmd BufReadPost *
 \ endif | endif
 
 " Python tabs
-autocmd FileType python setl shiftwidth=4 tabstop=4
+"autocmd FileType python setl shiftwidth=4 tabstop=4
 
 " Tabs: Needs some work
 " soft tabs, or tabs made up of space characters
@@ -163,6 +163,8 @@ autocmd FileType * setlocal formatoptions-=ro
 
 map <C-J> :bprev<CR>  " previous buffer
 map <C-K> :bnext<CR>  " next buffer
+
+"map <C-s> :setlocal spell spelllang=en_us<CR>
 
 " mute highlighting
 nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>

@@ -77,10 +77,12 @@ mailboxes +---Gmail--- \
           +gmail/401K \
           +gmail/Accounts \
           +gmail/Bills \
+          +gmail/CSC \
           +gmail/HMS \
           +gmail/ISM \
           +gmail/Jobs \
           +gmail/Misc \
+          +gmail/FedoraProject \
           +gmail/Forkedprocess \
           +gmail/IntoAction \
           +gmail/PhillyDevOps \

@@ -30,7 +30,8 @@ git-prompt.sh
 git-completion.bash
 screenrc
 tmux.conf
-vimrc"
+vimrc
+zshrc"
 
 # Possible skeleton files
 SKEL="bashrc
