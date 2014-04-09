@@ -64,3 +64,9 @@ PROMPT='%{$fg_bold[red]%}%m%{$reset_color%}:%?:%{$fg[cyan]%}%~%{$reset_color%}: 
 #PROMPT='%{$fg_bold[red]%}%m%{$reset_color%}:%?:%{$fg[cyan]%}%~%{$reset_color%}:$(__git_ps1 " [%s]") %{$reset_color%}» '
 
 #PROMPT='%{$fg_bold[red]%}%m%{$reset_color%}:%?:%{$reset_color%}%{$fg[cyan]%}%~%{$reset_color%}:%{vcs_info_msg_0_} » '
+
+
+# Puppet Environment
+export ENVPUPPET_BASEDIR=~/REPOS/
+alias puppet='~/REPOS/puppet/ext/envpuppet puppet'
+alias facter='~/REPOS/puppet/ext/envpuppet facter'
