@@ -43,143 +43,161 @@ OSTYPE=$( uname )
 
 # Usage
 _usage () {
-	echo "usage: $0 -[bmXh]"
-	echo "-b Base install"
-	echo "-m Mutt configuration"
-	echo "-X Xwindows configuration"
-	echo "-h print this message"
-	exit 1
+  echo "usage: $0 -[bsmXh]"
+  echo "-b Base install"
+  echo "-s <shell>"
+  echo "-m Mutt configuration"
+  echo "-X Xwindows configuration"
+  echo "-h print this message"
+  exit 1
 }
+
+if [ $# -eq 0 ]; then
+  _usage
+fi
 
 # Determine the location of our programs
 _ostype () {
-	case $OSTYPE in
-		Darwin)
-			PATH=/bin:/usr/local/bin:/opt/local/bin:/usr/bin:/usr/X11/bin
-			GIT=`command -v git`
-			WGET=`command -v wget`
-			CURL=`command -v curl`
-			;;
-		Linux)
-			PATH=/bin:/usr/bin:/usr/local/bin:/usr/bin:/usr/X11/bin
-			GIT=`command -v git`
-		WGET=`command -v wget`
-			CURL=`command -v curl`
-			;;
-	esac
+  case $OSTYPE in
+    Darwin)
+    PATH=/bin:/usr/local/bin:/opt/local/bin:/usr/bin:/usr/X11/bin
+    GIT=`command -v git`
+    WGET=`command -v wget`
+    CURL=`command -v curl`
+    ;;
+    Linux)
+    PATH=/bin:/usr/bin:/usr/local/bin:/usr/bin:/usr/X11/bin
+    GIT=`command -v git`
+    WGET=`command -v wget`
+    CURL=`command -v curl`
+    ;;
+  esac
 }
 
 # Base profile: vim and bash
 _base () {
-	# Set OS specific setting
-	_ostype
+  # Set OS specific setting
+  _ostype
 
-	# remove /etc/skel files if they exist
-	for skel in $SKEL
-	do
-		if [ ! -L ~/.$skel ]; then
-			echo "Skeleton files exist..removing.."
-			rm ~/.$skel
-			echo "Zapped skeleton files"
-		fi
-	done
+  # remove /etc/skel files if they exist
+  for skel in $SKEL
+  do
+    if [ ! -L ~/.$skel ]; then
+      echo "Skeleton files exist..removing.."
+      rm ~/.$skel
+      echo "Zapped skeleton files"
+    fi
+  done
 
-	for dotfiles in $DOTFILES
-	do
-	        if [ -L ~/.$dotfiles ]; then
-	                echo "Sym link for $dotfiles already exists."
-	        else
-	                ln -s ~/.dotfiles/$dotfiles ~/.$dotfiles
-	                echo "$dotfiles symlink created."
-	        fi
-	done
+  for dotfiles in $DOTFILES
+  do
+    if [ -L ~/.$dotfiles ]; then
+      echo "Sym link for $dotfiles already exists."
+    else
+      ln -s ~/.dotfiles/$dotfiles ~/.$dotfiles
+      echo "$dotfiles symlink created."
+    fi
+  done
 
-	# Vim setup
-	# backup directory
-	if [ -d ~/.backups ]; then
-	        echo "backups directory already exists."
-	else
-	        mkdir ~/.backups
-	        echo "Vim backup directory created."
-	fi
-	# vim plugins
-	if [ -d ~/.vim/bundle ]; then
-		echo "bundle dir already exists."
-	else
-		mkdir -p ~/.vim/autoload ~/.vim/bundle
-		cd ~/.vim/bundle
-		echo "Vim autoload and bundle directory created.  Proceding to checkout plugins..."
-		$GIT clone https://github.com/scrooloose/nerdtree.git
-		$GIT clone git://github.com/godlygeek/tabular.git
-		$GIT clone https://github.com/scrooloose/syntastic.git
-		$GIT clone git://github.com/altercation/vim-colors-solarized.git
-		$GIT clone http://github.com/sjl/gundo.vim.git
-		$GIT clone https://github.com/rodjek/vim-puppet.git puppet
-		$GIT clone https://github.com/Lokaltog/vim-powerline powerline
+  # Vim setup
 
-		if [ -n "$CURL" ]; then
-			PATHOGEN="$CURL -Sso"
-		elif [ -n "$WGET" ]; then
-			PATHOGEN="$WGET -O"
-		else
-			echo "pathogen.vim will not be installed.  Please browse to 
-				https://github.com/tpope/vim-pathogen and follow the installation 
-				instructions."
-		fi
+  # backup directory
+  if [ -d ~/.backups ]; then
+    echo "backups directory already exists."
+  else
+    mkdir ~/.backups
+    echo "Vim backup directory created."
+  fi
 
-	       	$PATHOGEN ~/.vim/autoload/pathogen.vim \
-	       		https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+  # vim plugins
+  if [ -d ~/.vim/bundle ]; then
+    echo "bundle dir already exists."
+  else
+    mkdir -p ~/.vim/autoload ~/.vim/bundle
+    cd ~/.vim/bundle
+    echo "Vim autoload and bundle directory created.  Proceding to checkout plugins..."
+    $GIT clone https://github.com/scrooloose/nerdtree.git
+    $GIT clone git://github.com/godlygeek/tabular.git
+    $GIT clone https://github.com/scrooloose/syntastic.git
+    $GIT clone git://github.com/altercation/vim-colors-solarized.git
+    $GIT clone https://github.com/rodjek/vim-puppet.git puppet
+    $GIT clone https://github.com/bling/vim-airline.git
+    $GIT clone https://github.com/kien/ctrlp.vim.git
 
-	fi
+    if [ -n "$CURL" ]; then
+      PATHOGEN="$CURL -Sso"
+    elif [ -n "$WGET" ]; then
+      PATHOGEN="$WGET -O"
+    else
+      echo "pathogen.vim will not be installed.  Please browse to
+      https://github.com/tpope/vim-pathogen and follow the installation
+      instructions."
+    fi
+
+    $PATHOGEN ~/.vim/autoload/pathogen.vim \
+    https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+
+  fi
+}
+
+_shell() {
+  if [[ $USER_SHELL =~ zsh ]]; then
+    ln -s ~/.dotfiles/zshrc ~/.zshrc
+  fi
 }
 
 # Mutt settings
 _mutt () {
-	if [ -d ~/.mutt ]; then
-	        echo "mutt directory already exists."
-	else
-	        mkdir ~/.mutt
-	        echo "mutt directory created."
-	fi
-	if [ -L ~/.muttrc ]; then
-		echo "Sym link for muttrc already exists."
-	else
-		ln -s ~/.dotfiles/muttrc ~/.muttrc
-		echo "muttrc symlink created"
-	fi
-	# Test
-	echo "Mutt"
+  if [ -d ~/.mutt ]; then
+    echo "mutt directory already exists."
+  else
+    mkdir ~/.mutt
+    echo "mutt directory created."
+  fi
+  if [ -L ~/.muttrc ]; then
+    echo "Sym link for muttrc already exists."
+  else
+    ln -s ~/.dotfiles/muttrc ~/.muttrc
+    echo "muttrc symlink created"
+  fi
+  # Test
+  echo "Mutt"
 }
 
 # XWindows Settings
 _xwindows () {
-	_ostype
-	if [ -L ~/.Xresources ]; then
-		echo "Sym link for Xresources already exists."
-	else
-		ln -s ~/.dotfiles/Xresources ~/.Xresources
-		echo "Xresources symlink created....Merging Xresources"
-		xrdb -merge ~/.Xresourses
-		echo "XWindows settings initialized"
-	fi
+  _ostype
+  if [ -L ~/.Xresources ]; then
+    echo "Sym link for Xresources already exists."
+  else
+    ln -s ~/.dotfiles/Xresources ~/.Xresources
+    echo "Xresources symlink created....Merging Xresources"
+    xrdb -merge ~/.Xresourses
+    echo "XWindows settings initialized"
+  fi
 }
 
-if [ $# -ne 1 ]; then
-	_usage
-fi
-
 # What version of our profile to install
-while getopts bmXh opt; do
-	case $opt in
-		b)
-			_base;;
-		m)
-			_base
-			_mutt;;
-		X)
-			_base
-			_xwindows;;
-		h)
-			_usage
-	esac
+while getopts "b:s:mXh" opt; do
+  case $opt in
+    b)
+    _base;;
+    s)
+    USER_SHELL=${OPTARG}
+    _shell;;
+    m)
+    _base
+    _mutt;;
+    X)
+    _base
+    _xwindows;;
+    h)
+    _usage
+  esac
 done
+
+shift $(($OPTIND - 1))
+
+#if [ $# -eq 0 ]; then
+#  _usage
+#fi
