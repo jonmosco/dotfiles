@@ -12,6 +12,7 @@ XTerm*termName:		 xterm-16color
 !XTerm*background:       grey10
 XTerm*background:	 #002b36
 XTerm*foreground:        #839496
+XTerm*utf8: 1
 
 ! Solarized
 !XTerm*background:	 #1c1c1c
@@ -21,10 +22,10 @@ XTerm*foreground:        #839496
 XTerm*saveLines:         1024
 XTerm*geometry:          80x25
 !XTerm*faceName:         Courier 10 Pitch:pixelsize=18
-!XTerm*faceName:	 Monaco:pixelsize=14
+XTerm*faceName:	 Monaco:pixelsize=14
 !XTerm*faceName:         SKYHOOK MONO
-XTerm*faceName:		 Monaco 14
-!XTerm*faceName:         Andale Mono
+!XTerm*faceName:		 Inconsolata-dz for Powerline
+XTerm*faceName:         Andale Mono
 XTerm*dynamicColors:     true
 XTerm*loginShell:        true
 XTerm*colorULMode:       true

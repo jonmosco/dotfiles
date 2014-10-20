@@ -72,7 +72,7 @@ alternative_order text/plain text/enriched text/html
 # This is the default account that opens when we start mutt
 set spoolfile = "+gmail/INBOX"
 
-mailboxes +---Gmail--- \
+mailboxes +----Gmail---- \
           +gmail/INBOX \
           +gmail/401K \
           +gmail/Accounts \
@@ -89,6 +89,7 @@ mailboxes +---Gmail--- \
           +gmail/PearsonVUE \
           +gmail/PMI \
           +gmail/Puppet \
+          +gmail/PuppetUserGroup\
           +gmail/USENIX \
           +gmail/orders \
           +gmail/OpenBSD \
@@ -96,11 +97,11 @@ mailboxes +---Gmail--- \
           +gmail/Sent \
           +gmail/School \
           +gmail/Drafts \
-          +---ForkedProcess--- \
+          +----ForkedProcess---- \
           +forkedprocess/INBOX \
           +forkedprocess/Logwatch \
           +forkedprocess/info \
-          +---Legacy--- \
+          +----Legacy---- \
           +forked_old/INBOX \
           +forked_old/Blogs \
           +forked_old/Domain \
@@ -108,7 +109,7 @@ mailboxes +---Gmail--- \
           +forked_old/Logwatch \
           +forked_old/Misc \
           +forked_old/Verizon \
-          +---DTCC--- \
+          +----DTCC---- \
           +dtcc.edu/INBOX \
 
 source ~/.mutt/gmail.muttrc

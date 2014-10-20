@@ -4,6 +4,8 @@ accounts = Gmail, forkedprocess, dtcc.edu
 pythonfile=~/.mutt/offlineimap.py
 fsync = False
 postsynchook = notmuch new
+#ui = quiet
+ui = ttyui
 
 [Account Gmail]
 localrepository = Gmail-Local
@@ -37,7 +39,7 @@ folderfilter = lambda folder: folder not in ['[Gmail]/Trash',
                                              '[Gmail]/Important',
                                              '[Gmail]/Spam',
                                              ]
-cert_fingerprint = 89091347184d41768bfc0da9fad94bfe882dd358
+cert_fingerprint = 2bab9dfeec44c80df7ad9d5c6281d1b9369ba232
 
 [Account forkedprocess]
 localrepository = forkedprocess-Local
@@ -69,4 +71,4 @@ ssl = yes
 remotehost = imap.dtcc.edu
 remoteuser = jmosco1
 remotepasseval = get_keychain_pass(account="jmosco1", server="imap.dtcc.edu")
-cert_fingerprint = 7aff6ff9e932194394d9ab4b4dde55e09a0e27d0
+cert_fingerprint = 5feb0646c87f8fecc01d4e417d9f58f5845cf4b5

@@ -123,7 +123,7 @@ autocmd BufReadPost *
 \ endif | endif
 
 " Python tabs
-"autocmd FileType python setl shiftwidth=4 tabstop=4
+autocmd FileType python setl shiftwidth=4 tabstop=4
 
 " Tabs: Needs some work
 " soft tabs, or tabs made up of space characters
@@ -136,6 +136,9 @@ set expandtab
 autocmd FileType ruby setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 autocmd BufNewFile,BufRead Vagrantfile set filetype=ruby
 autocmd BufNewFile,BufRead Gemfile set filetype=ruby
+
+" JSON
+autocmd BufNewFile,BufRead *.json set ft=javascript
 
 " Allow % to bounce between angles too
 set matchpairs+=<:>
@@ -164,8 +167,6 @@ autocmd FileType * setlocal formatoptions-=ro
 map <C-J> :bprev<CR>  " previous buffer
 map <C-K> :bnext<CR>  " next buffer
 
-"map <C-s> :setlocal spell spelllang=en_us<CR>
-
 " mute highlighting
 nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>
 " Easy Expansion of the Active File Directory
@@ -176,7 +177,12 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 "nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
 
 " change cursor to flat bar like gvim
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+"let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+"let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+"let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+"let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+
+" Puppet lint arguments
+let g:syntastic_puppet_puppetlint_args = "--no-80chars-check"
+let g:syntastic_puppet_puppetlint_args = "--no-class_inherits_from_params_class-check"
+
