@@ -12,3 +12,11 @@
   p = push
   s  = status
   st = status --short --branch
+[core]
+  excludesfile = /Users/jmosco/.gitignore_global
+[difftool "sourcetree"]
+  md = opendiff \"$LOCAL\" \"$REMOTE\"
+  ath =
+[mergetool "sourcetree"]
+  md = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = true

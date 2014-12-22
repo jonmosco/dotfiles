@@ -23,9 +23,10 @@
 " Global Settings
 " -----------------------------------------------------------------------------
 
+set nocompatible                " always Vim mode
+scriptencoding utf-8
 set encoding=utf-8
 set number                      " line numbers
-set nocompatible                " always Vim mode
 set ls=2                        " show the status line
 set hlsearch                    " search highlighting
 set incsearch                   " search as you type
@@ -35,7 +36,7 @@ set noerrorbells                " Please be quiet
 set sc                          " show current command
 set directory=~/.backups/       " swap file location
 set redraw optimize             " Keep the screen tidy
-set history=15000               " history lines
+set history=10000               " history lines
 set title                       " Inherit the term title from Vim
 set titleold=""                 " No "Thanks for Flying Vim" message
 set clipboard=unnamed
@@ -185,4 +186,3 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 " Puppet lint arguments
 let g:syntastic_puppet_puppetlint_args = "--no-80chars-check"
 let g:syntastic_puppet_puppetlint_args = "--no-class_inherits_from_params_class-check"
-
