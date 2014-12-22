@@ -1,0 +1,148 @@
+# Colors and other personal configurations
+source ~/.mutt/colors/solarized16.muttrc
+#source ~/.mutt/personal/forkedprocess.muttrc
+
+# Locations
+set folder           = ~/.mail
+set alias_file       = ~/.mutt/alias         # where to store aliases
+set header_cache     = ~/.mutt/cache/headers # where to store headers
+set message_cachedir = ~/.mutt/cache/bodies  # where to store bodies
+set certificate_file = ~/.mutt/certificates  # where to store certs
+set mailcap_path     = ~/.mutt/mailcap       # entries for filetypes
+set tmpdir           = ~/.mutt/temp          # where to keep temp files
+
+# Sidebar patch
+set sidebar_visible = yes
+set sidebar_delim   = '  │'
+set sidebar_width   = 32
+color sidebar_new yellow default
+
+# Status Bar
+set status_chars  = " *%A"
+set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
+
+# Header Options
+ignore *                                # ignore all headers
+unignore from: to: cc: date: subject:   # show only these
+unhdr_order *                           # some distros order things by default
+hdr_order from: to: cc: date: subject:  # and in this order
+
+# General config
+set wait_key  = no       # shut up, mutt
+set mbox_type = Maildir  # mailbox type
+set timeout = 3          # idle time before scanning
+set mail_check = 0       # minimum time between scans
+unset move               # gmail does that
+set delete               # don't ask, just do
+unset confirmappend      # don't ask, just do!
+set quit                 # don't ask, just do!!
+unset mark_old           # read/new is good enough for me
+set beep_new             # bell on new mails
+set pipe_decode          # strip headers and eval mimes when piping
+set thorough_search      # strip headers and eval mimes before searching
+set menu_scroll
+auto_view text/html
+
+# Compose options
+set realname = "Jon Mosco"
+set envelope_from
+
+# Index View Options
+set date_format = "%m/%d/%Y"
+set index_format = "[%Z]  %D  %-20.20F  %s"
+set sort=threads
+set sort_aux = reverse-last-date-received  # like gmail
+set uncollapse_jump                        # don't collapse on an unread message
+
+# Pager View Options
+set pager_index_lines = 10 # number of index lines to show
+set pager_context = 3      # number of context lines to show
+set pager_stop             # don't go to next message automatically
+set menu_scroll            # scroll in menus
+set tilde                  # show tildes like in vim
+unset markers              # no ugly plus signs
+
+set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
+alternative_order text/plain text/enriched text/html
+
+set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
+alternative_order text/plain text/enriched text/html
+
+# Accounts
+# This is the default account that opens when we start mutt
+set spoolfile = "+gmail/INBOX"
+
+mailboxes +----Gmail---- \
+          +gmail/INBOX \
+          +gmail/401K \
+          +gmail/Accounts \
+          +gmail/Bills \
+          +gmail/CSC \
+          +gmail/HMS \
+          +gmail/ISM \
+          +gmail/Jobs \
+          +gmail/Misc \
+          +gmail/FedoraProject \
+          +gmail/Forkedprocess \
+          +gmail/IntoAction \
+          +gmail/PhillyDevOps \
+          +gmail/PearsonVUE \
+          +gmail/PMI \
+          +gmail/Puppet \
+          +gmail/PuppetUserGroup\
+          +gmail/USENIX \
+          +gmail/orders \
+          +gmail/OpenBSD \
+          +gmail/archive \
+          +gmail/Sent \
+          +gmail/School \
+          +gmail/Drafts \
+          +----ForkedProcess---- \
+          +forkedprocess/INBOX \
+          +forkedprocess/Logwatch \
+          +forkedprocess/info \
+          +----Legacy---- \
+          +forked_old/INBOX \
+          +forked_old/Blogs \
+          +forked_old/Domain \
+          +forked_old/hurshproductions \
+          +forked_old/Logwatch \
+          +forked_old/Misc \
+          +forked_old/Verizon \
+          +----DTCC---- \
+          +dtcc.edu/INBOX \
+
+source ~/.mutt/gmail.muttrc
+
+folder-hook forkedprocess/* source ~/.mutt/forkedprocess.muttrc
+folder-hook gmail/*   source ~/.mutt/gmail.muttrc
+
+# Open URLs
+macro pager \Cu "|urlview<enter>" "call urlview to open links"
+
+# Keybindings
+bind index <tab>    sync-mailbox
+bind index \CP sidebar-prev
+bind index \CN sidebar-next
+bind index \Ce sidebar-open
+bind pager \CP sidebar-prev
+bind pager \CN sidebar-next
+bind pager \Ce sidebar-open
+bind pager k  previous-line
+bind pager j  next-line
+bind pager gg top
+bind pager G  bottom
+bind index R        group-reply
+macro index O "<shell-escape>offlineimap<enter>"           "run offlineimap to sync all mail"
+macro index o "<shell-escape>offlineimap -qf INBOX<enter>" "run offlineimap to sync inbox"
+bind compose p postpone-message
+bind index p recall-message
+
+# Move messages
+macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"
+macro index M "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
+
+# Access Contacts
+set query_command = "contacts -Sf '%eTOKEN%n' '%s' | sed -e 's/TOKEN/\t/g'"
+bind editor <Tab> complete-query
+bind editor ^T    complete

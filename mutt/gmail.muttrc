@@ -1,0 +1,7 @@
+set from      = "jonny.mosco@gmail.com"
+set sendmail  = "/usr/local/bin/msmtp -a gmail"
+set sendmail_wait = 0
+set mbox = "+gmail/archive"
+#unset record
+set record = "+gmail/sent"   # Move sent mail the sent mail folder
+set postponed = "+gmail/drafts"
