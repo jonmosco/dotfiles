@@ -78,11 +78,10 @@ endif
 syntax enable
 set background=dark
 colorscheme solarized
-"let g:solarized_termcolors=16
 let g:solarized_diffmode="high"
 
-let g:airline_enable_branch=1
-let g:airline_enable_syntastic=1
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#syntastic#enabled = 1
 let g:airline_theme='solarized'
 let g:airline_powerline_fonts=1
 set fillchars+=stl:\ ,stlnc:\
@@ -186,3 +185,13 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 " Puppet lint arguments
 let g:syntastic_puppet_puppetlint_args = "--no-80chars-check"
 let g:syntastic_puppet_puppetlint_args = "--no-class_inherits_from_params_class-check"
+
+" RSpec.vim mappings
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
+
+"let g:indentLine_char = '︙'
+let g:indentLine_char = '┆'
+
