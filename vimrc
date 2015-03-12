@@ -80,24 +80,21 @@ set background=dark
 colorscheme solarized
 let g:solarized_diffmode="high"
 
+" Airline settings
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline_theme='solarized'
 let g:airline_powerline_fonts=1
 set fillchars+=stl:\ ,stlnc:\
-
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#tab_nr_show = 0
-"let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
-"let g:airline#extensions#tabline#buffer_nr_format = '%s: '
 let g:airline#extensions#tabline#buffer_min_count = 2
 let g:airline#extensions#tabline#tab_min_count = 2
 let g:airline#extensions#bufferline#enabled = 1
 let g:airline#extensions#tabline#fnamecollapse = 1
-
 let g:airline#extensions#tabline#tab_nr_type = 0 " tab number
-"let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tmuxline#enabled = 0
 
 " ------------------------------------------------------------------------------
 " NERDtree
@@ -176,12 +173,6 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 "nnoremap <silent> <leader>DD :exe ":profile start profile.log"<cr>:exe ":profile func *"<cr>:exe ":profile file *"<cr>
 "nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
 
-" change cursor to flat bar like gvim
-"let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-"let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-"let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-"let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-
 " Puppet lint arguments
 let g:syntastic_puppet_puppetlint_args = "--no-80chars-check"
 let g:syntastic_puppet_puppetlint_args = "--no-class_inherits_from_params_class-check"
@@ -195,3 +186,19 @@ map <Leader>a :call RunAllSpecs()<CR>
 "let g:indentLine_char = '︙'
 let g:indentLine_char = '┆'
 
+" tmux line configuration
+let g:tmuxline_preset = {
+      \'a'    : '#S',
+      \'b'    : '#W',
+      \'win'  : '#I #W',
+      \'cwin' : '#I #W',
+      \'y'    : '%r',
+      \'z'    : '#H'}
+
+let g:tmuxline_theme = 'powerline'
+
+" Switch back to blue
+function! AirlineThemePatch(palette)
+    let a:palette.normal.airline_a = [ '#ffffff', '#268bd2', 255, 33 ]
+  endfunction
+  let g:airline_theme_patch_func = 'AirlineThemePatch'
