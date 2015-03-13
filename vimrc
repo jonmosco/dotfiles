@@ -187,12 +187,20 @@ map <Leader>a :call RunAllSpecs()<CR>
 let g:indentLine_char = '┆'
 
 " tmux line configuration
+"let g:tmuxline_preset = {
+"      \'a'    : '#S',
+"      \'b'    : '#W',
+"      \'win'  : '#I #W',
+"      \'cwin' : '#I #W',
+"      \'y'    : '%r',
+"      \'z'    : '#H'}
+
 let g:tmuxline_preset = {
-      \'a'    : '#S',
-      \'b'    : '#W',
-      \'win'  : '#I #W',
-      \'cwin' : '#I #W',
-      \'y'    : '%r',
+      \'a'    : '❐ #S',
+      \'win'  : ['#I', '#W'],
+      \'cwin' : ['#I', '#W'],
+      \'x'    : '%R',
+      \'y'    : ['%a', '%Y'],
       \'z'    : '#H'}
 
 let g:tmuxline_theme = 'powerline'
