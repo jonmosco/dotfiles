@@ -39,7 +39,7 @@ folderfilter = lambda folder: folder not in ['[Gmail]/Trash',
                                              '[Gmail]/Important',
                                              '[Gmail]/Spam',
                                              ]
-cert_fingerprint = 606dab919155192b372ebeb390a773ce01c1d2d2
+cert_fingerprint = bfef6858bc803af948632c52241d15dd7696b4d2
 
 [Account forkedprocess]
 localrepository = forkedprocess-Local
