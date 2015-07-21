@@ -174,8 +174,8 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 "nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
 
 " Puppet lint arguments
-let g:syntastic_puppet_puppetlint_args = "--no-80chars-check"
-let g:syntastic_puppet_puppetlint_args = "--no-class_inherits_from_params_class-check"
+"let g:syntastic_puppet_puppetlint_args = "--no-80chars-check"
+"let g:syntastic_puppet_puppetlint_args = "--no-class_inherits_from_params_class-check"
 
 " RSpec.vim mappings
 map <Leader>t :call RunCurrentSpecFile()<CR>
@@ -210,3 +210,18 @@ function! AirlineThemePatch(palette)
     let a:palette.normal.airline_a = [ '#ffffff', '#268bd2', 255, 33 ]
   endfunction
   let g:airline_theme_patch_func = 'AirlineThemePatch'
+
+autocmd BufRead,BufNewFile *
+      \  if expand('%:p:h') =~# '.*/cookbooks/.*'
+      \|   setlocal makeprg=foodcritic\ $*\ %
+      \|   setlocal errorformat=%m:\ %f:%l
+      \| endif
+
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
