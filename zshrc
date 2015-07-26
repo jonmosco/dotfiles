@@ -5,10 +5,22 @@
 # zshrc
 # zlogin
 
-export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$PATH
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+export PATH="$PATH:$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin"
 export CLICOLOR=1
 export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+export GREP_COLORS='1;37;41'
+export LESS='-R -i -g'
+export RI='-f ansi'
+export JAVA_HOME=$(/usr/libexec/java_home)
+export EDITOR=vim
+export GOROOT=/usr/local/go
+
+# History
+HISTFILE=$HOME/.history
+HISTSIZE=10000
+SAVEHIST=10000
+
+fpath=(~/.zsh/Completion $fpath)
 
 # Options
 autoload -U promptinit
@@ -21,15 +33,30 @@ autoload -U colors && colors
 # treat $PROMPT like a regular shell variable
 setopt PROMPT_SUBST
 setopt hist_ignore_all_dups
+setopt appendhistory
 setopt inc_append_history
 setopt beep
+setopt IGNORE_EOF
+bindkey -e
 
 # Hidden files
 alias show_hidden="defaults write com.apple.finder AppleShowAllFiles TRUE && killall Finder"
 alias hide_hidden="defaults write com.apple.finder AppleShowAllFiles FALSE && killall Finder"
+
+# General
 alias l='ls -lFha'
+alias grep='grep --color'
+alias rm='rm -i'
 alias vf='vagrant up --provider=vmware_fusion'
 alias vd='vagrant destroy --force'
+alias vs='vagrant status'
+alias vu='vagrant up'
+alias ls='ls -p'
+alias myip="ifconfig | perl -nle '/inet ([^ ]+)/ and print $1'"
+alias ..="cd .."
+alias mod='mkdir -p {files,manifests,templates,lib}'
+alias bexec='bundle exec'
+alias cf='chef generate'
 
 # Completion menu
 zstyle ':completion:*' menu select=0
@@ -38,35 +65,23 @@ zstyle ':completion:*:descriptions' format '%B%d%b'
 zstyle ':completion:*:messages' format '%d'
 
 # Git prompt
-#zstyle ':vcs_info:*' actionformats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f '
-#zstyle ':vcs_info:*' formats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{5}]%f '
-#zstyle ':vcs_info:*' actionformats "%{$fg[blue]%}%b%{$reset_color%} (%{$fg[red]%}%a%{$reset_color%}) %m%u%c%{$reset_color%}%{$fg[grey]%}%{$reset_color%}"
-#zstyle ':vcs_info:git*' formats "%{$fg[blue]%}%b%{$reset_color%}%m%u%c%{$reset_color%}%{$fg[grey]%}%{$reset_color%} "
-#zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{3}%r'
-#zstyle ':vcs_info:*' stagedstr "%{$fg[green]%}+%{$reset_color%}"
-#zstyle ':vcs_info:*' unstagedstr "%{$fg[red]%}+%{$reset_color%}"
-#zstyle ':vcs_info:*' check-for-changes true
-#zstyle ':vcs_info:*' enable git
-#precmd () { vcs_info }
-
 source ~/.zsh/zsh-vcs-prompt/zshrc.sh
 ZSH_VCS_PROMPT_ENABLE_CACHING='true'
 ZSH_VCS_PROMPT_HIDE_COUNT='true'
-#source ~/.git-prompt.sh
-#GIT_PS1_SHOWDIRTYSTATE=
 
-# Prompt
-#PROMPT="%{$fg_bold[red]%}%m%{$reset_color%}:%?: » "
+# AWS Credentials
+source ~/.aws
 
-#PROMPT='%{$fg_bold[red]%}%m%{$reset_color%}:%?:%{$fg[cyan]%}%~%{$reset_color%}: ${vcs_info_msg_0_}% %{$reset_color%}» '
-#PROMPT='%{$fg_bold[red]%}%m%{$reset_color%}:%?:%{$fg[cyan]%}%~%{$reset_color%}: ${vcs_info_msg_0_}% %{$reset_color%}» '
-PROMPT='%{$fg_bold[red]%}%m%{$reset_color%}:%?:%{$fg[cyan]%}%~%{$reset_color%}: $(vcs_super_info)% %{$reset_color%}» '
-#PROMPT='%{$fg_bold[red]%}%m%{$reset_color%}:%?:%{$fg[cyan]%}%~%{$reset_color%}:$(__git_ps1 " [%s]") %{$reset_color%}» '
+PROMPT='%{$fg[cyan]%}┌[%{$fg_bold[white]%}%n%{$reset_color%}%{$fg[cyan]%}@%{$fg_bold[white]%}%M%{$reset_color%}%{$fg[cyan]%}]%{$fg[white]%}-%{$fg[cyan]%}(%{$fg_bold[red]%}%~%{$reset_color%}%{$fg[cyan]%})%{$reset_color%}$(vcs_super_info)%{$reset_color%}
+%{$fg[cyan]%}└> % %{$reset_color%}'
 
-#PROMPT='%{$fg_bold[red]%}%m%{$reset_color%}:%?:%{$reset_color%}%{$fg[cyan]%}%~%{$reset_color%}:%{vcs_info_msg_0_} » '
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
-
-# Puppet Environment
-export ENVPUPPET_BASEDIR=~/REPOS/
-alias puppet='~/REPOS/puppet/ext/envpuppet puppet'
-alias facter='~/REPOS/puppet/ext/envpuppet facter'
+# Color man pages
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;38;5;74m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[38;33;246m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[04;38;5;146m'
