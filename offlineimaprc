@@ -39,7 +39,7 @@ folderfilter = lambda folder: folder not in ['[Gmail]/Trash',
                                              '[Gmail]/Important',
                                              '[Gmail]/Spam',
                                              ]
-cert_fingerprint = ce8f7fb8b2ed0cae4cb9a9855c2cbbae911a0b10
+cert_fingerprint = e10e301e29ddcea6e027c29aa325db04e604ef51
 
 
 [Account forkedprocess]
