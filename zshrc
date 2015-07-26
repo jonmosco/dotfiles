@@ -70,7 +70,9 @@ ZSH_VCS_PROMPT_ENABLE_CACHING='true'
 ZSH_VCS_PROMPT_HIDE_COUNT='true'
 
 # AWS Credentials
-source ~/.aws
+if [[ -r ~/.aws ]]; then
+  source ~/.aws
+fi
 
 PROMPT='%{$fg[cyan]%}┌[%{$fg_bold[white]%}%n%{$reset_color%}%{$fg[cyan]%}@%{$fg_bold[white]%}%M%{$reset_color%}%{$fg[cyan]%}]%{$fg[white]%}-%{$fg[cyan]%}(%{$fg_bold[red]%}%~%{$reset_color%}%{$fg[cyan]%})%{$reset_color%}$(vcs_super_info)%{$reset_color%}
 %{$fg[cyan]%}└> % %{$reset_color%}'
