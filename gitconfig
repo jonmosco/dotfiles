@@ -22,3 +22,5 @@
   trustExitCode = true
 [push]
   default = current
+[include]
+  path = .gitconfig-private
