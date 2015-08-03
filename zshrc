@@ -57,6 +57,9 @@ alias ..="cd .."
 alias mod='mkdir -p {files,manifests,templates,lib}'
 alias bexec='bundle exec'
 alias cf='chef generate'
+alias kc='kitchen converge'
+alias kd='kitchen destroy'
+alias kv='kitchen verify'
 
 # Completion menu
 zstyle ':completion:*' menu select=0
@@ -92,3 +95,5 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 if [[ -r ~/.zsh/misc/ ]]; then
   source ~/.zsh/misc/*
 fi
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
