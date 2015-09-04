@@ -5,7 +5,7 @@
 # zshrc
 # zlogin
 
-export PATH="$PATH:$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin"
+export PATH="$PATH:$HOME/bin:/usr/local/opt/gnu-tar/libexec/gnubin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin"
 export CLICOLOR=1
 export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 export GREP_COLORS='1;37;41'
@@ -14,6 +14,18 @@ export RI='-f ansi'
 export JAVA_HOME=$(/usr/libexec/java_home)
 export EDITOR=vim
 export GOROOT=/usr/local/go
+
+# Include local directories
+if [ -d $HOME/.zsh/misc/ ]; then
+  if [ "$(ls -A $HOME/.zsh/misc/)" ]; then
+    for config_file ($HOME/.zsh/misc/*) source $config_file
+  fi
+fi
+
+# Packer.io
+if [ -d "$HOME/bin/packer" ] ; then
+  export PATH="$HOME/bin/packer:$PATH"
+fi
 
 # History
 HISTFILE=$HOME/.history
@@ -59,7 +71,9 @@ alias bexec='bundle exec'
 alias cf='chef generate'
 alias kc='kitchen converge'
 alias kd='kitchen destroy'
+alias kl='kitchen login'
 alias kv='kitchen verify'
+alias tar='gtar'
 
 # Completion menu
 zstyle ':completion:*' menu select=0
@@ -71,11 +85,6 @@ zstyle ':completion:*:messages' format '%d'
 source ~/.zsh/zsh-vcs-prompt/zshrc.sh
 ZSH_VCS_PROMPT_ENABLE_CACHING='true'
 ZSH_VCS_PROMPT_HIDE_COUNT='true'
-
-# AWS Credentials
-if [[ -r ~/.aws ]]; then
-  source ~/.aws
-fi
 
 PROMPT='%{$fg[cyan]%}┌[%{$fg_bold[white]%}%n%{$reset_color%}%{$fg[cyan]%}@%{$fg_bold[white]%}%M%{$reset_color%}%{$fg[cyan]%}]%{$fg[white]%}-%{$fg[cyan]%}(%{$fg_bold[red]%}%~%{$reset_color%}%{$fg[cyan]%})%{$reset_color%}$(vcs_super_info)%{$reset_color%}
 %{$fg[cyan]%}└> % %{$reset_color%}'
@@ -91,9 +100,4 @@ export LESS_TERMCAP_so=$'\E[38;33;246m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
-# Include local directories
-if [[ -r ~/.zsh/misc/ ]]; then
-  source ~/.zsh/misc/*
-fi
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"

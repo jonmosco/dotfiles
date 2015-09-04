@@ -53,6 +53,8 @@ set backupdir=~/.backups/
 set backupext=.bak              "Append .bak to backup files
 set writebackup
 set backspace=indent,eol,start  " Make Backspaces delete sensibly
+set smartcase                   " "Smart" searching
+set ignorecase                  " Ignore case when searching
 
 execute pathogen#infect()
 filetype on
