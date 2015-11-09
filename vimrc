@@ -23,6 +23,37 @@
 " Global Settings
 " -----------------------------------------------------------------------------
 
+" Vundle
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" Plugins
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'tpope/vim-fugitive'
+Plugin 'kien/ctrlp.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'rodjek/vim-puppet'
+Plugin 'scrooloose/syntastic'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'bling/vim-airline'
+Plugin 'fatih/vim-go'
+Plugin 'Gundo'
+Plugin 'majutsushi/tagbar'
+Plugin 'ConradIrwin/vim-bracketed-paste'
+
+if v:version >= 703 && has("patch584")
+  Plugin 'Valloric/YouCompleteMe'
+endif
+
+call vundle#end()
+filetype plugin indent on
+
 set nocompatible                " always Vim mode
 scriptencoding utf-8
 set encoding=utf-8
@@ -56,25 +87,18 @@ set backspace=indent,eol,start  " Make Backspaces delete sensibly
 set smartcase                   " "Smart" searching
 set ignorecase                  " Ignore case when searching
 
-execute pathogen#infect()
-filetype on
-filetype plugin indent on
 
 " Set the size of the window
 " - if using desktop, increase font size
 if has("gui_running")
   let s:uname = system("uname")
   if s:uname == "Darwin\n"
-  "set guifont=Monaco\ For\ Powerline:h14
-  set guifont=Inconsolata-Dz\ For\ Powerline:h16
-  set lines=30
-  set columns=110
+    "set guifont=Monaco\ For\ Powerline:h14
+    set guifont=Inconsolata-Dz\ For\ Powerline:h16
+    set lines=30
+    set columns=110
   endif
 endif
-
-" ------------------------------------------------------------------------------
-" Colors, themes, airline
-" ------------------------------------------------------------------------------
 
 " Solarized theme
 syntax enable
@@ -98,15 +122,13 @@ let g:airline#extensions#tabline#fnamecollapse = 1
 let g:airline#extensions#tabline#tab_nr_type = 0 " tab number
 let g:airline#extensions#tmuxline#enabled = 0
 
-" ------------------------------------------------------------------------------
 " NERDtree
-" ------------------------------------------------------------------------------
-
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeMapOpenInTab='\r'
 let NERDChristmasTree=1
 let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
+"let NERDTreeWinPos = "right"
 map <Leader>n :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
@@ -116,15 +138,15 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 
 " Open where we last edited
 autocmd BufReadPost *
-\ if ! exists("g:leave_my_cursor_position_alone") |
-\ if line("'\"") > 0 && line ("'\"") <= line("$") |
-\ exe "normal g'\"" |
-\ endif | endif
+      \ if ! exists("g:leave_my_cursor_position_alone") |
+      \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+      \ exe "normal g'\"" |
+      \ endif | endif
 
 " Python tabs
 autocmd FileType python setl shiftwidth=4 tabstop=4
 
-" Tabs: Needs some work
+" Tabs
 " soft tabs, or tabs made up of space characters
 set tabstop=2
 set softtabstop=2
@@ -142,22 +164,28 @@ autocmd BufNewFile,BufRead *.json set ft=javascript
 " Allow % to bounce between angles too
 set matchpairs+=<:>
 
-" Unset the last search pattern by hitting return
-nnoremap <CR>   :noh<CR><CR>
-
 " End of Line niceness
 set list
 set listchars=tab:▸\ ,trail:☠
 
-" Undo path
-nnoremap <F5> :GundoToggle<CR>
-
 " Turn off the annoying auto comment feature
 autocmd FileType * setlocal formatoptions-=ro
 
+" ctags path
+let g:tagbar_ctags_bin='/usr/local/bin/ctags'
+
 " ------------------------------------------------------------------------------
-" Mappings
+" Custom Mappings
 " ------------------------------------------------------------------------------
+
+" Unset the last search pattern by hitting return
+nnoremap <CR>   :noh<CR><CR>
+
+" Undo path
+nnoremap <F5> :GundoToggle<CR>
+
+" Toggle Tagbar
+nmap <F6> :TagbarToggle<CR>
 
 " Switch Tabs
 "map <C-K> gt
@@ -168,6 +196,7 @@ map <C-K> :bnext<CR>  " next buffer
 
 " mute highlighting
 nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>
+
 " Easy Expansion of the Active File Directory
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
@@ -176,26 +205,13 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 "nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
 
 " Puppet lint arguments
-"let g:syntastic_puppet_puppetlint_args = "--no-80chars-check"
-"let g:syntastic_puppet_puppetlint_args = "--no-class_inherits_from_params_class-check"
+let g:syntastic_puppet_puppetlint_args = '--no-80chars-check --no-documentation-check --no-autoloader_layout-check'
 
 " RSpec.vim mappings
 map <Leader>t :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 map <Leader>a :call RunAllSpecs()<CR>
-
-"let g:indentLine_char = '︙'
-let g:indentLine_char = '┆'
-
-" tmux line configuration
-"let g:tmuxline_preset = {
-"      \'a'    : '#S',
-"      \'b'    : '#W',
-"      \'win'  : '#I #W',
-"      \'cwin' : '#I #W',
-"      \'y'    : '%r',
-"      \'z'    : '#H'}
 
 let g:tmuxline_preset = {
       \'a'    : '❐ #S',
@@ -209,9 +225,9 @@ let g:tmuxline_theme = 'powerline'
 
 " Switch back to blue
 function! AirlineThemePatch(palette)
-    let a:palette.normal.airline_a = [ '#ffffff', '#268bd2', 255, 33 ]
-  endfunction
-  let g:airline_theme_patch_func = 'AirlineThemePatch'
+  let a:palette.normal.airline_a = [ '#ffffff', '#268bd2', 255, 33 ]
+endfunction
+let g:airline_theme_patch_func = 'AirlineThemePatch'
 
 autocmd BufRead,BufNewFile *
       \  if expand('%:p:h') =~# '.*/cookbooks/.*'
@@ -219,14 +235,47 @@ autocmd BufRead,BufNewFile *
       \|   setlocal errorformat=%m:\ %f:%l
       \| endif
 
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-
 " JSON
 au BufRead,BufNewFile *.json set filetype=json
+
+" Puppet ctags
+let g:tagbar_type_puppet = {
+  \ 'ctagstype': 'puppet',
+  \ 'kinds': [
+    \'c:class',
+    \'s:site',
+    \'n:node',
+    \'d:definition',
+    \'r:resource',
+    \'f:default'
+  \]
+\}
+
+" Go ctags
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+\ }
