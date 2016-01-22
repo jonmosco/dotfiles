@@ -46,6 +46,7 @@ Plugin 'fatih/vim-go'
 Plugin 'Gundo'
 Plugin 'majutsushi/tagbar'
 Plugin 'ConradIrwin/vim-bracketed-paste'
+Plugin 'Yggdroot/indentLine'
 
 if v:version >= 703 && has("patch584")
   Plugin 'Valloric/YouCompleteMe'
@@ -132,6 +133,9 @@ let NERDTreeMinimalUI=1
 map <Leader>n :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
+" Markdown
+let g:vim_markdown_folding_disabled = 1
+
 " ------------------------------------------------------------------------------
 " Misc formatting
 " ------------------------------------------------------------------------------
@@ -144,7 +148,11 @@ autocmd BufReadPost *
       \ endif | endif
 
 " Python tabs
-autocmd FileType python setl shiftwidth=4 tabstop=4
+autocmd FileType python
+      \ setl shiftwidth=4
+      \ tabstop=4
+      \ softtabstop=4
+      \ textwidth=79
 
 " Tabs
 " soft tabs, or tabs made up of space characters
@@ -187,12 +195,13 @@ nnoremap <F5> :GundoToggle<CR>
 " Toggle Tagbar
 nmap <F6> :TagbarToggle<CR>
 
-" Switch Tabs
-"map <C-K> gt
-"map <C-J> gT
-
 map <C-J> :bprev<CR>  " previous buffer
 map <C-K> :bnext<CR>  " next buffer
+
+" IndentLine
+let g:indentLine_char = '│'
+let g:indentLine_enabled = 0
+map <C-S> :IndentLinesToggle<CR> " Indent Line
 
 " mute highlighting
 nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>

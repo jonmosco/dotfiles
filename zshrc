@@ -14,6 +14,8 @@ export RI='-f ansi'
 export JAVA_HOME=$(/usr/libexec/java_home)
 export EDITOR=vim
 export GOROOT=/usr/local/go
+export GOPATH=$HOME/code/go
+export PATH=$PATH:$GOPATH/bin
 
 # Include local directories
 if [ -d $HOME/.zsh/misc/ ]; then
@@ -68,11 +70,6 @@ alias myip="ifconfig | perl -nle '/inet ([^ ]+)/ and print $1'"
 alias ..="cd .."
 alias mod='mkdir -p {files,manifests,templates,lib}'
 alias bexec='bundle exec'
-alias cf='chef generate'
-alias kc='kitchen converge'
-alias kd='kitchen destroy'
-alias kl='kitchen login'
-alias kv='kitchen verify'
 alias tar='gtar'
 
 # Completion menu
