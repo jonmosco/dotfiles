@@ -169,12 +169,16 @@ autocmd BufNewFile,BufRead Gemfile set filetype=ruby
 " JSON
 autocmd BufNewFile,BufRead *.json set ft=javascript
 
+" Go
+autocmd FileType go setlocal noet ts=8 sw=8 sts=8
+
 " Allow % to bounce between angles too
 set matchpairs+=<:>
 
 " End of Line niceness
 set list
-set listchars=tab:▸\ ,trail:☠
+set listchars=trail:☠
+"set listchars=tab:▸\ ,trail:☠
 
 " Turn off the annoying auto comment feature
 autocmd FileType * setlocal formatoptions-=ro

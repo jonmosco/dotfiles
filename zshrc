@@ -17,6 +17,9 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 
+# VPN workaround
+export DOCKER_HOST=tcp://127.0.0.1:2376
+
 # Include local directories
 if [ -d $HOME/.zsh/misc/ ]; then
   if [ "$(ls -A $HOME/.zsh/misc/)" ]; then
@@ -34,7 +37,11 @@ HISTFILE=$HOME/.history
 HISTSIZE=10000
 SAVEHIST=10000
 
-fpath=(~/.zsh/Completion $fpath)
+# Completion functions for commands are stored in files with names beginning
+# with an underscore _, and these files should be placed in a directory
+# listed in the $fpath variable. You can add a directory to $fpath by adding
+# a line like this to your ~/.zshrc file
+fpath=(~/.zsh/completion $fpath)
 
 # Options
 autoload -U promptinit
@@ -70,7 +77,7 @@ alias myip="ifconfig | perl -nle '/inet ([^ ]+)/ and print $1'"
 alias ..="cd .."
 alias mod='mkdir -p {files,manifests,templates,lib}'
 alias bexec='bundle exec'
-alias tar='gtar'
+alias dmachine='eval "$(docker-machine env default)"'
 
 # Completion menu
 zstyle ':completion:*' menu select=0
