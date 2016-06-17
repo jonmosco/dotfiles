@@ -6,9 +6,10 @@
 [color]
   ui = true
 [alias]
+  c = commit
+  co = checkout
   # See http://cat.pdx.edu/~hunner/git-lg.png for an example
   lg = "log --pretty=format:'%C(yellow)%h%C(reset) %C(blue)%an%C(reset) %C(cyan)%cr%C(reset) %s %C(green)%d%C(reset)' --graph --date-order"
-  co = checkout
   p = push
   s  = status
   st = status --short --branch

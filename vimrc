@@ -37,11 +37,13 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'tpope/vim-fugitive'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
-Plugin 'rodjek/vim-puppet'
+Plugin 'voxpupuli/vim-puppet'
 Plugin 'scrooloose/syntastic'
+Plugin 'chase/vim-ansible-yaml'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'fatih/vim-go'
 Plugin 'Gundo'
 Plugin 'majutsushi/tagbar'
@@ -131,7 +133,7 @@ let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
 "let NERDTreeWinPos = "right"
 map <Leader>n :NERDTreeToggle<CR>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Markdown
 let g:vim_markdown_folding_disabled = 1
@@ -177,7 +179,7 @@ set matchpairs+=<:>
 
 " End of Line niceness
 set list
-set listchars=trail:☠
+set listchars=tab:\ \ ,trail:☠
 "set listchars=tab:▸\ ,trail:☠
 
 " Turn off the annoying auto comment feature
@@ -292,3 +294,4 @@ let g:tagbar_type_go = {
     \ 'ctagsbin'  : 'gotags',
     \ 'ctagsargs' : '-sort -silent'
 \ }
+
