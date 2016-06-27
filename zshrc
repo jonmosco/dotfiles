@@ -73,7 +73,6 @@ alias vv='vagrant up --provider=virtualbox'
 alias vd='vagrant destroy --force'
 alias vs='vagrant status'
 alias vu='vagrant up'
-alias ls='ls -p'
 alias myip="ifconfig | perl -nle '/inet ([^ ]+)/ and print $1'"
 alias ..="cd .."
 alias mod='mkdir -p {files,manifests,templates,lib}'
