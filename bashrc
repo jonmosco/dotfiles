@@ -31,7 +31,6 @@ shopt -s checkwinsize
 shopt -s cdspell
 shopt -s login_shell
 shopt -s extglob
-shopt -s globstar
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -216,3 +215,6 @@ man() {
 }
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+bind 'set show-all-if-ambiguous on'
+bind 'TAB:menu-complete'

@@ -17,9 +17,6 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 
-# VPN workaround
-export DOCKER_HOST=tcp://127.0.0.1:2376
-
 # Include local directories
 if [ -d $HOME/.zsh/misc/ ]; then
   if [ "$(ls -A $HOME/.zsh/misc/)" ]; then

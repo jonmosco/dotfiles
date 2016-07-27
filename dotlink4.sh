@@ -3,7 +3,7 @@
 # dotlink4.sh: The fourth version of my profile setup script.
 # Updates: Complete rewrite to be more specific on the function
 # of the system we are installing on
-# 
+#
 # FEATURES:
 # - Provides usage statement
 # - Choose what portions of profile to set
@@ -16,6 +16,8 @@
 #   the plugins?
 # - For skeleton files, only remote if files are not symbolic links since we
 #   are creating them
+# - Add Vim as an option since we are now using a plugin manager and no longer
+#   need individual git repos
 #
 # Caveats:
 # -On some default Linux installs, profiles are set up for new users
@@ -38,7 +40,6 @@ SKEL="bashrc
 bash_profile"
 
 # OS
-#OSTYPE=`uname`
 OSTYPE=$( uname )
 
 # Usage
@@ -61,15 +62,15 @@ _ostype () {
   case $OSTYPE in
     Darwin)
     PATH=/bin:/usr/local/bin:/opt/local/bin:/usr/bin:/usr/X11/bin
-    GIT=`command -v git`
-    WGET=`command -v wget`
-    CURL=`command -v curl`
+    GIT=$(command -v git)
+    WGET=$(command -v wget)
+    CURL=$(command -v curl)
     ;;
     Linux)
     PATH=/bin:/usr/bin:/usr/local/bin:/usr/bin:/usr/X11/bin
-    GIT=`command -v git`
-    WGET=`command -v wget`
-    CURL=`command -v curl`
+    GIT=$(command -v git)
+    WGET=$(command -v wget)
+    CURL=$(command -v curl)
     ;;
   esac
 }
@@ -82,19 +83,19 @@ _base () {
   # remove /etc/skel files if they exist
   for skel in $SKEL
   do
-    if [ ! -L ~/.$skel ]; then
+    if [ ! -L "$HOME/.$skel" ]; then
       echo "Skeleton files exist..removing.."
-      rm ~/.$skel
+      rm "$HOME/.$skel"
       echo "Zapped skeleton files"
     fi
   done
 
   for dotfiles in $DOTFILES
   do
-    if [ -L ~/.$dotfiles ]; then
+    if [ -L "$HOME/.$dotfiles" ]; then
       echo "Sym link for $dotfiles already exists."
     else
-      ln -s ~/.dotfiles/$dotfiles ~/.$dotfiles
+      ln -s "$HOME/.dotfiles/$dotfiles $HOME/.$dotfiles"
       echo "$dotfiles symlink created."
     fi
   done
@@ -102,19 +103,19 @@ _base () {
   # Vim setup
 
   # backup directory
-  if [ -d ~/.backups ]; then
+  if [ -d "$HOME/.backups" ]; then
     echo "backups directory already exists."
   else
-    mkdir ~/.backups
+    mkdir "$HOME/.backups"
     echo "Vim backup directory created."
   fi
 
   # vim plugins
-  if [ -d ~/.vim/bundle ]; then
+  if [ -d "$HOME/.vim/bundle" ]; then
     echo "bundle dir already exists."
   else
-    mkdir -p ~/.vim/autoload ~/.vim/bundle
-    cd ~/.vim/bundle
+    mkdir -p "$HOME/.vim/autoload $HOME/.vim/bundle"
+    cd "$HOME/.vim/bundle" || exit
     echo "Vim autoload and bundle directory created.  Proceding to checkout plugins..."
     $GIT clone https://github.com/scrooloose/nerdtree.git
     $GIT clone git://github.com/godlygeek/tabular.git
@@ -134,30 +135,30 @@ _base () {
       instructions."
     fi
 
-    $PATHOGEN ~/.vim/autoload/pathogen.vim \
-    https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+    "$PATHOGEN $HOME/.vim/autoload/pathogen.vim \
+    https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
 
   fi
 }
 
 _shell() {
-  if [[ $USER_SHELL =~ zsh ]]; then
-    ln -s ~/.dotfiles/zshrc ~/.zshrc
+  if [[ "$USER_SHELL" =~ zsh ]]; then
+    ln -s "$HOME/.dotfiles/zshrc $HOME/.zshrc"
   fi
 }
 
 # Mutt settings
 _mutt () {
-  if [ -d ~/.mutt ]; then
+  if [ -d "$HOME/.mutt" ]; then
     echo "mutt directory already exists."
   else
-    mkdir ~/.mutt
+    mkdir "$HOME/.mutt"
     echo "mutt directory created."
   fi
-  if [ -L ~/.muttrc ]; then
+  if [ -L "$HOME/.muttrc" ]; then
     echo "Sym link for muttrc already exists."
   else
-    ln -s ~/.dotfiles/muttrc ~/.muttrc
+    ln -s "$HOME/.dotfiles/muttrc $HOME/.muttrc"
     echo "muttrc symlink created"
   fi
   # Test
@@ -167,12 +168,12 @@ _mutt () {
 # XWindows Settings
 _xwindows () {
   _ostype
-  if [ -L ~/.Xresources ]; then
+  if [ -L "$HOME/.Xresources" ]; then
     echo "Sym link for Xresources already exists."
   else
-    ln -s ~/.dotfiles/Xresources ~/.Xresources
+    ln -s "$HOME/.dotfiles/Xresources $HOME/.Xresources"
     echo "Xresources symlink created....Merging Xresources"
-    xrdb -merge ~/.Xresourses
+    xrdb -merge "$HOME/.Xresourses"
     echo "XWindows settings initialized"
   fi
 }
@@ -196,8 +197,4 @@ while getopts "b:s:mXh" opt; do
   esac
 done
 
-shift $(($OPTIND - 1))
-
-#if [ $# -eq 0 ]; then
-#  _usage
-#fi
+shift $((OPTIND - 1))
