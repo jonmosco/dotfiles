@@ -34,6 +34,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'}
 Plugin 'tpope/vim-fugitive'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'

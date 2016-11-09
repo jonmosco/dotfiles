@@ -17,18 +17,6 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 
-# Include local directories
-if [ -d $HOME/.zsh/misc/ ]; then
-  if [ "$(ls -A $HOME/.zsh/misc/)" ]; then
-    for config_file ($HOME/.zsh/misc/*) source $config_file
-  fi
-fi
-
-# Packer.io
-if [ -d "$HOME/bin/packer" ] ; then
-  export PATH="$HOME/bin/packer:$PATH"
-fi
-
 # History
 HISTFILE=$HOME/.history
 HISTSIZE=10000
@@ -82,16 +70,6 @@ zstyle ':completion:*' verbose yes
 zstyle ':completion:*:descriptions' format '%B%d%b'
 zstyle ':completion:*:messages' format '%d'
 
-# Git prompt
-source ~/.zsh/zsh-vcs-prompt/zshrc.sh
-ZSH_VCS_PROMPT_ENABLE_CACHING='true'
-ZSH_VCS_PROMPT_HIDE_COUNT='true'
-
-PROMPT='%{$fg[cyan]%}┌[%{$fg_bold[white]%}%n%{$reset_color%}%{$fg[cyan]%}@%{$fg_bold[white]%}%M%{$reset_color%}%{$fg[cyan]%}]%{$fg[white]%}-%{$fg[cyan]%}(%{$fg_bold[red]%}%~%{$reset_color%}%{$fg[cyan]%})%{$reset_color%}$(vcs_super_info)%{$reset_color%}
-%{$fg[cyan]%}└> % %{$reset_color%}'
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
 # Color man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;38;5;74m'
@@ -101,4 +79,15 @@ export LESS_TERMCAP_so=$'\E[38;33;246m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+# local files
+if [[ -d "$HOME/.zsh/misc/" ]]; then
+  for config_file in $HOME/.zsh/misc/*.*; do
+    source $config_file
+  done
+fi
+
+# Local environment variables and settings.  These should not go in source
+# control (public)
+if [[ -a ~/.localrc ]]; then
+  source ~/.localrc
+fi
