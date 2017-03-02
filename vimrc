@@ -50,10 +50,12 @@ Plugin 'Gundo'
 Plugin 'majutsushi/tagbar'
 Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'Yggdroot/indentLine'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'Glench/Vim-Jinja2-Syntax'
 
-if v:version >= 703 && has("patch584")
-  Plugin 'Valloric/YouCompleteMe'
-endif
+" if v:version >= 703 && has("patch584")
+"   Plugin 'Valloric/YouCompleteMe'
+" endif
 
 call vundle#end()
 filetype plugin indent on

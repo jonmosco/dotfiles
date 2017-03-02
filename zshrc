@@ -57,12 +57,12 @@ alias vf='vagrant up --provider=vmware_fusion'
 alias vv='vagrant up --provider=virtualbox'
 alias vd='vagrant destroy --force'
 alias vs='vagrant status'
+alias vgs='vagrant global-status'
 alias vu='vagrant up'
 alias myip="ifconfig | perl -nle '/inet ([^ ]+)/ and print $1'"
 alias ..="cd .."
 alias mod='mkdir -p {files,manifests,templates,lib}'
 alias bexec='bundle exec'
-alias dmachine='eval "$(docker-machine env default)"'
 
 # Completion menu
 zstyle ':completion:*' menu select=0
