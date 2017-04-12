@@ -78,6 +78,7 @@ mailboxes +----Gmail---- \
           +gmail/Accounts \
           +gmail/Bills \
           +gmail/CSC \
+          +gmail/Desk \
           +gmail/HMS \
           +gmail/ISM \
           +gmail/Jobs \
@@ -137,6 +138,8 @@ macro index O "<shell-escape>offlineimap<enter>"           "run offlineimap to s
 macro index o "<shell-escape>offlineimap -qf INBOX<enter>" "run offlineimap to sync inbox"
 bind compose p postpone-message
 bind index p recall-message
+bind index - collapse-thread
+bind index _ collapse-all
 
 # Move messages
 macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"

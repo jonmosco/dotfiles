@@ -21,7 +21,7 @@ nametrans = lambda folder: {'drafts':  '[Gmail]/Drafts',
                             'trash':   '[Gmail]/Trash',
                             'archive': '[Gmail]/All Mail',
                             }.get(folder, folder)
-cert_fingerprint = 2d3d801997e470c20896c2ebd03ec6b45a538d6d
+cert_fingerprint = 1a4771d194333864c804b0bc166589a28f742661
 
 [Repository Gmail-Remote]
 maxconnections = 1
@@ -39,7 +39,7 @@ folderfilter = lambda folder: folder not in ['[Gmail]/Trash',
                                              '[Gmail]/Important',
                                              '[Gmail]/Spam',
                                              ]
-cert_fingerprint = e10e301e29ddcea6e027c29aa325db04e604ef51
+cert_fingerprint = 3ffdb8519c1c8242ce8387d3d9fccc208a776b4a
 
 
 [Account forkedprocess]

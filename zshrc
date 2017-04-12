@@ -79,6 +79,14 @@ export LESS_TERMCAP_so=$'\E[38;33;246m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
+# Prompt
+source ~/.zsh/prompt/fox.zsh-theme
+
+# VCS Prompt
+source ~/.zsh/zsh-vcs-prompt/zshrc.sh
+ZSH_VCS_PROMPT_ENABLE_CACHING='true'
+ZSH_VCS_PROMPT_HIDE_COUNT='true'
+
 # local files
 if [[ -d "$HOME/.zsh/misc/" ]]; then
   for config_file in $HOME/.zsh/misc/*.*; do

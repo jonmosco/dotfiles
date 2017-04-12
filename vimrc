@@ -1,25 +1,4 @@
 " -----------------------------------------------------------------------------
-" TODO
-" -----------------------------------------------------------------------------
-
-" - fix color scheme [DONE 1/5/12]
-"   NOTE: Switched to Solarized
-" - Better Perl support
-" - SVN [DONE 1/3/12]
-" - comment everything!
-" - move comments to the right
-" - screen color support [DONE 1/30/12]
-" - copy/paste for Mac OS X [DONE 1/7/12]
-"   MacVim handles this perfectly
-" - Fix indenting for Python [DONE 1/8/12]
-" - Fix indenting
-" - Fix indenting for Puppet [DONE 2/21/2013]
-" - Better keybindings
-" - Remove old junk!
-" - Use powerline [DONE 7/30/13]
-" - Use Softabs [DONE 8/2/13]
-
-" -----------------------------------------------------------------------------
 " Global Settings
 " -----------------------------------------------------------------------------
 
@@ -49,14 +28,11 @@ Plugin 'fatih/vim-go'
 Plugin 'Gundo'
 Plugin 'majutsushi/tagbar'
 Plugin 'ConradIrwin/vim-bracketed-paste'
-Plugin 'Yggdroot/indentLine'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'Glench/Vim-Jinja2-Syntax'
-
-" if v:version >= 703 && has("patch584")
-"   Plugin 'Valloric/YouCompleteMe'
-" endif
-
+Plugin 'junegunn/goyo.vim'
+Plugin 'tomtom/tcomment_vim'
+Plugin 'nathanaelkane/vim-indent-guides'
 call vundle#end()
 filetype plugin indent on
 
@@ -130,6 +106,7 @@ let g:airline#extensions#tmuxline#enabled = 0
 
 " NERDtree
 map <C-n> :NERDTreeToggle<CR>
+
 let NERDTreeMapOpenInTab='\r'
 let NERDChristmasTree=1
 let NERDTreeShowHidden=1
@@ -295,3 +272,14 @@ let g:tagbar_type_go = {
     \ 'ctagsargs' : '-sort -silent'
 \ }
 
+" Leader key by default is \
+" Remap to ,
+let mapleader = ","
+
+let g:go_template_autocreate = 0
+au FileType go nmap <leader>r <Plug>(go-run)
+
+
+let g:indent_guides_guide_size = 1
+let g:indent_guides_color_change_percent = 3
+let g:indent_guides_enable_on_vim_startup = 1
