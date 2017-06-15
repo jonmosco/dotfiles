@@ -99,3 +99,10 @@ fi
 if [[ -a ~/.localrc ]]; then
   source ~/.localrc
 fi
+
+# Kubernetes kubectl completion
+if [ $commands[kubectl] ]; then
+  source <(kubectl completion zsh)
+fi
+
+eval "$(chef shell-init zsh)"
