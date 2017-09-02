@@ -18,7 +18,8 @@ Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'}
 Plugin 'tpope/vim-fugitive'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
-Plugin 'voxpupuli/vim-puppet'
+"Plugin 'voxpupuli/vim-puppet'
+Plugin 'rodjek/vim-puppet'
 Plugin 'scrooloose/syntastic'
 Plugin 'chase/vim-ansible-yaml'
 Plugin 'godlygeek/tabular'
@@ -34,8 +35,6 @@ Plugin 'Glench/Vim-Jinja2-Syntax'
 Plugin 'junegunn/goyo.vim'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'google/vim-searchindex'
-"Plugin 'tpope/vim-unimpaired'
-
 call vundle#end()
 filetype plugin indent on
 
@@ -138,6 +137,7 @@ autocmd FileType python
       \ tabstop=4
       \ softtabstop=4
       \ textwidth=79
+      \ expandtab
 
 " Tabs
 " soft tabs, or tabs made up of space characters
