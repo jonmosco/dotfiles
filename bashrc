@@ -79,7 +79,6 @@ case $OSTYPE in
     #alias ls='ls --color=always -F'
     alias la='ls -ltr'
     alias p='ps aux'
-    alias reggie='mount -t nfs 172.16.2.2:/Uploads ~/mnt'
     alias ostest='echo Darwin settings applied!'
 
     # Bash completion via homebrew
@@ -214,7 +213,6 @@ man() {
     man "$@"
 }
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
 bind 'set show-all-if-ambiguous on'
 bind 'TAB:menu-complete'

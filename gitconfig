@@ -7,6 +7,7 @@
   ui = true
 [alias]
   c = commit
+  comit = commit
   co = checkout
   # See http://cat.pdx.edu/~hunner/git-lg.png for an example
   lg = "log --pretty=format:'%C(yellow)%h%C(reset) %C(blue)%an%C(reset) %C(cyan)%cr%C(reset) %s %C(green)%d%C(reset)' --graph --date-order"
@@ -14,13 +15,16 @@
   s  = status
   st = status --short --branch
 [core]
-  excludesfile = /Users/jmosco/.gitignore_global
+	excludesfile = /Users/jmosco/.gitignore_global
 [difftool "sourcetree"]
   md = opendiff \"$LOCAL\" \"$REMOTE\"
   ath =
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
 [mergetool "sourcetree"]
   md = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-  trustExitCode = true
+	trustExitCode = true
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 [push]
   default = current
 [include]

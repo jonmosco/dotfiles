@@ -12,6 +12,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
+"Plugin 'matze/vim-move'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'}
 Plugin 'tpope/vim-fugitive'
@@ -32,7 +33,9 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'Glench/Vim-Jinja2-Syntax'
 Plugin 'junegunn/goyo.vim'
 Plugin 'tomtom/tcomment_vim'
-Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'google/vim-searchindex'
+"Plugin 'tpope/vim-unimpaired'
+
 call vundle#end()
 filetype plugin indent on
 
@@ -283,3 +286,9 @@ au FileType go nmap <leader>r <Plug>(go-run)
 let g:indent_guides_guide_size = 1
 let g:indent_guides_color_change_percent = 3
 let g:indent_guides_enable_on_vim_startup = 1
+
+" Jenkinsfile
+au BufReadPost Jenkinsfile set syntax=groovy
+au BufReadPost Jenkinsfile set filetype=groovy
+
+let g:move_key_modifier = 'C'

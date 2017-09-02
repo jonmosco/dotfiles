@@ -5,7 +5,8 @@
 # zshrc
 # zlogin
 
-export PATH="$PATH:$HOME/bin:/usr/local/opt/gnu-tar/libexec/gnubin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin"
+#export PATH="$PATH:$HOME/bin:/usr/local/bin:/usr/local/opt/gnu-tar/libexec/gnubin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin"
+export PATH="$HOME/bin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/gnu-tar/libexec/gnubin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin"
 export CLICOLOR=1
 export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 export GREP_COLORS='1;37;41'
@@ -83,9 +84,11 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 source ~/.zsh/prompt/fox.zsh-theme
 
 # VCS Prompt
-source ~/.zsh/zsh-vcs-prompt/zshrc.sh
-ZSH_VCS_PROMPT_ENABLE_CACHING='true'
-ZSH_VCS_PROMPT_HIDE_COUNT='true'
+#source ~/.zsh/zsh-vcs-prompt/zshrc.sh
+#ZSH_VCS_PROMPT_ENABLE_CACHING='true'
+#ZSH_VCS_PROMPT_HIDE_COUNT='true'
+
+source ~/.zsh/zsh-git-prompt/zshrc.sh
 
 # local files
 if [[ -d "$HOME/.zsh/misc/" ]]; then
@@ -98,4 +101,12 @@ fi
 # control (public)
 if [[ -a ~/.localrc ]]; then
   source ~/.localrc
+fi
+
+# Rbenv
+eval "$(rbenv init -)"
+
+# Kubernetes kubectl completion
+if [ $commands[kubectl] ]; then
+  source <(kubectl completion zsh)
 fi
