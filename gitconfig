@@ -5,6 +5,10 @@
   helper = osxkeychain
 [color]
   ui = true
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
 [alias]
   c = commit
   comit = commit
@@ -14,6 +18,7 @@
   p = push
   s  = status
   st = status --short --branch
+  fup = fetch upstream
 [core]
 	excludesfile = /Users/jmosco/.gitignore_global
 [difftool "sourcetree"]

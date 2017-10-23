@@ -6,7 +6,7 @@
 # zlogin
 
 #export PATH="$PATH:$HOME/bin:/usr/local/bin:/usr/local/opt/gnu-tar/libexec/gnubin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin"
-export PATH="$HOME/bin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/gnu-tar/libexec/gnubin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin"
+export PATH="$HOME/bin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/gnu-tar/libexec/gnubin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
 export CLICOLOR=1
 export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 export GREP_COLORS='1;37;41'
