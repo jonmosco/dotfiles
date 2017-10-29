@@ -4,5 +4,5 @@ mutt/sig
 mutt/temp
 mutt/offlineimap.pyc
 tmux/plugins/
-zsh/misc/
 zsh/local*
+vim/bundle/

@@ -5,10 +5,9 @@
 # zshrc
 # zlogin
 
-#export PATH="$PATH:$HOME/bin:/usr/local/bin:/usr/local/opt/gnu-tar/libexec/gnubin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin"
-export PATH="$HOME/bin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/gnu-tar/libexec/gnubin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
-export CLICOLOR=1
-export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+export PATH="$HOME/bin:$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
+#export CLICOLOR=1
+#export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 export GREP_COLORS='1;37;41'
 export LESS='-R -i -g'
 export RI='-f ansi'
@@ -17,6 +16,7 @@ export EDITOR=vim
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
+export KUBECONFIG="$HOME/.kube/cluster-merge:$HOME/.kube/config-dev:$HOME/.kube/config-uat"
 
 # History
 HISTFILE=$HOME/.history
@@ -51,7 +51,9 @@ alias show_hidden="defaults write com.apple.finder AppleShowAllFiles TRUE && kil
 alias hide_hidden="defaults write com.apple.finder AppleShowAllFiles FALSE && killall Finder"
 
 # General
-alias l='ls -lFha'
+#alias ls='ls -F'
+alias ls='gls --color -F'
+alias l='gls -lFha --color'
 alias grep='grep --color'
 alias rm='rm -i'
 alias vf='vagrant up --provider=vmware_fusion'
@@ -62,8 +64,6 @@ alias vgs='vagrant global-status'
 alias vu='vagrant up'
 alias myip="ifconfig | perl -nle '/inet ([^ ]+)/ and print $1'"
 alias ..="cd .."
-alias mod='mkdir -p {files,manifests,templates,lib}'
-alias bexec='bundle exec'
 
 # Completion menu
 zstyle ':completion:*' menu select=0
@@ -83,16 +83,11 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 # Prompt
 source ~/.zsh/prompt/fox.zsh-theme
 
-# VCS Prompt
-#source ~/.zsh/zsh-vcs-prompt/zshrc.sh
-#ZSH_VCS_PROMPT_ENABLE_CACHING='true'
-#ZSH_VCS_PROMPT_HIDE_COUNT='true'
-
 source ~/.zsh/zsh-git-prompt/zshrc.sh
 
-# local files
-if [[ -d "$HOME/.zsh/misc/" ]]; then
-  for config_file in $HOME/.zsh/misc/*.*; do
+# local configuration files
+if [[ -d "$HOME/.zsh/" ]]; then
+  for config_file in $HOME/.zsh/*.zsh; do
     source $config_file
   done
 fi
@@ -104,9 +99,11 @@ if [[ -a ~/.localrc ]]; then
 fi
 
 # Rbenv
-eval "$(rbenv init -)"
+#eval "$(rbenv init -)"
 
 # Kubernetes kubectl completion
 if [ $commands[kubectl] ]; then
   source <(kubectl completion zsh)
 fi
+
+eval `gdircolors .dir_colors`

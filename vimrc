@@ -12,13 +12,12 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
-"Plugin 'matze/vim-move'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'}
 Plugin 'tpope/vim-fugitive'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
-"Plugin 'voxpupuli/vim-puppet'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'rodjek/vim-puppet'
 Plugin 'scrooloose/syntastic'
 Plugin 'chase/vim-ansible-yaml'
@@ -35,6 +34,9 @@ Plugin 'Glench/Vim-Jinja2-Syntax'
 Plugin 'junegunn/goyo.vim'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'google/vim-searchindex'
+Plugin 'Yggdroot/indentLine'
+Plugin 'hashivim/vim-terraform'
+Plugin 'tpope/vim-commentary'
 call vundle#end()
 filetype plugin indent on
 
@@ -198,10 +200,6 @@ nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>
 " Easy Expansion of the Active File Directory
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
-" Enable profiling
-"nnoremap <silent> <leader>DD :exe ":profile start profile.log"<cr>:exe ":profile func *"<cr>:exe ":profile file *"<cr>
-"nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
-
 " RSpec.vim mappings
 map <Leader>t :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
@@ -233,55 +231,12 @@ autocmd BufRead,BufNewFile *
 " JSON
 au BufRead,BufNewFile *.json set filetype=json
 
-" Puppet ctags
-let g:tagbar_type_puppet = {
-  \ 'ctagstype': 'puppet',
-  \ 'kinds': [
-    \'c:class',
-    \'s:site',
-    \'n:node',
-    \'d:definition',
-    \'r:resource',
-    \'f:default'
-  \]
-\}
-
-" Go ctags
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-
 " Leader key by default is \
 " Remap to ,
 let mapleader = ","
 
 let g:go_template_autocreate = 0
 au FileType go nmap <leader>r <Plug>(go-run)
-
 
 let g:indent_guides_guide_size = 1
 let g:indent_guides_color_change_percent = 3
@@ -292,3 +247,76 @@ au BufReadPost Jenkinsfile set syntax=groovy
 au BufReadPost Jenkinsfile set filetype=groovy
 
 let g:move_key_modifier = 'C'
+
+" ctags
+
+let g:tagbar_type_ansible = {
+  \ 'ctagstype' : 'ansible',
+  \ 'kinds' : [
+    \ 't:tasks'
+  \ ],
+  \ 'sort' : 0
+  \ }
+
+let g:tagbar_type_go = {
+	\ 'ctagstype' : 'go',
+	\ 'kinds'     : [
+		\ 'p:package',
+		\ 'i:imports:1',
+		\ 'c:constants',
+		\ 'v:variables',
+		\ 't:types',
+		\ 'n:interfaces',
+		\ 'w:fields',
+		\ 'e:embedded',
+		\ 'm:methods',
+		\ 'r:constructor',
+		\ 'f:functions'
+	\ ],
+	\ 'sro' : '.',
+	\ 'kind2scope' : {
+		\ 't' : 'ctype',
+		\ 'n' : 'ntype'
+	\ },
+	\ 'scope2kind' : {
+		\ 'ctype' : 't',
+		\ 'ntype' : 'n'
+	\ },
+	\ 'ctagsbin'  : 'gotags',
+	\ 'ctagsargs' : '-sort -silent'
+\ }
+
+let g:tagbar_type_groovy = {
+    \ 'ctagstype' : 'groovy',
+    \ 'kinds'     : [
+        \ 'p:package:1',
+        \ 'c:classes',
+        \ 'i:interfaces',
+        \ 't:traits',
+        \ 'e:enums',
+        \ 'm:methods',
+        \ 'f:fields:1'
+    \ ]
+\ }
+
+let g:tagbar_type_puppet = {
+    \ 'ctagstype': 'puppet',
+    \ 'kinds': [
+        \'c:class',
+        \'s:site',
+        \'n:node',
+        \'d:definition'
+      \]
+    \}
+
+let g:tagbar_type_terraform = {
+    \ 'ctagstype' : 'terraform',
+    \ 'kinds' : [
+    \ 'r:resources',
+    \ 'm:modules',
+    \ 'o:outputs',
+    \ 'v:variables',
+    \ 'f:tfvars'
+    \ ],
+    \ 'sort' : 0
+    \ }
