@@ -184,7 +184,7 @@ nnoremap <CR>   :noh<CR><CR>
 nnoremap <F5> :GundoToggle<CR>
 
 " Toggle Tagbar
-nmap <F6> :TagbarToggle<CR>
+nmap tB :TagbarToggle<CR>
 
 map <C-J> :bprev<CR>  " previous buffer
 map <C-K> :bnext<CR>  " next buffer
