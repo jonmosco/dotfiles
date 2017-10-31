@@ -108,6 +108,17 @@ let g:airline#extensions#tabline#fnamecollapse = 1
 let g:airline#extensions#tabline#tab_nr_type = 0 " tab number
 let g:airline#extensions#tmuxline#enabled = 0
 
+
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 " NERDtree
 map <C-n> :NERDTreeToggle<CR>
 
@@ -181,10 +192,10 @@ let g:tagbar_ctags_bin='/usr/local/bin/ctags'
 nnoremap <CR>   :noh<CR><CR>
 
 " Undo path
-nnoremap <F5> :GundoToggle<CR>
+nnoremap gU :GundoToggle<CR>
 
 " Toggle Tagbar
-nmap tB :TagbarToggle<CR>
+nmap tT :TagbarToggle<CR>
 
 map <C-J> :bprev<CR>  " previous buffer
 map <C-K> :bnext<CR>  " next buffer
@@ -192,7 +203,7 @@ map <C-K> :bnext<CR>  " next buffer
 " IndentLine
 let g:indentLine_char = '│'
 let g:indentLine_enabled = 0
-map <C-S> :IndentLinesToggle<CR> " Indent Line
+map tI :IndentLinesToggle<CR> " Indent Line
 
 " mute highlighting
 nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>
@@ -205,16 +216,6 @@ map <Leader>t :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 map <Leader>a :call RunAllSpecs()<CR>
-
-let g:tmuxline_preset = {
-      \'a'    : '❐ #S',
-      \'win'  : ['#I', '#W'],
-      \'cwin' : ['#I', '#W'],
-      \'x'    : '%R',
-      \'y'    : ['%a', '%Y'],
-      \'z'    : '#H'}
-
-let g:tmuxline_theme = 'powerline'
 
 " Switch back to blue
 function! AirlineThemePatch(palette)
