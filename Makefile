@@ -13,3 +13,6 @@ vim:
 
 brew:
 	brew install shellcheck
+
+shell:
+	git clone https://github.com/olivierverdier/zsh-git-prompt.git ${HOME}/.zsh/zsh-git-prompt
