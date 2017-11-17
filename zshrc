@@ -5,7 +5,7 @@
 # zshrc
 # zlogin
 
-export PATH="$HOME/bin:$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
+export PATH="$HOME/bin:$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:/usr/local/go/bin:/usr/local/sbin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
 #export CLICOLOR=1
 #export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 export GREP_COLORS='1;37;41'
@@ -16,7 +16,7 @@ export EDITOR=vim
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
-export KUBECONFIG="$HOME/.kube/cluster-merge:$HOME/.kube/config-dev:$HOME/.kube/config-uat"
+export KUBECONFIG="$HOME/.kube/cluster-merge:$HOME/.kube/config-dev:$HOME/.kube/config-uat:$HOME/.kube/config-prod"
 
 # History
 HISTFILE=$HOME/.history
@@ -46,23 +46,11 @@ setopt beep
 setopt IGNORE_EOF
 bindkey -e
 
-# Hidden files
-alias show_hidden="defaults write com.apple.finder AppleShowAllFiles TRUE && killall Finder"
-alias hide_hidden="defaults write com.apple.finder AppleShowAllFiles FALSE && killall Finder"
-
 # General
-#alias ls='ls -F'
 alias ls='gls --color -F'
 alias l='gls -lFha --color'
 alias grep='grep --color'
 alias rm='rm -i'
-alias vf='vagrant up --provider=vmware_fusion'
-alias vv='vagrant up --provider=virtualbox'
-alias vd='vagrant destroy --force'
-alias vs='vagrant status'
-alias vgs='vagrant global-status'
-alias vu='vagrant up'
-alias myip="ifconfig | perl -nle '/inet ([^ ]+)/ and print $1'"
 alias ..="cd .."
 
 # Completion menu
@@ -81,7 +69,8 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 # Prompt
-source ~/.zsh/prompt/fox.zsh-theme
+# source ~/.zsh/prompt/fox.zsh-theme
+source ~/.zsh/prompt/steeef.zsh-theme
 
 source ~/.zsh/zsh-git-prompt/zshrc.sh
 
@@ -98,12 +87,21 @@ if [[ -a ~/.localrc ]]; then
   source ~/.localrc
 fi
 
-# Rbenv
-#eval "$(rbenv init -)"
-
 # Kubernetes kubectl completion
 if [ $commands[kubectl] ]; then
   source <(kubectl completion zsh)
 fi
 
 eval `gdircolors .dir_colors`
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# Switch to a simple prompt to aid in pasting
+function screen_paste () {
+  PROMPT='$ '
+}
+
+# Restore default prompt
+function return_default () {
+  source ~/.zsh/prompt/steeef.zsh-theme
+}

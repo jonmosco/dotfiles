@@ -1,4 +1,4 @@
 # Global gitignore
 Tags
-tags
+tags/
 ~/.vim/bundle/

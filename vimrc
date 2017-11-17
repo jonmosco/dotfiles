@@ -108,7 +108,6 @@ let g:airline#extensions#tabline#fnamecollapse = 1
 let g:airline#extensions#tabline#tab_nr_type = 0 " tab number
 let g:airline#extensions#tmuxline#enabled = 0
 
-
 " Syntastic
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -121,13 +120,10 @@ let g:syntastic_check_on_wq = 0
 
 " NERDtree
 map <C-n> :NERDTreeToggle<CR>
-
 let NERDTreeMapOpenInTab='\r'
 let NERDChristmasTree=1
 let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
-"let NERDTreeWinPos = "right"
-map <Leader>n :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Markdown
@@ -176,7 +172,6 @@ set matchpairs+=<:>
 " End of Line niceness
 set list
 set listchars=tab:\ \ ,trail:☠
-"set listchars=tab:▸\ ,trail:☠
 
 " Turn off the annoying auto comment feature
 autocmd FileType * setlocal formatoptions-=ro
@@ -203,31 +198,19 @@ map <C-K> :bnext<CR>  " next buffer
 " IndentLine
 let g:indentLine_char = '│'
 let g:indentLine_enabled = 0
+let g:indent_guides_guide_size = 1
+let g:indent_guides_color_change_percent = 3
+let g:indent_guides_enable_on_vim_startup = 1
 map tI :IndentLinesToggle<CR> " Indent Line
 
 " mute highlighting
 nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>
-
-" Easy Expansion of the Active File Directory
-cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
-
-" RSpec.vim mappings
-map <Leader>t :call RunCurrentSpecFile()<CR>
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
 
 " Switch back to blue
 function! AirlineThemePatch(palette)
   let a:palette.normal.airline_a = [ '#ffffff', '#268bd2', 255, 33 ]
 endfunction
 let g:airline_theme_patch_func = 'AirlineThemePatch'
-
-autocmd BufRead,BufNewFile *
-      \  if expand('%:p:h') =~# '.*/cookbooks/.*'
-      \|   setlocal makeprg=foodcritic\ $*\ %
-      \|   setlocal errorformat=%m:\ %f:%l
-      \| endif
 
 " JSON
 au BufRead,BufNewFile *.json set filetype=json
@@ -238,10 +221,6 @@ let mapleader = ","
 
 let g:go_template_autocreate = 0
 au FileType go nmap <leader>r <Plug>(go-run)
-
-let g:indent_guides_guide_size = 1
-let g:indent_guides_color_change_percent = 3
-let g:indent_guides_enable_on_vim_startup = 1
 
 " Jenkinsfile
 au BufReadPost Jenkinsfile set syntax=groovy
