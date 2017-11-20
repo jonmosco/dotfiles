@@ -9,8 +9,8 @@ UNAME := $(shell uname)
 .PHONY: clean
 
 links:
-	for files in $(DOTFILES); do \
-		ln -sf $$(basename file) $(HOME)/.$$(basename file); \
+	for file in $(DOTFILES); do \
+		ln -sf $(HOME)/.dotfiles/$$file $(HOME)/$(addprefix .,$$file); \
 	done
 
 vim:
