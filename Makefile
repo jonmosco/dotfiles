@@ -2,7 +2,7 @@
 # workstation settings
 
 DOTFILES = zshrc vimrc gitconfig gitignore_global \
-					 bashrc bash_profile functions dockerfunctions
+	bashrc bash_profile functions dockerfunctions
 
 UNAME := $(shell uname)
 

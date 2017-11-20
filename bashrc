@@ -10,8 +10,6 @@ shopt -s cdspell
 shopt -s login_shell
 shopt -s extglob
 
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
 export EDITOR=vim
 export HISTCONTROL=ignoreboth
 export HISTFILESIZE=150000
@@ -61,12 +59,10 @@ _exitstatus ()
 
   EXITSTATUS="$?"
 
-  local RED="\033[0;31m"
-
   if [ "${EXITSTATUS}" -ne 0 ]; then
-    PS1="${RED}[$USER@\h:\w] \$ "
+    PS1="\[\e[37;41m\][${EXITSTATUS}]\[\e[0;33m\] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;35m\]: "
   else
-    PS1="[$USER@\h:\w] \$ "
+    PS1="\[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;35m\]: "
   fi
 
   # Secondary prompt
