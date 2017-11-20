@@ -10,7 +10,7 @@ UNAME := $(shell uname)
 
 links:
 	for files in $(DOTFILES); do \
-		ln -sf $$file $(HOME)/.$$file; \
+		ln -sf $$(basename file) $(HOME)/.$$(basename file); \
 	done
 
 vim:
