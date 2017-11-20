@@ -1,29 +1,7 @@
-###############################################################################
-#
-# Total rewrite of bashrc
-#
-# OS Loop will be handled by a case statement instead of a series of if
-# statements
-#
-# TODO:
-# - Needs testing on the following platforms:
-#   * BSD and Solaris
-# - Better way to notice what host we are on, perhaps a different color?
-# - Add variables for colors used with prompt; makes it way easier to read
-#   [DONE 7/11/13]
-# - Possibly put prompt info into a separate file ?
-#   ~/.bash.d/
-#
-###############################################################################
-complete -W "$(echo `cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | grep -v "\["`;)" ssh
-
 # General settings
 set -o noclobber
 set -o ignoreeof
-#set -o vi
 
-# options that control the shell behavior
-# don't overwrite the history file, add to it.
 shopt -s cmdhist
 shopt -s checkhash
 shopt -s histappend
@@ -36,30 +14,21 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export EDITOR=vim
 export HISTCONTROL=ignoreboth
-export HISTFILESIZE=15000
-export HISTSIZE=15000
+export HISTFILESIZE=150000
+export HISTSIZE=150000
 export HISTTIMEFORMAT="%D %I:%M "
 export PAGER=less
 export LESS='-R -i -g'
 export GREP_COLORS='1;37;41'
 export MAIL=$HOME/.mail
-export RI="--format ansi --width 70"
 
 # alias definitions
 alias l='ls -lFha'
 alias lt='ls -ltr'
-#alias p='ps -ef'
 alias h='history'
 alias ..='cd ..'
-alias gc='git commit'
-alias gs='git status'
 alias grep='grep --color'
 alias rmi='rm -i'
-alias gp='git push'
-alias vd='vagrant destroy --force'
-alias vu='vagrant up'
-alias vf='vagrant up --provider=vmware_fusion'
-alias mod='mkdir -p {manifests,templates,files,lib}'
 alias tree='tree -C'
 
 # Set OS specific settings
@@ -69,62 +38,7 @@ case $OSTYPE in
   Darwin)
     export PATH=$HOME/bin:/opt/local/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$PATH
     export CLICOLOR=1
-    #export LSCOLORS=GxFxCxDxBxDxDxxbadacad
-    # Solarized colors
     export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
-    # Thank you http://www.johnnypez.com/design-development/unable-to-find-a-java_home-at-on-mac-osx/
-    #export JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
-    export JAVA_HOME=$(/usr/libexec/java_home)
-
-    #alias ls='ls --color=always -F'
-    alias la='ls -ltr'
-    alias p='ps aux'
-    alias ostest='echo Darwin settings applied!'
-
-    # Bash completion via homebrew
-    if [ -f $(brew --prefix)/etc/bash_completion ]; then
-      . $(brew --prefix)/etc/bash_completion
-    fi
-
-    # AWS Credentials
-    if [ -f $HOME/.aws ]; then
-      source $HOME/.aws
-      # Add the EC2 bin to $PATH
-      export PATH=$PATH:$EC2_HOME/bin
-    fi
-
-    # VMware fusion
-    #if [ -d "/Applications/VMware Fusion.app" ]; then
-    # export PATH="$PATH:/Applications/VMware Fusion.app/Contents/Library"
-    #fi
-
-    vmboot()
-    {
-      # VMware fusion
-      if [ -d "/Applications/VMware Fusion.app" ]; then
-        export PATH="$PATH:/Applications/VMware Fusion.app/Contents/Library"
-        command vmrun "$@" nogui
-      fi
-    }
-
-    # Puppet Environment
-    export ENVPUPPET_BASEDIR=~/REPOS/
-    alias puppet='~/REPOS/puppet/ext/envpuppet puppet'
-    alias facter='~/REPOS/puppet/ext/envpuppet facter'
-
-    # Test the syntax of ERB templates
-    erbtest() {
-      erb -x -T '-' $1 | ruby -c
-    }
-
-    # update vagrant plugins
-    vp()
-    {
-      if [ "$(command -v vagrant)" ]; then
-        for i in `vagrant plugin list | awk {'print $1'}`; do vagrant plugin update $i; done
-      fi
-    }
-
     ;;
   Linux)
     export PATH=/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin
@@ -132,87 +46,31 @@ case $OSTYPE in
     export LSCOLORS=GxFxCxDxbxDxDxxbadacad
     alias ls='ls -F --color'
     alias p='ps -ef'
-    alias ostest='echo Linux settings applied!'
     ;;
   *BSD)
     if [ -e /usr/local/bin/colors ]; then
       export LSCOLORS=GxFxCxDxBxDxDxxbadacad
       alias ls='colorls -FG'
-      alias ostest='echo BSD settings applied!'
     fi
     ;;
 esac
 
-###############################################################################
-# Prompt
-# Change the color of our prompt if $? is not equal to 0
-# Im not going to lie, I love this function
-###############################################################################
 
 _exitstatus ()
 {
 
-    EXITSTATUS="$?"
+  EXITSTATUS="$?"
 
-    BROWN="\[\e[0;33m\]"
-    BLUE="\[\e[0;34m\]"
-    PURPLE="\[\e[0;35m\]"
-    CYAN="\[\e[0;36m\]"
-    RED="\033[0;31m"
-    GREEN="\[\e[0;32m\]"
-    GREY="\e[0;38m\]"
+  local RED="\033[0;31m"
 
-    #GITPROMPT="\[\e[0;34m\][\T] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " [%s]") \[\e[0;33m\]\$ \[\e[0m\]"
-    GITPROMPT="\[\e[0;34m\][\T] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]: \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " [%s]") \[\e[0;33m\]» \[\e[0m\]"
-    #GITPROMPT="\[\e[0;34m\][\T] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]: \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " [%s]") \[\e[0;33m\]➡  \[\e[0m\]"
-    #GITPROMPT="\[\e[0;34m\][\T] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]: \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " [%s]") \[\e[0;33m\]\$ \[\e[0m\]"
-    NOGITPROMPT="\[\e[0;34m\][\T]\[\e[0;33m\][\u@\h \[\e[0;36m\]\w\[\e[0;33m\]]\$ \[\e[0m\]"
-    #ERRORPROMPT="\[\e[37;41m\][\T]\[\e[0;33m\][\[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h \[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1) \[\e[0;33m\]]\$ \[\e[0m\]"
-    #ERRORPROMPT="\[\e[37;41m\][${EXITSTATUS}][\T]\[\e[0;33m\] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " [%s]") \[\e[0;33m\]\$ \[\e[0m\]"
-    ERRORPROMPT="\[\e[37;41m\][${EXITSTATUS}][\T]\[\e[0;33m\] \[\e[1;31m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;35m\]$(__git_ps1 " [%s]") \[\e[0;33m\]» \[\e[0m\]"
+  if [ "${EXITSTATUS}" -ne 0 ]; then
+    PS1="${RED}[$USER@\h:\w] \$ "
+  else
+    PS1="[$USER@\h:\w] \$ "
+  fi
 
-    if [[ -L ~/.git-prompt.sh && -L ~/.git-completion.bash ]]; then
-      source ~/.git-prompt.sh && source ~/.git-completion.bash
-      #GIT_PS1_SHOWUNTRACKEDFILES=true
-      GIT_PS1_SHOWDIRTYSTATE=true
-      GIT_PS1_SHOWCOLORHINTS=true
-      GIT_PS1_DESCRIBE_STYLE=default
-      #GIT_PS1_SHOWUPSTREAM=verbose
-      PROMPT="${GITPROMPT}"
-    else
-      # Prompt without git
-      PROMPT="${NOGITPROMPT}"
-    fi
-
-    if [ "${EXITSTATUS}" -ne 0 ]; then
-      PS1="${ERRORPROMPT}"
-    else
-      PS1="${PROMPT}"
-    fi
-
-    # Secondary prompt
-    PS2='> '
+  # Secondary prompt
+  PS2='> '
 }
 
 PROMPT_COMMAND=_exitstatus
-
-##############################################################################
-# End Prompt
-###############################################################################
-
-# color manpages
-# Needs some work
-man() {
-  env LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-    LESS_TERMCAP_md=$(printf "\e[1;31m") \
-    LESS_TERMCAP_me=$(printf "\e[0m") \
-    LESS_TERMCAP_se=$(printf "\e[0m") \
-    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-    LESS_TERMCAP_ue=$(printf "\e[0m") \
-    LESS_TERMCAP_us=$(printf "\e[1;32m") \
-    man "$@"
-}
-
-
-bind 'set show-all-if-ambiguous on'
-bind 'TAB:menu-complete'
