@@ -2,13 +2,13 @@
 # workstation settings
 
 DOTFILES = zshrc vimrc gitconfig gitignore_global \
-					 bashrc bash_profile
+					 bashrc bash_profile functions dockerfunctions
 
 .PHONY: clean
 
 links:
 	for files in $(DOTFILES); do \
-		ln -sf $(HOME)/.dotfiles/.$$file $(HOME)/.$$file; \
+		ln -sf $(HOME)/.dotfiles/$$file $(HOME)/.$$file; \
 	done
 
 	#ln -vsf ${PWD}/zshrc ${HOME}/.zshrc
