@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Switch to a simple prompt to aid in pasting
+function paste_prompt () {
+  export PROMPT='$ '
+}
+
+# Restore default prompt
+function default_prompt () {
+  source ~/.zsh/prompt/steeef.zsh-theme
+}
+
+# Flush DNS cache
+# sometimes after being on VPN, DNS gets a little strange
+function flush_dns() {
+  sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache
+}

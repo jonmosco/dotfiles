@@ -20,8 +20,8 @@ export KUBECONFIG="$HOME/.kube/cluster-merge:$HOME/.kube/config-dev:$HOME/.kube/
 
 # History
 HISTFILE=$HOME/.history
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=50000
+SAVEHIST=50000
 
 # Completion functions for commands are stored in files with names beginning
 # with an underscore _, and these files should be placed in a directory
@@ -81,11 +81,14 @@ if [[ -d "$HOME/.zsh/" ]]; then
   done
 fi
 
-# Local environment variables and settings.  These should not go in source
-# control (public)
-if [[ -a ~/.localrc ]]; then
-  source ~/.localrc
-fi
+# Load extra functions and helpers
+# Local environment variables and settings are kept in .localrc
+# These should not go in source control (public)
+for files in ~/.{dockerfunctions,localrc,functions}; do
+  if [[ -r "$files" ]] && [[ -f "$files" ]]; then
+    source "$files"
+  fi
+done
 
 # Kubernetes kubectl completion
 if [ $commands[kubectl] ]; then
@@ -95,13 +98,3 @@ fi
 eval `gdircolors .dir_colors`
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-# Switch to a simple prompt to aid in pasting
-function screen_paste () {
-  PROMPT='$ '
-}
-
-# Restore default prompt
-function return_default () {
-  source ~/.zsh/prompt/steeef.zsh-theme
-}

@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# function helpers for docker commands
+
+# Set our registry based on location
+function fp_registry() {
+  export REGISTRY=registry.forkedprocess.com
+  docker login -u jmosco registry.forkedprocess.com
+}
+
+function csc_registry() {
+  export REGISTRY=docker-dev-local.cscinfo.com
+  docker login -u jmosco docker-dev-local.cscinfo.com
+}
+
+# Get a containers PID
+function container_pid() {
+  docker inspect --format '{{ .State.Pid }}' "$1"
+}
+
+# Clean up images that are tagged <none>:<none>
+# dangling images and needs to be pruned
+function clean_dangling() {
+  docker rmi "$(docker images -f "dangling=true" -q)"
+}
+
+# Create our utility container
+# check if the image is local and exists, otherwise
+# build it then run the container
+function utility() {
+  docker run --rm -it ${REGISTRY}/jmosco-utility:1.0 /bin/bash
+}
+
+function dclean() {
+  local containers
+  containers=( $(docker ps -aq 2>/dev/null) )
+  docker rm "${containers[@]}" 2>/dev/null
+}

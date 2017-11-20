@@ -37,6 +37,7 @@ Plugin 'google/vim-searchindex'
 Plugin 'Yggdroot/indentLine'
 Plugin 'hashivim/vim-terraform'
 Plugin 'tpope/vim-commentary'
+Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 call vundle#end()
 filetype plugin indent on
 
