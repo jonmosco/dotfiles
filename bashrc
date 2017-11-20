@@ -1,6 +1,5 @@
 # General settings
 set -o noclobber
-set -o ignoreeof
 
 shopt -s cmdhist
 shopt -s checkhash
