@@ -52,6 +52,15 @@ case $OSTYPE in
     ;;
 esac
 
+# Load extra functions and helpers
+# Local environment variables and settings are kept in .localrc
+# These should not go in source control (public)
+for files in ~/.{aliases,dockerfunctions,localrc,functions}; do
+  if [[ -r "$files" ]] && [[ -f "$files" ]]; then
+    source "$files"
+  fi
+done
+
 
 _exitstatus ()
 {

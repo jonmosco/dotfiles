@@ -1,21 +1,13 @@
 Overview
-===============================================================================
+========
 
 Home for my (Jon) dotfiles and environment configuration
 
-TODO:
-- Describe structure and direction [DONE]
-- Describe installation [DONE]
-- Add dircolors
-- Add iTerm2 Settings
-
-Motivation:
--------------------------------------------------------------------------------
+## Motivation
 
 Consistency.
 
-Dependencies:
--------------------------------------------------------------------------------
+## Dependencies
 
 The script dotlink4.sh will now take arguments to set up the appropriate
 environment based on what is needed.
@@ -38,12 +30,9 @@ Vim Plugins:
 - vim-puppet: <https://github.com/rodjek/vim-puppet>
 - Powerline: <https://github.com/Lokaltog/powerline> *
 
-* Powerline will not look fancy unless you install patched fonts
-
 All dependencies are fulfilled by dotlink4.sh
 
-Installation:
--------------------------------------------------------------------------------
+## Installation
 
 - Checkout the git repo: $ git clone https://github.com/jonmosco/dotfiles.git .dotfiles
 - NOTE: From the Advanced Bash Scripting guide:
