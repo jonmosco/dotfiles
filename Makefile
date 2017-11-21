@@ -14,6 +14,7 @@ links:
 	done
 
 vim:
+	mkair -p $(HOME)/.backups
 	mkdir -p $(HOME)/.vim/bundle
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
