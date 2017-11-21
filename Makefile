@@ -1,8 +1,7 @@
-# Makefile for setting up dotfiles and misc
-# workstation settings
+# Makefile for setting up dotfiles and misc workstation settings
 
 DOTFILES = aliases zshrc vimrc gitconfig gitignore_global \
-	bashrc bash_profile functions dockerfunctions
+	bashrc bash_profile functions dockerfunctions zsh
 
 UNAME := $(shell uname)
 

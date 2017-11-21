@@ -6,8 +6,6 @@
 # zlogin
 
 export PATH="$HOME/bin:$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:/usr/local/go/bin:/usr/local/sbin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
-#export CLICOLOR=1
-#export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 export GREP_COLORS='1;37;41'
 export LESS='-R -i -g'
 export RI='-f ansi'
@@ -31,8 +29,6 @@ fpath=(~/.zsh/completion $fpath)
 
 # Options
 autoload -U promptinit
-promptinit
-
 autoload -Uz compinit && compinit
 autoload -Uz vcs_info
 autoload -U colors && colors
@@ -69,17 +65,8 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 # Prompt
-# source ~/.zsh/prompt/fox.zsh-theme
 source ~/.zsh/prompt/steeef.zsh-theme
-
 source ~/.zsh/zsh-git-prompt/zshrc.sh
-
-# local configuration files
-if [[ -d "$HOME/.zsh/" ]]; then
-  for config_file in $HOME/.zsh/*.zsh; do
-    source $config_file
-  done
-fi
 
 # Load extra functions and helpers
 # Local environment variables and settings are kept in .localrc
