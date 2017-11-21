@@ -6,7 +6,9 @@ DOTFILES = zshrc vimrc gitconfig gitignore_global \
 
 UNAME := $(shell uname)
 
-.PHONY: clean
+.PHONY: clean links vim
+
+all: links vim
 
 links:
 	for file in $(DOTFILES); do \
@@ -14,7 +16,7 @@ links:
 	done
 
 vim:
-	mkair -p $(HOME)/.backups
+	mkdir -p $(HOME)/.backups
 	mkdir -p $(HOME)/.vim/bundle
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
