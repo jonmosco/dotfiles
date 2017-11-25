@@ -2,10 +2,10 @@
 alias k='kubectl'
 alias ka='kubectl apply -f'
 alias kd='kubectl describe'
-alias kg='kubectl get'
-alias krm='kubectl delete'
-alias kl='kubectl logs'
 alias ke='kubectl exec -ti'
+alias kg='kubectl get'
+alias kl='kubectl logs'
+alias krm='kubectl delete'
 
 # Docker aliases
 alias d='docker'
@@ -18,3 +18,4 @@ alias vv='vagrant up --provider=virtualbox'
 alias vs='vagrant status'
 alias vd='vagrant destroy --force'
 alias vgs='vagrant global-status'
+alias vssh='vagrant ssh'

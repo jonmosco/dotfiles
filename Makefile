@@ -1,7 +1,7 @@
 # Makefile for setting up dotfiles and misc workstation settings
 
 DOTFILES = aliases zshrc vimrc gitconfig gitignore_global \
-	bashrc bash_profile functions dockerfunctions zsh
+	bashrc bash_profile functions dockerfunctions zsh third_party
 
 UNAME := $(shell uname)
 
@@ -26,4 +26,4 @@ brew:
 endif
 
 shell:
-	git clone https://github.com/olivierverdier/zsh-git-prompt.git ${HOME}/.zsh/zsh-git-prompt
+	git clone https://github.com/olivierverdier/zsh-git-prompt.git ${HOME}/.third_party/zsh-git-prompt

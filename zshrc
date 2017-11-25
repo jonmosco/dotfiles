@@ -1,9 +1,4 @@
 # .zshrc
-# zsh files are loaded in the following order:
-# zshenv
-# zprofile
-# zshrc
-# zlogin
 
 export PATH="$HOME/bin:$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:/usr/local/go/bin:/usr/local/sbin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
 export GREP_COLORS='1;37;41'
@@ -66,7 +61,9 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 # Prompt
 source ~/.zsh/prompt/steeef.zsh-theme
-source ~/.zsh/zsh-git-prompt/zshrc.sh
+
+# This directory is ignored and gets clonded from our Makefile
+source ~/.third_party/zsh-git-prompt/zshrc.sh
 
 # Load extra functions and helpers
 # Local environment variables and settings are kept in .localrc

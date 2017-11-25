@@ -7,6 +7,10 @@
 # git untracked files modification from Brian Carper:
 # http://briancarper.net/blog/570/git-info-in-your-zsh-prompt
 
+function kube_context {
+   echo "$(kubectl config view --minify  --output 'jsonpath={..namespace}')"
+}
+
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 function virtualenv_info {
