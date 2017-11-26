@@ -15,3 +15,10 @@ function default_prompt () {
 function flush_dns() {
   sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache
 }
+
+# kubectl context
+function kube_prompt () {
+PROMPT=$'
+%F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)$(kubectl config view --minify  --output 'jsonpath={..namespace}')
+$ '
+}

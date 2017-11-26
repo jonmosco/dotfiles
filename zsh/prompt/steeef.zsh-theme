@@ -7,10 +7,6 @@
 # git untracked files modification from Brian Carper:
 # http://briancarper.net/blog/570/git-info-in-your-zsh-prompt
 
-function kube_context {
-   echo "$(kubectl config view --minify  --output 'jsonpath={..namespace}')"
-}
-
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 function virtualenv_info {
@@ -100,5 +96,5 @@ function steeef_precmd {
 add-zsh-hook precmd steeef_precmd
 
 PROMPT=$'
-%{$purple%}%n${PR_RST} at %{$orange%}%m${PR_RST} in %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)
+%F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)
 $ '
