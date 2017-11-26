@@ -26,4 +26,5 @@ brew:
 endif
 
 shell:
+	mkdir -p $(HOME)/.third_party
 	git clone https://github.com/olivierverdier/zsh-git-prompt.git ${HOME}/.third_party/zsh-git-prompt
