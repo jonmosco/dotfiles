@@ -85,7 +85,6 @@ if [[ -e "${HOME}/.dir_colors" ]]; then
 else
   export CLICOLOR=1
   export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
-  alias ls='ls --color -F'
 fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
