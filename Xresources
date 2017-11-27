@@ -1,9 +1,4 @@
-! $Id: Xresources 54 2013-04-07 01:27:49Z jmosco $
-
 ! .Xdefaults
-! TODO
-! - cursor settings
-! - Load this file with xrdb
 
 ! XTerm Resource settings
 !XTerm*termName:         xterm-xfree86

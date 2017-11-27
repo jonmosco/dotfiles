@@ -38,8 +38,6 @@ setopt IGNORE_EOF
 bindkey -e
 
 # General
-alias ls='gls --color -F'
-alias l='gls -lFha --color'
 alias grep='grep --color'
 alias rm='rm -i'
 alias ..="cd .."
@@ -79,6 +77,15 @@ if [ $commands[kubectl] ]; then
   source <(kubectl completion zsh)
 fi
 
-eval `gdircolors .dir_colors`
+# color ls
+if [[ -e "${HOME}/.dir_colors" ]]; then
+  eval `gdircolors ~/.dir_colors`
+  alias ls='gls --color -F'
+  alias l='gls -lFha --color'
+else
+  export CLICOLOR=1
+  export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+  alias ls='ls --color -F'
+fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
