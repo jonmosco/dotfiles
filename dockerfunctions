@@ -3,12 +3,12 @@
 # function helpers for docker commands
 
 # Set our registry based on location
-function fp_registry() {
+function registry_fp() {
   export REGISTRY=registry.forkedprocess.com
   docker login -u jmosco registry.forkedprocess.com
 }
 
-function csc_registry() {
+function registry_csc() {
   export REGISTRY=docker-dev-local.cscinfo.com
   docker login -u jmosco docker-dev-local.cscinfo.com
 }

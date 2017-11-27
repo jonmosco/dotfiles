@@ -57,6 +57,7 @@ esac
 # These should not go in source control (public)
 for files in ~/.{aliases,dockerfunctions,localrc,functions}; do
   if [[ -r "$files" ]] && [[ -f "$files" ]]; then
+    # shellcheck disable=SC1090
     source "$files"
   fi
 done
@@ -67,10 +68,13 @@ _exitstatus ()
 
   EXITSTATUS="$?"
 
+  orange=$(tput setaf 166);
+
+
   if [ "${EXITSTATUS}" -ne 0 ]; then
-    PS1="\[\e[37;41m\][${EXITSTATUS}]\[\e[0;33m\] \[\e[0;35m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;38m\]: \[\e[0;38m\]$ "
+    PS1="\[\e[37;41m\][${EXITSTATUS}]\[\e[0;33m\] \[${orange}\]\u\[\e[0;38m\]@\[\e[0;33m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;38m\]: \[\e[0;38m\]$ "
   else
-    PS1="\[\e[0;35m\]\u\[\e[0;38m\]@\[\e[1;31m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;38m\]: \[\e[0;38m\]$ "
+    PS1="\[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]:\[\e[0;36m\]\w\[\e[0;38m\]: \[\e[0;38m\]$ "
   fi
 
   # Secondary prompt
