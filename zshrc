@@ -78,13 +78,14 @@ if [ $commands[kubectl] ]; then
 fi
 
 # color ls
-if [[ -e "${HOME}/.dir_colors" ]]; then
+if [[ -e "${HOME}/.dir_colors" ]] && [[ -x /usr/local/bin/gls ]]; then
   eval `gdircolors ~/.dir_colors`
   alias ls='gls --color -F'
   alias l='gls -lFha --color'
 else
   export CLICOLOR=1
   export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+  alias l='ls -lFha'
 fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
