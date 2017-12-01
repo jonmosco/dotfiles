@@ -36,6 +36,7 @@ setopt inc_append_history
 setopt beep
 setopt IGNORE_EOF
 bindkey -e
+unsetopt prompt_cr prompt_sp
 
 # General
 alias grep='grep --color'
@@ -58,7 +59,8 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 # Prompt
-source ~/.zsh/prompt/steeef.zsh-theme
+# source ~/.zsh/prompt/steeef.zsh-theme
+source ~/.zsh/prompt/robby_simple.zsh-theme
 
 # This directory is ignored and gets clonded from our Makefile
 source ~/.third_party/zsh-git-prompt/zshrc.sh
@@ -88,4 +90,9 @@ else
   alias l='ls -lFha'
 fi
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# KUBE_PROMPT_DEFAULT_LABEL_IMG=true
+
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"

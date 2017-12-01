@@ -96,5 +96,5 @@ function steeef_precmd {
 add-zsh-hook precmd steeef_precmd
 
 PROMPT=$'
-%F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)
+%F{166%}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)
 $ '

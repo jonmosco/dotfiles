@@ -2,13 +2,16 @@
 
 # Restore default prompt
 function prompt_default () {
+  # shellcheck disable=SC1090
   source ~/.zsh/prompt/steeef.zsh-theme
 }
 
 # kubectl context
 function prompt_k8s () {
-PROMPT=$'
-%F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)(%F{blue}k8s:%f%F{161}$(kubectl config view --minify  --output 'jsonpath={..namespace}')%f)
+  source ~/repos/kube-prompt/kube-prompt.sh
+  # shellcheck disable=SC2125
+  PROMPT=$'
+%F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)$(kube_prompt)
 $ '
 }
 
@@ -17,10 +20,20 @@ function prompt_paste () {
   export PROMPT='$ '
 }
 
+function prompt_simple () {
+  # Robby Russel prompt to use for minimal prompt
+  ret_status="%(?:%F{166%}➜${PR_RST} :%{$fg_no_bold[red]%}➜${PR_RST} )"
+  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) '
+}
+
+function prompt_simple_k8s () {
+  source ~/repos/kube-prompt/kube-prompt.sh
+  ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
+  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) $(kube_prompt) '
+}
 
 # Flush DNS cache
 # sometimes after being on VPN, DNS gets a little strange
 function flush_dns() {
   sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache
 }
-
