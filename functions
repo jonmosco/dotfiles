@@ -8,10 +8,11 @@ function prompt_default () {
 
 # kubectl context
 function prompt_k8s () {
-  source ~/repos/kube-prompt/kube-prompt.sh
+  # shellcheck disable=SC1090
+  source ~/repos/kube-ps1/kube-ps1.sh
   # shellcheck disable=SC2125
   PROMPT=$'
-%F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)$(kube_prompt)
+%F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)$(kube_ps1)
 $ '
 }
 
@@ -23,13 +24,16 @@ function prompt_paste () {
 function prompt_simple () {
   # Robby Russel prompt to use for minimal prompt
   ret_status="%(?:%F{166%}➜${PR_RST} :%{$fg_no_bold[red]%}➜${PR_RST} )"
+  # shellcheck disable=SC2016
   PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) '
 }
 
 function prompt_simple_k8s () {
-  source ~/repos/kube-prompt/kube-prompt.sh
+  # shellcheck disable=SC1090
+  source ~/repos/kube-ps1/kube-ps1.sh
   ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
-  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) $(kube_prompt) '
+  # shellcheck disable=SC2016
+  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) $(kube_ps1) '
 }
 
 # Flush DNS cache
