@@ -36,6 +36,16 @@ function prompt_simple_k8s () {
   PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) $(kube_ps1) '
 }
 
+function prompt_bash_k8s () {
+  orange=$(tput setaf 166);
+  green=$(tput setaf 64);
+
+  # shellcheck disable=SC1090
+  source ~/repos/kube-ps1/kube-ps1.sh
+  PS1="\[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\]$(kube_ps1)$ "
+  export PS1
+}
+
 # Flush DNS cache
 # sometimes after being on VPN, DNS gets a little strange
 function flush_dns() {

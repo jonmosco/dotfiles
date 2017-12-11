@@ -1,4 +1,5 @@
 # .zshrc
+zmodload zsh/zprof
 
 export PATH="$HOME/bin:$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:/usr/local/go/bin:/usr/local/sbin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
 export GREP_COLORS='1;37;41'
@@ -9,7 +10,6 @@ export EDITOR=vim
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
-export KUBECONFIG="$HOME/.kube/cluster-merge:$HOME/.kube/config-dev:$HOME/.kube/config-uat:$HOME/.kube/config-prod"
 
 # History
 HISTFILE=$HOME/.history
@@ -59,8 +59,8 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 # Prompt
-# source ~/.zsh/prompt/steeef.zsh-theme
-source ~/.zsh/prompt/robby_simple.zsh-theme
+source ~/.zsh/prompt/steeef.zsh-theme
+# source ~/.zsh/prompt/robby_simple.zsh-theme
 
 # This directory is ignored and gets clonded from our Makefile
 source ~/.third_party/zsh-git-prompt/zshrc.sh
@@ -68,7 +68,7 @@ source ~/.third_party/zsh-git-prompt/zshrc.sh
 # Load extra functions and helpers
 # Local environment variables and settings are kept in .localrc
 # These should not go in source control (public)
-for files in ~/.{aliases,dockerfunctions,localrc,functions}; do
+for files in ~/.{aliases,dockerfunctions,exports,localrc,functions}; do
   if [[ -r "$files" ]] && [[ -f "$files" ]]; then
     source "$files"
   fi
@@ -90,9 +90,10 @@ else
   alias l='ls -lFha'
 fi
 
-#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-# KUBE_PROMPT_DEFAULT_LABEL_IMG=true
+#KUBE_PS1_DEFAULT_LABEL_IMG=true
+# prompt_k8s
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

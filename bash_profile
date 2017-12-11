@@ -1,6 +1,5 @@
 source ~/.bashrc
-source ~/.git-prompt.sh
 
-export PATH=$PATH:/Users/jmosco/bin
-
-source '/Users/jmosco/lib/azure-cli/az.completion'
+if [ -f /usr/local/share/bash-completion/bash_completion ]; then
+  source /usr/local/share/bash-completion/bash_completion
+fi

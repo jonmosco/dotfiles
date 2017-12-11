@@ -73,9 +73,9 @@ _exitstatus ()
 
 
   if [ "${EXITSTATUS}" -ne 0 ]; then
-    PS1="\[\e[37;41m\][${EXITSTATUS}]\[\e[0;33m\] \[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]: \[\e[0;38m\]$ "
+    PS1="\[\e[37;41m\][${EXITSTATUS}]\[\e[0;33m\] \[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\]$ "
   else
-    PS1="\[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]: \[\e[0;38m\]$(kube_prompt) $ "
+    PS1="\[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\]$ "
   fi
 
   # Secondary prompt
@@ -83,3 +83,6 @@ _exitstatus ()
 }
 
 PROMPT_COMMAND=_exitstatus
+
+# shellcheck disable=SC1090
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

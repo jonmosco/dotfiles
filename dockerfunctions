@@ -28,7 +28,15 @@ function clean_dangling() {
 # check if the image is local and exists, otherwise
 # build it then run the container
 function utility() {
-  docker run --rm -it ${REGISTRY}/jmosco-utility:1.0 /bin/bash
+  if ! docker run --name=utility --rm -it ${REGISTRY}/jmosco-utility:1.0 /bin/bash; then
+    docker cp "$HOME/.ssh/id_rsa.pub" utility:/home/jmosco/.ssh/id_rsa.pub
+    docker exec -ti utility sudo chown jmosco: /home/jmosco/.ssh/id_rsa.pub
+  fi
+}
+
+function utility_ssh() {
+  docker cp "$HOME/.ssh/id_rsa.pub" utility:/home/jmosco/.ssh/id_rsa.pub
+  docker exec -ti utility sudo chown jmosco: /home/jmosco/.ssh/id_rsa.pub
 }
 
 function dclean() {
