@@ -8,11 +8,6 @@ function registry_fp() {
   docker login -u jmosco registry.forkedprocess.com
 }
 
-function registry_csc() {
-  export REGISTRY=docker-dev-local.cscinfo.com
-  docker login -u jmosco docker-dev-local.cscinfo.com
-}
-
 # Get a containers PID
 function container_pid() {
   docker inspect --format '{{ .State.Pid }}' "$1"
@@ -28,15 +23,10 @@ function clean_dangling() {
 # check if the image is local and exists, otherwise
 # build it then run the container
 function utility() {
-  if ! docker run --name=utility --rm -it ${REGISTRY}/jmosco-utility:1.0 /bin/bash; then
-    docker cp "$HOME/.ssh/id_rsa.pub" utility:/home/jmosco/.ssh/id_rsa.pub
-    docker exec -ti utility sudo chown jmosco: /home/jmosco/.ssh/id_rsa.pub
-  fi
-}
-
-function utility_ssh() {
-  docker cp "$HOME/.ssh/id_rsa.pub" utility:/home/jmosco/.ssh/id_rsa.pub
-  docker exec -ti utility sudo chown jmosco: /home/jmosco/.ssh/id_rsa.pub
+  docker run -it --rm \
+    -v "${HOME}/.ssh:/home/jmosco/.ssh" \
+    --name utility \
+    ${REGISTRY}/jmosco-utility:1.0 /bin/bash
 }
 
 function dclean() {

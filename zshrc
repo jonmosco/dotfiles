@@ -90,9 +90,6 @@ else
   alias l='ls -lFha'
 fi
 
-#KUBE_PS1_DEFAULT_LABEL_IMG=true
-# prompt_k8s
-
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
