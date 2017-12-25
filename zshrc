@@ -34,7 +34,7 @@ setopt hist_ignore_all_dups
 setopt appendhistory
 setopt inc_append_history
 setopt beep
-setopt IGNORE_EOF
+setopt interactivecomments
 bindkey -e
 unsetopt prompt_cr prompt_sp
 
@@ -94,3 +94,9 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/jmosco/Downloads/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/jmosco/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/jmosco/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/jmosco/Downloads/google-cloud-sdk/completion.zsh.inc'; fi

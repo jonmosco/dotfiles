@@ -1,5 +1,30 @@
 #!/bin/bash
 
+# Docker prompt
+function prompt_docker () {
+  # shellcheck disable=SC1090
+  source ~/repos/kube-ps1/kube-ps1.sh
+
+  # if [ -f /.dockerenv ]; then
+    white=$(tput setaf 15)
+    yellow=$(tput setaf 136)
+    reset_color=$(tput sgr0)
+
+    PS1='\[${orange}\u\]' # username
+    PS1+='\[${white}@\]' # @
+    PS1+='\[${yellow}\h\]' # hostname
+    # Unicode Moby
+    PS1+=' 🐳 '
+    PS1+='\[${white}:\]'
+    PS1+='\[${green}\w\]'
+    PS1+='\[${white}:\]'
+    PS1+='\[ $(kube_ps1)\]' # kube-ps1 prompt
+    PS1+='\[${reset_color}\]'
+    PS1+='$ '
+    export PS1
+  # fi
+}
+
 # Restore default prompt
 function prompt_default () {
   # shellcheck disable=SC1090
@@ -8,8 +33,18 @@ function prompt_default () {
 
 # kubectl context
 function prompt_k8s () {
-  # shellcheck disable=SC1090
+  # shellcheck disable=sc1090
   source ~/repos/kube-ps1/kube-ps1.sh
+  # shellcheck disable=SC2125
+  PROMPT=$'
+%F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)$(kube_ps1)
+$ '
+}
+
+# kubectl context
+function prompt_k8s_omz () {
+  # shellcheck disable=SC1090
+  source ~/repos/oh-my-zsh/plugins/kube-ps1/kube-ps1.zsh
   # shellcheck disable=SC2125
   PROMPT=$'
 %F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)$(kube_ps1)
@@ -36,13 +71,24 @@ function prompt_simple_k8s () {
   PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) $(kube_ps1) '
 }
 
+function prompt_k8s_eval () {
+  # shellcheck disable=SC1090
+  source ~/repos/kube-ps1/kube-ps1.sh
+  # shellcheck disable=SC2034
+  ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
+  while :; do
+    ts=$(date +%s%N) ; kube_ps1 ; tt=$((($(date +%s%N) - $ts)/1000000)) ; echo "Time taken: $tt milliseconds"
+  done
+}
+
 function prompt_bash_k8s () {
   orange=$(tput setaf 166);
   green=$(tput setaf 64);
 
   # shellcheck disable=SC1090
   source ~/repos/kube-ps1/kube-ps1.sh
-  PS1="\[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\]$(kube_ps1)$ "
+  # PS1="\[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\]$(kube_ps1) $ "
+  PS1='\u@\h:\w\ $(kube_ps1) $ '
   export PS1
 }
 
@@ -50,4 +96,13 @@ function prompt_bash_k8s () {
 # sometimes after being on VPN, DNS gets a little strange
 function flush_dns() {
   sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache
+}
+
+# Extract yaml from a running deployment
+function k8s_yaml_extract() {
+  if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 output.yaml"
+    exit 1
+  fi
+  kubectl get deployment "$1" -o yaml --export "$2"
 }

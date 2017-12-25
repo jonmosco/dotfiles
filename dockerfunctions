@@ -25,6 +25,7 @@ function clean_dangling() {
 function utility() {
   docker run -it --rm \
     -v "${HOME}/.ssh:/home/jmosco/.ssh" \
+    -v "${HOME}/.kube:/home/jmosco/.kube" \
     --name utility \
     ${REGISTRY}/jmosco-utility:1.0 /bin/bash
 }
