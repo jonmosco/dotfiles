@@ -98,7 +98,7 @@ PS1+='\[${white}@\]' # @
 PS1+='\[${yellow}\h\]' # hostname
 if [ -f /.dockerenv ]; then
   # Unicode Moby
-  PS1+=' 🐳 '
+  PS1+=' 🐳  '
 fi
 PS1+='\[${white}:\]'
 PS1+='\[${green}\w\]'
