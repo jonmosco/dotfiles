@@ -62,9 +62,9 @@ for files in ~/.{aliases,dockerfunctions,localrc,functions}; do
   fi
 done
 
-
 _exitstatus ()
 {
+
 
   EXITSTATUS="$?"
 
@@ -73,16 +73,42 @@ _exitstatus ()
 
 
   if [ "${EXITSTATUS}" -ne 0 ]; then
-    PS1="\[\e[37;41m\][${EXITSTATUS}]\[\e[0;33m\] \[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\]$ "
+    PS1="\[\e[37;41m\]\[${EXITSTATUS}]\[\e[0;33m\] \[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\]$ "
   else
-    PS1="\[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\]$ "
+    PS1='\[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\] $(kube_ps1) $ '
   fi
+  export PS1
 
   # Secondary prompt
   PS2='> '
 }
 
-PROMPT_COMMAND=_exitstatus
+orange=$(tput setaf 166);
+reset_color=$(tput sgr0)
+# cyan=$(tput setaf 6)
+white=$(tput setaf 15)
+yellow=$(tput setaf 136)
+green=$(tput setaf 64);
+
+# shellcheck disable=SC1090
+source ~/repos/kube-ps1/kube-ps1.sh
+
+PS1='\[${orange}\u\]' # username
+PS1+='\[${white}@\]' # @
+PS1+='\[${yellow}\h\]' # hostname
+if [ -f /.dockerenv ]; then
+  # Unicode Moby
+  PS1+=' 🐳 '
+fi
+PS1+='\[${white}:\]'
+PS1+='\[${green}\w\]'
+PS1+='\[${white}:\]'
+PS1+='\[ $(kube_ps1)\]' # kube-ps1 prompt
+PS1+='\[${reset_color}\]'
+PS1+='$ '
+export PS1
+
+# PROMPT_COMMAND=_exitstatus
 
 # shellcheck disable=SC1090
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
