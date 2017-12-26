@@ -33,7 +33,7 @@ function prompt_default () {
 
 # kubectl context
 function prompt_k8s () {
-  # shellcheck disable=sc1090
+  # shellcheck disable=SC1090
   source ~/repos/kube-ps1/kube-ps1.sh
   # shellcheck disable=SC2125
   PROMPT=$'
@@ -65,6 +65,16 @@ function prompt_simple () {
 
 function prompt_simple_k8s () {
   # shellcheck disable=SC1090
+  KUBE_PS1_DEFAULT_LABEL_IMG=false
+  source ~/repos/kube-ps1/kube-ps1.sh
+  ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
+  # shellcheck disable=SC2016
+  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) $(kube_ps1) '
+}
+
+function prompt_simple_k8s_img () {
+  # shellcheck disable=SC1090
+  KUBE_PS1_DEFAULT_LABEL_IMG=true
   source ~/repos/kube-ps1/kube-ps1.sh
   ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
   # shellcheck disable=SC2016
