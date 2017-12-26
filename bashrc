@@ -65,12 +65,10 @@ done
 _exitstatus ()
 {
 
-
   EXITSTATUS="$?"
 
   orange=$(tput setaf 166);
   green=$(tput setaf 64);
-
 
   if [ "${EXITSTATUS}" -ne 0 ]; then
     PS1="\[\e[37;41m\]\[${EXITSTATUS}]\[\e[0;33m\] \[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\]$ "
@@ -83,6 +81,12 @@ _exitstatus ()
   PS2='> '
 }
 
+# Confirm we want to exit when in a container to avoid loosing all the work
+# we might have done
+if [ -f /.dockerenv ]; then
+  set -o ignoreeof
+fi
+
 orange=$(tput setaf 166);
 reset_color=$(tput sgr0)
 # cyan=$(tput setaf 6)
@@ -91,7 +95,9 @@ yellow=$(tput setaf 136)
 green=$(tput setaf 64);
 
 # shellcheck disable=SC1090
-source ~/repos/kube-ps1/kube-ps1.sh
+if [ -d ~/repos/kube-ps1 ]; then
+  source ~/repos/kube-ps1/kube-ps1.sh
+fi
 
 PS1='\[${orange}\u\]' # username
 PS1+='\[${white}@\]' # @
@@ -107,8 +113,6 @@ PS1+='\[ $(kube_ps1)\]' # kube-ps1 prompt
 PS1+='\[${reset_color}\]'
 PS1+='$ '
 export PS1
-
-# PROMPT_COMMAND=_exitstatus
 
 # shellcheck disable=SC1090
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
