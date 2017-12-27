@@ -67,8 +67,10 @@ source ~/.zsh/prompt/steeef.zsh-theme
 # source ~/.zsh/prompt/robby_simple.zsh-theme
 
 if [ -d "${HOME}/.third_party" ]; then
-  for file in "${HOME}/.third_party/*"; do
-    source ~/.third_party/zsh-git-prompt/zshrc.sh
+  for file in "${HOME}/.third_party/zsh-git-prompt/zshrc.sh"; do
+    if [[ -r "$file" ]] && [[ -f "$file" ]]; then
+      source $file
+    fi
   done
 fi
 
