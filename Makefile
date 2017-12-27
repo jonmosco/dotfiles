@@ -5,9 +5,9 @@ DOTFILES = aliases zshrc vimrc gitconfig gitignore_global \
 
 UNAME := $(shell uname)
 
-.PHONY: clean links vim
+.PHONY: clean links vim shell
 
-all: links vim
+all: links vim shell
 
 links:
 	for file in $(DOTFILES); do \
