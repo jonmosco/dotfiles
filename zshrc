@@ -1,15 +1,19 @@
 # .zshrc
 zmodload zsh/zprof
 
-export PATH="$HOME/bin:$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:/usr/local/go/bin:/usr/local/sbin:/opt/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/opt/local/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
+export PATH="$HOME/bin:/usr/local/bin:/usr/local/go/bin:/usr/local/sbin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
 export GREP_COLORS='1;37;41'
 export LESS='-R -i -g'
 export RI='-f ansi'
-export JAVA_HOME=$(/usr/libexec/java_home)
 export EDITOR=vim
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
+
+if [ -d  /usr/local/opt/coreutils ]; then
+  # If these directories exist, then prepend them to existing PATH
+  PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+fi
 
 # History
 HISTFILE=$HOME/.history
@@ -62,8 +66,11 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 source ~/.zsh/prompt/steeef.zsh-theme
 # source ~/.zsh/prompt/robby_simple.zsh-theme
 
-# This directory is ignored and gets clonded from our Makefile
-source ~/.third_party/zsh-git-prompt/zshrc.sh
+if [ -d "${HOME}/.third_party" ]; then
+  for file in "${HOME}/.third_party/*"; do
+    source ~/.third_party/zsh-git-prompt/zshrc.sh
+  done
+fi
 
 # Load extra functions and helpers
 # Local environment variables and settings are kept in .localrc
