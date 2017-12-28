@@ -11,7 +11,6 @@ export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 
 if [ -d  /usr/local/opt/coreutils ]; then
-  # If these directories exist, then prepend them to existing PATH
   PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 fi
 
