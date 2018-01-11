@@ -96,18 +96,17 @@ set background=dark
 colorscheme solarized
 let g:solarized_diffmode="high"
 
-" Airline settings
+" Airline
+let g:airline_theme='solarized'
+let g:airline_solarized_bg='dark'
+let g:airline_powerline_fonts=1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
-let g:airline_theme='solarized'
-let g:airline_powerline_fonts=1
-set fillchars+=stl:\ ,stlnc:\
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#tab_nr_show = 0
 let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#buffer_min_count = 2
 let g:airline#extensions#tabline#tab_min_count = 2
-let g:airline#extensions#bufferline#enabled = 1
 let g:airline#extensions#tabline#fnamecollapse = 1
 let g:airline#extensions#tabline#tab_nr_type = 0 " tab number
 let g:airline#extensions#tmuxline#enabled = 0
@@ -116,7 +115,6 @@ let g:airline#extensions#tmuxline#enabled = 0
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -219,10 +217,10 @@ map tI :IndentLinesToggle<CR> " Indent Line
 nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>
 
 " Switch back to blue
-function! AirlineThemePatch(palette)
-  let a:palette.normal.airline_a = [ '#ffffff', '#268bd2', 255, 33 ]
-endfunction
-let g:airline_theme_patch_func = 'AirlineThemePatch'
+" function! AirlineThemePatch(palette)
+"   let a:palette.normal.airline_a = [ '#ffffff', '#268bd2', 255, 33 ]
+" endfunction
+" let g:airline_theme_patch_func = 'AirlineThemePatch'
 
 " JSON
 au BufRead,BufNewFile *.json set filetype=json

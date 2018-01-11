@@ -55,31 +55,12 @@ esac
 # Load extra functions and helpers
 # Local environment variables and settings are kept in .localrc
 # These should not go in source control (public)
-for files in ~/.{aliases,dockerfunctions,localrc,functions}; do
+for files in ~/.{bash_prompt,aliases,dockerfunctions,localrc,functions}; do
   if [[ -r "$files" ]] && [[ -f "$files" ]]; then
     # shellcheck disable=SC1090
     source "$files"
   fi
 done
-
-_exitstatus ()
-{
-
-  EXITSTATUS="$?"
-
-  orange=$(tput setaf 166);
-  green=$(tput setaf 64);
-
-  if [ "${EXITSTATUS}" -ne 0 ]; then
-    PS1="\[\e[37;41m\]\[${EXITSTATUS}]\[\e[0;33m\] \[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\]$ "
-  else
-    PS1='\[${orange}\]\u\[\e[1;37m\]@\[\e[0;33m\]\h\[\e[0;38m\]\e[1;37m\]:\[${green}\]\w\[\e[0;38m\]\e[1;37m\]:\[\e[0;38m\] $(kube_ps1) $ '
-  fi
-  export PS1
-
-  # Secondary prompt
-  PS2='> '
-}
 
 # Confirm we want to exit when in a container to avoid loosing all the work
 # we might have done
@@ -87,32 +68,10 @@ if [ -f /.dockerenv ]; then
   set -o ignoreeof
 fi
 
-orange=$(tput setaf 166);
-reset_color=$(tput sgr0)
-# cyan=$(tput setaf 6)
-white=$(tput setaf 15)
-yellow=$(tput setaf 136)
-green=$(tput setaf 64);
-
 # shellcheck disable=SC1090
 if [ -d ~/repos/kube-ps1 ]; then
   source ~/repos/kube-ps1/kube-ps1.sh
 fi
-
-PS1='\[${orange}\u\]' # username
-PS1+='\[${white}@\]' # @
-PS1+='\[${yellow}\h\]' # hostname
-if [ -f /.dockerenv ]; then
-  # Unicode Moby
-  PS1+=' 🐳  '
-fi
-PS1+='\[${white}:\]'
-PS1+='\[${green}\w\]'
-PS1+='\[${white}:\]'
-PS1+='\[ $(kube_ps1)\]' # kube-ps1 prompt
-PS1+='\[${reset_color}\]'
-PS1+='$ '
-export PS1
 
 # shellcheck disable=SC1090
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash

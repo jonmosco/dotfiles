@@ -6,19 +6,20 @@ function prompt_docker () {
   source ~/repos/kube-ps1/kube-ps1.sh
 
   # if [ -f /.dockerenv ]; then
+    orange=$(tput setaf 166);
     white=$(tput setaf 15)
     yellow=$(tput setaf 136)
     reset_color=$(tput sgr0)
 
-    PS1='\[${orange}\u\]' # username
-    PS1+='\[${white}@\]' # @
-    PS1+='\[${yellow}\h\]' # hostname
+    PS1="\[${orange}\]\u" # username
+    PS1+='\[${white}\]@' # @
+    PS1+='\[${yellow}\]\h' # hostname
     # Unicode Moby
     PS1+=' 🐳 '
-    PS1+='\[${white}:\]'
-    PS1+='\[${green}\w\]'
-    PS1+='\[${white}:\]'
-    PS1+='\[ $(kube_ps1)\]' # kube-ps1 prompt
+    PS1+='\[${white}\]:'
+    PS1+='\[${green}\]\W'
+    PS1+='\[${white}\]:'
+    PS1+='$(kube_ps1)' # kube-ps1 prompt
     PS1+='\[${reset_color}\]'
     PS1+='$ '
     export PS1
@@ -37,7 +38,7 @@ function prompt_k8s () {
   source ~/repos/kube-ps1/kube-ps1.sh
   # shellcheck disable=SC2125
   PROMPT=$'
-%F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(git_super_status)$(virtualenv_info)$(kube_ps1)
+%F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~ ${PR_RST}$(virtualenv_info)${PR_RST}$(kube_ps1)${PR_RST}
 $ '
 }
 
@@ -60,25 +61,27 @@ function prompt_simple () {
   # Robby Russel prompt to use for minimal prompt
   ret_status="%(?:%F{166%}➜${PR_RST} :%{$fg_no_bold[red]%}➜${PR_RST} )"
   # shellcheck disable=SC2016
-  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) '
+  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} '
 }
 
 function prompt_simple_k8s () {
   # shellcheck disable=SC1090
-  KUBE_PS1_DEFAULT_LABEL_IMG=false
+  # KUBE_PS1_DEFAULT_LABEL_IMG=false
   source ~/repos/kube-ps1/kube-ps1.sh
+  # KUBE_PS1_LABEL_COLOR="$(tput setaf 35)"
   ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
   # shellcheck disable=SC2016
-  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) $(kube_ps1) '
+  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(kube_ps1) '
 }
 
 function prompt_simple_k8s_img () {
   # shellcheck disable=SC1090
-  KUBE_PS1_DEFAULT_LABEL_IMG=true
+  # KUBE_PS1_DEFAULT_LABEL_IMG=true
+  KUBE_PS1_LABEL_USE_IMG=true
   source ~/repos/kube-ps1/kube-ps1.sh
   ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
   # shellcheck disable=SC2016
-  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(git_super_status) $(kube_ps1) '
+  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}%f$(git_super_status)%f$(kube_ps1) '
 }
 
 function prompt_k8s_eval () {
@@ -96,6 +99,7 @@ function prompt_bash_k8s () {
   green=$(tput setaf 64);
 
   # shellcheck disable=SC1090
+  bash -l
   source ~/repos/kube-ps1/kube-ps1.sh
   PS1='\u@\h:\w\ $(kube_ps1) $ '
   export PS1

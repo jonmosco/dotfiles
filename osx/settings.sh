@@ -17,3 +17,9 @@ defaults write com.apple.finder AppleShowAllFiles YES
 
 # Automatically quit printer app once the print jobs complete
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+
+# Start sshd
+sudo systemsetup -setremotelogin on
+
+# Empty Trash securely by default
+defaults write com.apple.finder EmptyTrashSecurely -bool true

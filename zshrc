@@ -41,11 +41,6 @@ setopt interactivecomments
 bindkey -e
 unsetopt prompt_cr prompt_sp
 
-# General
-alias grep='grep --color'
-alias rm='rm -i'
-alias ..="cd .."
-
 # Completion menu
 zstyle ':completion:*' menu select=0
 zstyle ':completion:*' verbose yes
@@ -62,13 +57,14 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 # Prompt
-source ~/.zsh/prompt/steeef.zsh-theme
-# source ~/.zsh/prompt/robby_simple.zsh-theme
+# source ~/.zsh/prompt/steeef.zsh-theme
+source ~/.zsh/prompt/robby_simple.zsh-theme
 
 if [ -d "${HOME}/.third_party" ]; then
   for file in "${HOME}/.third_party/zsh-git-prompt/zshrc.sh"; do
     if [[ -r "$file" ]] && [[ -f "$file" ]]; then
       source $file
+      RPROMPT='%{$reset_color%}$(git_super_status)%{$reset_color%}'
     fi
   done
 fi
@@ -111,3 +107,6 @@ if [ -f '/Users/jmosco/Downloads/google-cloud-sdk/path.zsh.inc' ]; then source '
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/jmosco/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/jmosco/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+# iTerm2 integration
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
