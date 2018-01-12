@@ -35,7 +35,7 @@ fi
 PS1+='\[${white}\]:\[${reset}\]'
 PS1+='\[${green}\]\W\[${reset}\]'
 PS1+='\[${white}\]:\[${reset}\]'
-PS1+='$(kube_ps1)\$ '
+PS1+='$(kube_ps1)\$ \[${reset}\]'
 export PS1
 
 PS2='\[${yellow}\]→ \[${reset}\]'
