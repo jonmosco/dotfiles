@@ -9,6 +9,8 @@ export EDITOR=vim
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE=en_US.UTF-8
 
 if [ -d  /usr/local/opt/coreutils ]; then
   PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
@@ -59,12 +61,13 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 # Prompt
 # source ~/.zsh/prompt/steeef.zsh-theme
 source ~/.zsh/prompt/robby_simple.zsh-theme
+# source ~/.zsh/prompt/simple-test.zsh-prompt
 
 if [ -d "${HOME}/.third_party" ]; then
   for file in "${HOME}/.third_party/zsh-git-prompt/zshrc.sh"; do
     if [[ -r "$file" ]] && [[ -f "$file" ]]; then
       source $file
-      RPROMPT='%{$reset_color%}$(git_super_status)%{$reset_color%}'
+      RPROMPT='$(git_super_status)'
     fi
   done
 fi
@@ -107,6 +110,3 @@ if [ -f '/Users/jmosco/Downloads/google-cloud-sdk/path.zsh.inc' ]; then source '
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/jmosco/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/jmosco/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
-
-# iTerm2 integration
-# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

@@ -10,6 +10,11 @@ UNAME := $(shell uname)
 
 all: links vim shell
 
+clean:
+	for file in $(DOTFILES); do \
+		rm $(HOME)/.$$file
+	done
+
 links:
 	for file in $(DOTFILES); do \
 		ln -sf $(HOME)/.dotfiles/$$file $(HOME)/$(addprefix .,$$file); \

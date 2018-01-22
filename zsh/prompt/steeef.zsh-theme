@@ -35,13 +35,6 @@ autoload -Uz vcs_info
 # you should disable it, if you work with large repositories
 # zstyle ':vcs_info:*:prompt:*' check-for-changes true
 
-# set formats
-# %b - branchname
-# %u - unstagedstr (see below)
-# %c - stagedstr (see below)
-# %a - action (e.g. rebase-i)
-# %R - repository path
-# %S - path in the repository
 PR_RST="%f"
 FMT_BRANCH="(%{$turquoise%}%b%u%c${PR_RST})"
 FMT_ACTION="(%{$limegreen%}%a${PR_RST})"
@@ -87,6 +80,21 @@ function steeef_precmd {
     fi
 }
 add-zsh-hook precmd steeef_precmd
+
+if [[ -f ~/repos/kube-ps1/kube-ps1.sh ]]; then
+  # export KUBE_PS1_SYMBOL_COLOR=""
+  # export KUBE_PS1_CTX_COLOR=""
+  # export KUBE_PS1_NS_COLOR=""
+  # export KUBE_PS1_NS_COLOR="white"
+  # export KUBE_PS1_SEPARATOR=' '
+  # KUBE_PS1_SYMBOL_USE_IMG=true
+  # export KUBE_PS1_PREFIX=''
+  # export KUBE_PS1_SUFFIX=''
+  # export KUBE_PS1_DIVIDER=''
+  # export KUBE_PS1_BINARY=""
+  # export KUBE_PS1_NS_ENABLE=false
+  source ~/repos/kube-ps1/kube-ps1.sh
+fi
 
 PROMPT=$'
 %F{166%}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(kube_ps1) $(virtualenv_info)

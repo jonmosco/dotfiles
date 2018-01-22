@@ -65,13 +65,20 @@ function prompt_simple () {
 }
 
 function prompt_simple_k8s () {
+  #KUBE_PS1_SYMBOL_USE_IMG=true
+  #KUBE_PS1_SYMBOL_ENABLE=true
+  #KUBE_PS1_SEPARATOR=' '
+  #KUBE_PS1_PREFIX=''
+  #KUBE_PS1_SUFFIX=''
+  #KUBE_PS1_NS_ENABLE=false
   # shellcheck disable=SC1090
   # KUBE_PS1_DEFAULT_LABEL_IMG=false
   source ~/repos/kube-ps1/kube-ps1.sh
-  # KUBE_PS1_LABEL_COLOR="$(tput setaf 35)"
-  ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
+  # ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
+  local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
   # shellcheck disable=SC2016
-  PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}${PR_RST} $(kube_ps1) '
+  # PROMPT='${ret_status} %{%F{cyan}%}%c%{$reset_color%}${PR_RST}$(kube_ps1) '
+  PROMPT='%{${ret_status}%} %{$fg[cyan]%}%c%{$reset_color%} $(kube_ps1) '
 }
 
 function prompt_simple_k8s_img () {
