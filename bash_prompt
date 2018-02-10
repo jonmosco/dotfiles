@@ -6,7 +6,7 @@ if tput setaf 1 &> /dev/null; then
     # Solarized colors, taken from http://git.io/solarized-colors.
     green=$(tput setaf 64)
     orange=$(tput setaf 166)
-    red=$(tput setaf 124)
+    # red=$(tput setaf 124)
     white=$(tput setaf 15)
     yellow=$(tput setaf 136)
 else

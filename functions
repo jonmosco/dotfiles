@@ -26,6 +26,18 @@ function prompt_docker () {
   # fi
 }
 
+function prompt_issue_27() {
+  KUBE_PS1_SYMBOL_USE_IMG=true
+  KUBE_PS1_SYMBOL_ENABLE=true
+  KUBE_PS1_SEPARATOR=' '
+  KUBE_PS1_PREFIX=''
+  KUBE_PS1_SUFFIX=''
+  KUBE_PS1_NS_ENABLE=false
+  source ~/repos/kube-ps1/kube-ps1.sh
+  source ~/.zsh/prompt/agnoster.zsh
+  PROMPT='$(kube_ps1) ' $PROMPT
+}
+
 # Restore default prompt
 function prompt_default () {
   # shellcheck disable=SC1090
@@ -73,7 +85,7 @@ function prompt_simple_k8s () {
   #KUBE_PS1_NS_ENABLE=false
   # shellcheck disable=SC1090
   # KUBE_PS1_DEFAULT_LABEL_IMG=false
-  source ~/repos/kube-ps1/kube-ps1.sh
+  source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
   # ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
   local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
   # shellcheck disable=SC2016

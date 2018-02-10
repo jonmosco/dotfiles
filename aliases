@@ -21,6 +21,7 @@ alias kgs='kubectl get secrets'
 alias kgsvc='kubectl get service'
 alias kl='kubectl logs'
 alias krm='kubectl delete'
+alias kutil='kubectl run -i --tty busybox --image=busybox --restart=Never -- sh'
 
 # Docker aliases
 alias d='docker'

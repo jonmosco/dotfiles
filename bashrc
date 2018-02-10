@@ -70,21 +70,30 @@ fi
 
 # shellcheck disable=SC1090
 if [ -d ~/repos/kube-ps1 ]; then
-  # KUBE_PS1_SYMBOL_USE_IMG=true
   # KUBE_PS1_SYMBOL_ENABLE=true
-  # KUBE_PS1_SEPARATOR=' '
   # KUBE_PS1_PREFIX=''
   # KUBE_PS1_SUFFIX=''
   # KUBE_PS1_NS_ENABLE=false
   # export KUBE_PS1_PREFIX='{'
   # export KUBE_PS1_PREFIX=''
   # export KUBE_PS1_SEPARATOR=''
-  # export KUBE_PS1_NS_COLOR="yellow"
-  #export KUBE_PS1_SYMBOL_COLOR=""
-  #export KUBE_PS1_CTX_COLOR=""
-  #export KUBE_PS1_NS_COLOR=""
-  source ~/repos/kube-ps1/kube-ps1.sh
+  # export KUBE_PS1_NS_COLOR=""
+  # export KUBE_PS1_SYMBOL_COLOR="green"
+  # export KUBE_PS1_CTX_COLOR="$(tput setaf 5)"
+  # export KUBE_PS1_SEPARATOR=''
+  export KUBE_PS1_NS_COLOR="green"
+  # export KUBE_PS1_SYMBOL_COLOR=green
+  # export KUBE_PS1_CTX_COLOR="91"
+  source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
+  export KUBE_PS1_CTX_COLOR="124"
+  # export KUBE_PS1_SYMBOL_ENABLE=false
+  # export KUBE_PS1_CTX_COLOR=green
+  export KUBE_PS1_BG_COLOR="white"
+  # export KUBE_PS1_SEPARATOR=' '
 fi
 
 # shellcheck disable=SC1090
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+GIT_PROMPT_ONLY_IN_REPO=1
+source ~/repos/bash-git-prompt/gitprompt.sh

@@ -10,7 +10,7 @@ if [[ -f ~/repos/kube-ps1/kube-ps1.sh ]]; then
   # export KUBE_PS1_SUFFIX=''
   # export KUBE_PS1_DIVIDER=''
   # export KUBE_PS1_BINARY=""
-  export KUBE_PS1_NS_ENABLE=false
+  # export KUBE_PS1_NS_ENABLE=false
   source ~/repos/kube-ps1/kube-ps1.sh
 fi
 

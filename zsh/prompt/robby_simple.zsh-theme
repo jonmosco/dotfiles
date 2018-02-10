@@ -1,12 +1,13 @@
 # Robby Russel prompt.  Modified to use for minimal prompt and solarized
 # dark colors
-if [[ -f ~/repos/kube-ps1/kube-ps1.sh ]]; then
+if [[ -f ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh ]]; then
   # KUBE_PS1_PREFIX='{'
   # export KUBE_PS1_PREFIX=''
   # export KUBE_PS1_SEPARATOR=''
-  # export KUBE_PS1_SYMBOL_USE_IMG=true
-  export KUBE_PS1_NS_ENABLE=false
-  source ~/repos/kube-ps1/kube-ps1.sh
+  # export KUBE_PS1_SYMBOL_USE_IMG=false
+  # export KUBE_PS1_SYMBOL_ENABLE=true
+  # export KUBE_PS1_NS_ENABLE=false
+  source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
 fi
 
 PR_RST="%f"

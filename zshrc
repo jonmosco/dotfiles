@@ -59,9 +59,21 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 # Prompt
-# source ~/.zsh/prompt/steeef.zsh-theme
-source ~/.zsh/prompt/robby_simple.zsh-theme
+# KUBE_PS1_SYMBOL_USE_IMG=true
+# KUBE_PS1_BG_COLOR=15
+# source ~/.zsh/prompt/robby_simple.zsh-theme
 # source ~/.zsh/prompt/simple-test.zsh-prompt
+# KUBE_PS1_NS_COLOR=""
+# KUBE_PS1_SYMBOL_ENABLE=false
+# KUBE_PS1_SEPARATOR='!'
+# KUBE_PS1_PREFIX=''
+# KUBE_PS1_SUFFIX=''
+# KUBE_PS1_NS_ENABLE=false
+# KUBE_PS1_BINARY=oc
+# source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
+# source ~/.zsh/prompt/agnoster.zsh
+source ~/.zsh/prompt/steeef.zsh-theme
+# KUBE_PS1_SEPARATOR='!'
 
 if [ -d "${HOME}/.third_party" ]; then
   for file in "${HOME}/.third_party/zsh-git-prompt/zshrc.sh"; do

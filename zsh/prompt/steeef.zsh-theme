@@ -13,27 +13,11 @@ setopt prompt_subst
 autoload -U add-zsh-hook
 autoload -Uz vcs_info
 
-#use extended color palette if available
-#if [[ $terminfo[colors] -ge 256 ]]; then
-#    turquoise="%F{81}"
-#    orange="%F{166}"
-#    purple="%F{135}"
-#    hotpink="%F{161}"
-#    limegreen="%F{118}"
-#else
-    turquoise="%F{cyan}"
-    orange="%F{yellow}"
-    purple="%F{magenta}"
-    hotpink="%F{red}"
-    limegreen="%F{green}"
-#fi
-
-# enable VCS systems you use
-# zstyle ':vcs_info:*' enable git svn
-
-# check-for-changes can be really slow.
-# you should disable it, if you work with large repositories
-# zstyle ':vcs_info:*:prompt:*' check-for-changes true
+turquoise="%F{cyan}"
+orange="%F{yellow}"
+purple="%F{magenta}"
+hotpink="%F{red}"
+limegreen="%F{green}"
 
 PR_RST="%f"
 FMT_BRANCH="(%{$turquoise%}%b%u%c${PR_RST})"
@@ -41,11 +25,6 @@ FMT_ACTION="(%{$limegreen%}%a${PR_RST})"
 FMT_UNSTAGED="%{$orange%}●"
 FMT_STAGED="%{$limegreen%}●"
 
-#zstyle ':vcs_info:*:prompt:*' unstagedstr   "${FMT_UNSTAGED}"
-#zstyle ':vcs_info:*:prompt:*' stagedstr     "${FMT_STAGED}"
-#zstyle ':vcs_info:*:prompt:*' actionformats "${FMT_BRANCH}${FMT_ACTION}"
-#zstyle ':vcs_info:*:prompt:*' formats       "${FMT_BRANCH}"
-#zstyle ':vcs_info:*:prompt:*' nvcsformats   ""
 
 function steeef_preexec {
     case "$(history $HISTCMD)" in
@@ -81,10 +60,10 @@ function steeef_precmd {
 }
 add-zsh-hook precmd steeef_precmd
 
-if [[ -f ~/repos/kube-ps1/kube-ps1.sh ]]; then
+if [[ -f ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh ]]; then
   # export KUBE_PS1_SYMBOL_COLOR=""
-  # export KUBE_PS1_CTX_COLOR=""
-  # export KUBE_PS1_NS_COLOR=""
+  # export KUBE_PS1_CTX_COLOR="5"
+  # export KUBE_PS1_NS_COLOR="magenta"
   # export KUBE_PS1_NS_COLOR="white"
   # export KUBE_PS1_SEPARATOR=' '
   # KUBE_PS1_SYMBOL_USE_IMG=true
@@ -93,9 +72,45 @@ if [[ -f ~/repos/kube-ps1/kube-ps1.sh ]]; then
   # export KUBE_PS1_DIVIDER=''
   # export KUBE_PS1_BINARY=""
   # export KUBE_PS1_NS_ENABLE=false
-  source ~/repos/kube-ps1/kube-ps1.sh
+  # export KUBE_PS1_BG_COLOR="white"
+  # export KUBE_PS1_BG_COLOR=""
+
+  # Develop branch
+  export KUBE_PS1_CTX_COLOR="124"
+  source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
+
+  # Stable branch
+  # source ~/repos/kube-ps1/kube-ps1-stable/kube-ps1/kube-ps1.sh
 fi
 
+CROSS="\u2718"
+LIGHTNING="\u26a1"
+GEAR="\u2699"
+
+prompt_status() {
+  local symbols
+  symbols=()
+  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$CROSS"
+  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}$LIGHTNING"
+  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}$GEAR "
+
+  [[ -n "$symbols" ]] && prompt_segment $PRIMARY_FG default " $symbols "
+}
+
+CURRENT_BG='NONE'
+PRIMARY_FG=black
+
+# Characters
+SEGMENT_SEPARATOR="\ue0b0"
+
+prompt_segment() {
+  local bg fg
+  [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
+  [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
+  CURRENT_BG=$1
+  [[ -n $3 ]] && print -n $3
+}
+
 PROMPT=$'
-%F{166%}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(kube_ps1) $(virtualenv_info)
+$(RETVAL=$? prompt_status)%F{166%}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(kube_ps1) $(virtualenv_info)
 $ '
