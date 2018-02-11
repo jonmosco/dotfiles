@@ -30,7 +30,8 @@ PS1+='\[${white}\]@\[${reset}\]'
 PS1+='\[${yellow}\]\h\[${reset}\]'
 if [ -f /.dockerenv ]; then
   # Unicode Moby
-  PS1+='\[ 🐳 \] '
+  # PS1+='\[ 🐳 \] '
+  PS1+='\[\U1F433\] '
 fi
 PS1+='\[${white}\]:\[${reset}\]'
 PS1+='\[${green}\]\W\[${reset}\]'

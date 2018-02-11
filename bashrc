@@ -88,7 +88,7 @@ if [ -d ~/repos/kube-ps1 ]; then
   export KUBE_PS1_CTX_COLOR="124"
   # export KUBE_PS1_SYMBOL_ENABLE=false
   # export KUBE_PS1_CTX_COLOR=green
-  export KUBE_PS1_BG_COLOR="white"
+  # export KUBE_PS1_BG_COLOR="white"
   # export KUBE_PS1_SEPARATOR=' '
 fi
 
