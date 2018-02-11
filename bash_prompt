@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# Moby icon when in containers
 MOBY=$'\U1F433'
 
 if tput setaf 1 &> /dev/null; then
@@ -31,8 +33,7 @@ PS1+='\[${white}\]@\[${reset}\]'
 PS1+='\[${yellow}\]\h\[${reset}\]'
 if [ -f /.dockerenv ]; then
   # Unicode Moby
-  # PS1+='\[ 🐳 \] '
-  PS1+='\[${MOBY}\] '
+  PS1+=' \[${MOBY}\] '
 fi
 PS1+='\[${white}\]:\[${reset}\]'
 PS1+='\[${green}\]\W\[${reset}\]'
