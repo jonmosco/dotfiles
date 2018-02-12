@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Moby icon when in containers
-MOBY=$'\U1F433'
+MOBY=$'\U1F433 '
 
 if tput setaf 1 &> /dev/null; then
     tput sgr0; # reset colors
@@ -38,7 +38,7 @@ fi
 PS1+='\[${white}\]:\[${reset}\]'
 PS1+='\[${green}\]\W\[${reset}\]'
 PS1+='\[${white}\]:\[${reset}\]'
-PS1+='$(kube_ps1)\$\[${reset}\] '
+PS1+='$(kube_ps1)\$ \[${reset}\] '
 export PS1
 
 PS2='\[${yellow}\]→ \[${reset}\]'
