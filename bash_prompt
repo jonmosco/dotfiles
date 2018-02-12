@@ -5,7 +5,7 @@ MOBY=$'\U1F433'
 
 if tput setaf 1 &> /dev/null; then
     tput sgr0; # reset colors
-    reset=$(tput sgr0)
+    reset=$(tput sgr 0)
     # Solarized colors, taken from http://git.io/solarized-colors.
     green=$(tput setaf 64)
     orange=$(tput setaf 166)

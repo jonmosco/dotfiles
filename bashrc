@@ -73,6 +73,11 @@ if [ -d ~/.kube-ps1-testing.sh ]; then
   source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
 fi
 
+if [ -d ~/.third_party/kube-ps1 ]; then
+  # shellcheck disable=SC1090
+  source ~/.third_party/kube-ps1/kube-ps1.sh
+fi
+
 # shellcheck disable=SC1090
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
