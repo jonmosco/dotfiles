@@ -68,18 +68,5 @@ if [ -f /.dockerenv ]; then
   set -o ignoreeof
 fi
 
-if [ -d ~/.kube-ps1-testing.sh ]; then
-  # shellcheck disable=SC1090
-  source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
-fi
-
-if [ -d ~/.third_party/kube-ps1 ]; then
-  # shellcheck disable=SC1090
-  source ~/.third_party/kube-ps1/kube-ps1.sh
-fi
-
 # shellcheck disable=SC1090
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-# GIT_PROMPT_ONLY_IN_REPO=1
-# source ~/repos/bash-git-prompt/gitprompt.sh

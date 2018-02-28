@@ -38,6 +38,9 @@ fi
 PS1+='\[${white}\]:\[${reset}\]'
 PS1+='\[${green}\]\W\[${reset}\]'
 PS1+='\[${white}\]:\[${reset}\]'
+if [[ -f "${HOME}/projects/kube-ps1/kube-ps1.sh" ]]; then
+  source "${HOME}/projects/kube-ps1/kube-ps1.sh"
+fi
 PS1+='$(kube_ps1)\$ \[${reset}\]'
 export PS1
 
