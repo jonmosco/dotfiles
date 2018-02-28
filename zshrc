@@ -69,7 +69,7 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 # KUBE_PS1_PREFIX=''
 # KUBE_PS1_SUFFIX=''
 # KUBE_PS1_NS_ENABLE=false
-# KUBE_PS1_BINARY=oc
+# KUBE_PS1_BINARY=tt
 # source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
 # source ~/.zsh/prompt/agnoster.zsh
 source ~/.zsh/prompt/steeef.zsh-theme

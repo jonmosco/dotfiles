@@ -72,11 +72,15 @@ if [[ -f ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh ]]; then
   # export KUBE_PS1_DIVIDER=''
   # export KUBE_PS1_BINARY=""
   # export KUBE_PS1_NS_ENABLE=false
+  # export KUBE_PS1_BG_COLOR="87"
   # export KUBE_PS1_BG_COLOR="white"
-  # export KUBE_PS1_BG_COLOR=""
+  # export KUBE_PS1_BINARY="oc"
+  # export KUBE_PS1_SYMBOL_USE_IMG=true
 
   # Develop branch
   export KUBE_PS1_CTX_COLOR="124"
+  # export KUBE_PS1_CTX_COLOR="white"
+  # export KUBE_PS1_NS_COLOR="green"
   source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
 
   # Stable branch
