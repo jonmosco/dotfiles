@@ -3,7 +3,7 @@
 battery() {
   if [[ $(uname) == "Linux" ]]; then
     batt=$(acpi)
-  elif [[ $(uname) == "Darwn" ]]; then
+  elif [[ $(uname) == "Darwin" ]]; then
     batt=$(pmset -g batt)
   fi
   percentage=$(echo $batt |grep -Eo "[0-9]+%") || return
@@ -14,11 +14,11 @@ battery() {
   battery_bg=$1
   columns=$(tmux -q display -p '#{client_width}' 2> /dev/null || echo 120)
   if [[ $columns -ge 170 ]]; then
-      battery_symbol_count=10
-    elif [[ $columns -ge 120 ]]; then
-      battery_symbol_count=8
+    battery_symbol_count=10
+  elif [[ $columns -ge 120 ]]; then
+    battery_symbol_count=8
   else
-      battery_symbol_count=6
+    battery_symbol_count=6
   fi
 
   battery_symbol_full=◼
