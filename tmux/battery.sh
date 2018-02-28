@@ -5,7 +5,10 @@ battery() {
     batt=$(acpi)
   elif [[ $(uname) == "Darwin" ]]; then
     batt=$(pmset -g batt)
+  else
+    return 1
   fi
+
   percentage=$(echo $batt |grep -Eo "[0-9]+%") || return
   discharging=$(echo $batt | grep -qi "discharging" && echo "true" || echo "false")
   charge="${percentage%%%} / 100"
