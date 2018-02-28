@@ -9,7 +9,7 @@ battery() {
     return 1
   fi
 
-  percentage=$(echo $batt |grep -Eo "[0-9]+%") || return
+  percentage=$(echo $batt | grep -Eo "[0-9]+%") || return
   discharging=$(echo $batt | grep -qi "discharging" && echo "true" || echo "false")
   charge="${percentage%%%} / 100"
   [ ${percentage%%%} -lt 10 ] && mode=" blink" || mode=""
@@ -30,7 +30,9 @@ battery() {
   if [[ "$discharging" == "true" ]]; then
     printf "%s  " 🔋
   else
-    printf "%s  " ⚡
+    # printf "%s  " ⚡
+    # Switch to hex codes for term support
+    printf '\xE2\x9A\xA1  '
   fi
 
   palette="124 160 196 202 208 214 220 226 190 154 118 82 46 40 34"
