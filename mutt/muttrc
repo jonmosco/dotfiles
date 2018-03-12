@@ -119,8 +119,6 @@ macro index M "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
 set query_command = "contacts -Sf '%eTOKEN%n' '%s' | sed -e 's/TOKEN/\t/g'"
 bind editor <Tab> complete-query
 bind editor ^T    complete
-# macro index y '<enter-command>unset wait_key<enter><tag-prefix><pipe-entry>/usr/bin/procmail /home/jmosco/.procmailrcc<enter><tag-prefix><delete-message><enter-command>set wait_key<enter>'
-# macro pager y '<enter-command>unset wait_key<enter><pipe-entry>/usr/bin/procmail /home/jmosco/.procmailrc<enter><delete-message><enter-command>set wait_key<enter>'
 
 # mailing list filtering
 save-hook debian-mentors@lists\.debian\.org$ +forkedprocess/lists/debian-mentors
