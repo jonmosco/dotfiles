@@ -1,5 +1,5 @@
 # MS Word documents
-application/msword; ~/.mutt/view_attachment.sh %s "-" '/Applications/Microsoft Office 2011/Microsoft Word.app'
+# application/msword; ~/.mutt/view_attachment.sh %s "-" '/Applications/Microsoft Office 2011/Microsoft Word.app'
 
 # Images
 image/jpg; ~/.mutt/view_attachment.sh %s jpg

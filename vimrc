@@ -189,9 +189,9 @@ autocmd FileType * setlocal formatoptions-=ro
 " ctags path
 let g:tagbar_ctags_bin='/usr/local/bin/ctags'
 
-" ------------------------------------------------------------------------------
+" --------------------------------------------------------------------
 " Custom Mappings
-" ------------------------------------------------------------------------------
+" --------------------------------------------------------------------
 
 " Unset the last search pattern by hitting return
 nnoremap <CR>   :noh<CR><CR>
@@ -216,12 +216,6 @@ map tI :IndentLinesToggle<CR> " Indent Line
 " mute highlighting
 nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>
 
-" Switch back to blue
-" function! AirlineThemePatch(palette)
-"   let a:palette.normal.airline_a = [ '#ffffff', '#268bd2', 255, 33 ]
-" endfunction
-" let g:airline_theme_patch_func = 'AirlineThemePatch'
-
 " JSON
 au BufRead,BufNewFile *.json set filetype=json
 
@@ -231,6 +225,9 @@ let mapleader = ","
 
 let g:go_template_autocreate = 0
 au FileType go nmap <leader>r <Plug>(go-run)
+
+" insert a literal tab
+inoremap <S-Tab> <C-V><Tab>
 
 " Jenkinsfile
 au BufReadPost Jenkinsfile set syntax=groovy

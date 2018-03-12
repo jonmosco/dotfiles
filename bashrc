@@ -29,20 +29,19 @@ alias rmi='rm -i'
 alias tree='tree -C'
 
 # Set OS specific settings
-OSTYPE=$( uname )
+OSTYPE=$(uname)
 
 case $OSTYPE in
   Darwin)
-    export PATH=$HOME/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/X11/bin:$PATH
+    export PATH="${HOME}/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/X11/bin:$PATH"
     export CLICOLOR=1
     export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
     ;;
   Linux)
-    export PATH=/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin
+    export PATH="${HOME}/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin:$PATH"
     export LS_OPTIONS='--color=auto'
     export LSCOLORS=GxFxCxDxbxDxDxxbadacad
     alias ls='ls -F --color'
-    alias p='ps -ef'
     ;;
   *BSD)
     if [ -e /usr/local/bin/colors ]; then
@@ -70,3 +69,8 @@ fi
 
 # shellcheck disable=SC1090
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# kubectl completion
+if command -v kubectl >/dev/null; then
+  source <(kubectl completion bash)
+fi

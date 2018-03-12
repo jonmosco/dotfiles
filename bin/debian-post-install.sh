@@ -2,8 +2,15 @@
 #
 # Post debian install for thinkpad
 
+packages=( nfs-common tmux htop git thinkfan )
+
+# Update apt
+apt-get update
+
 # Base packages
-apt-get update && apt-get install -y vim tmux htop git
+for package in "${packages[@]}"; do
+  apt-get install -y "${package}"
+done
 
 # Wifi adapter
 apt-get update && apt-get install firmware-iwlwifi
@@ -15,3 +22,6 @@ wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key ad
 # Add to sources.list
 echo "deb http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee -a /etc/apt/sources.list
 sudo apt-get update && apt-get install google-chrome-stable
+
+# Gnome settings
+gsettings set org.gnome.desktop.interface show-battery-percentage true

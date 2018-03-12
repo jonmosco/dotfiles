@@ -1,5 +1,5 @@
-set from      = "admin@forkedprocess.com"
-set sendmail  = "/usr/local/bin/msmtp -a forkedprocess"
+set from      = "jon.mosco@forkedprocess.com"
+set sendmail  = "/usr/bin/msmtp -a forkedprocess"
 set mbox      = "+forkedprocess/sent"
 unset record
 set postponed = "+forkedprocess/Drafts"

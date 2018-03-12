@@ -1,51 +1,16 @@
 [general]
 ui = ttyui
-accounts = Gmail, forkedprocess, dtcc.edu
+accounts = forkedprocess, dtcc.edu
 pythonfile=~/.mutt/offlineimap.py
 fsync = False
 postsynchook = notmuch new
 #ui = quiet
 ui = ttyui
 
-[Account Gmail]
-localrepository = Gmail-Local
-remoterepository = Gmail-Remote
-status_backend = sqlite
-
-[Repository Gmail-Local]
-type = Maildir
-localfolders = ~/.mail/gmail
-nametrans = lambda folder: {'drafts':  '[Gmail]/Drafts',
-                            'sent':    '[Gmail]/Sent Mail',
-                            'flagged': '[Gmail]/Starred',
-                            'trash':   '[Gmail]/Trash',
-                            'archive': '[Gmail]/All Mail',
-                            }.get(folder, folder)
-cert_fingerprint = 1a4771d194333864c804b0bc166589a28f742661
-
-[Repository Gmail-Remote]
-maxconnections = 1
-type = Gmail
-remoteuser = jonny.mosco@gmail.com
-remotepasseval = get_keychain_pass(account="jonny.mosco@gmail.com", server="imap.gmail.com")
-realdelete = no
-nametrans = lambda folder: {'[Gmail]/Drafts':    'drafts',
-                            '[Gmail]/Sent Mail': 'sent',
-                            '[Gmail]/Starred':   'flagged',
-                            '[Gmail]/Trash':     'trash',
-                            '[Gmail]/All Mail':  'archive',
-                            }.get(folder, folder)
-folderfilter = lambda folder: folder not in ['[Gmail]/Trash',
-                                             '[Gmail]/Important',
-                                             '[Gmail]/Spam',
-                                             ]
-cert_fingerprint = 3ffdb8519c1c8242ce8387d3d9fccc208a776b4a
-
-
 [Account forkedprocess]
 localrepository = forkedprocess-Local
 remoterepository = forkedprocess-Remote
-status_backend = sqlite
+# status_backend = sqlite
 
 [Repository forkedprocess-Local]
 type = Maildir
@@ -54,13 +19,14 @@ localfolders = ~/.mail/forkedprocess
 [Repository forkedprocess-Remote]
 type = IMAP
 remotehost = mail.forkedprocess.com
-remoteuser = admin@forkedprocess.com
-remotepasseval = get_keychain_pass(account="admin@forkedprocess.com", server="mail.forkedprocess.com")
+remoteuser = jon.mosco@forkedprocess.com
+# remotepasseval = get_keychain_pass(account="admin@forkedprocess.com", server="mail.forkedprocess.com")
+cert_fingerprint = f5c683664bf9c409b9418d4c255c720bd4d9682b
 
 [Account dtcc.edu]
 localrepository = dtcc.edu-Local
 remoterepository = dtcc.edu-Remote
-status_backend = sqlite
+# status_backend = sqlite
 
 [Repository dtcc.edu-Local]
 type = Maildir
@@ -71,5 +37,5 @@ type = IMAP
 ssl = yes
 remotehost = imap.dtcc.edu
 remoteuser = jmosco1
-remotepasseval = get_keychain_pass(account="jmosco1", server="imap.dtcc.edu")
-cert_fingerprint = 5feb0646c87f8fecc01d4e417d9f58f5845cf4b5
+# remotepasseval = get_keychain_pass(account="jmosco1", server="imap.dtcc.edu")
+cert_fingerprint = c0bf7466c228f96232a7e3c3c18ef37c2ae1a21f

@@ -1,6 +1,6 @@
 # Colors and other personal configurations
 source ~/.mutt/colors/solarized16.muttrc
-#source ~/.mutt/personal/forkedprocess.muttrc
+# source ~/.mutt/personal/forkedprocess.muttrc
 
 # Locations
 set folder           = ~/.mail
@@ -9,12 +9,13 @@ set header_cache     = ~/.mutt/cache/headers # where to store headers
 set message_cachedir = ~/.mutt/cache/bodies  # where to store bodies
 set certificate_file = ~/.mutt/certificates  # where to store certs
 set mailcap_path     = ~/.mutt/mailcap       # entries for filetypes
-set tmpdir           = ~/.mutt/temp          # where to keep temp files
+set tmpdir           = ~/.mutt_temp          # where to keep temp files
 
 # Sidebar patch
-set sidebar_visible = yes
-set sidebar_delim   = '  │'
-set sidebar_width   = 32
+set sidebar_visible      = yes
+set sidebar_divider_char = '  │'
+set sidebar_width        = 34
+set sidebar_short_path   = yes
 color sidebar_new yellow default
 
 # Status Bar
@@ -70,53 +71,22 @@ alternative_order text/plain text/enriched text/html
 
 # Accounts
 # This is the default account that opens when we start mutt
-set spoolfile = "+gmail/INBOX"
+# set spoolfile = "+gmail/INBOX"
+set spoolfile = "+forkedprocess/INBOX"
 
-mailboxes +----Gmail---- \
-          +gmail/INBOX \
-          +gmail/401K \
-          +gmail/Accounts \
-          +gmail/Bills \
-          +gmail/CSC \
-          +gmail/Desk \
-          +gmail/HMS \
-          +gmail/ISM \
-          +gmail/Jobs \
-          +gmail/Misc \
-          +gmail/FedoraProject \
-          +gmail/Forkedprocess \
-          +gmail/IntoAction \
-          +gmail/PhillyDevOps \
-          +gmail/PearsonVUE \
-          +gmail/PMI \
-          +gmail/Puppet \
-          +gmail/PuppetUserGroup\
-          +gmail/USENIX \
-          +gmail/orders \
-          +gmail/OpenBSD \
-          +gmail/archive \
-          +gmail/Sent \
-          +gmail/School \
-          +gmail/Drafts \
-          +----ForkedProcess---- \
+mailboxes +----ForkedProcess---- \
           +forkedprocess/INBOX \
-          +forkedprocess/Logwatch \
+          +----Lists---- \
+          +forkedprocess/lists/debian-devel \
+          +forkedprocess/lists/debian-mentors \
           +forkedprocess/info \
-          +----Legacy---- \
-          +forked_old/INBOX \
-          +forked_old/Blogs \
-          +forked_old/Domain \
-          +forked_old/hurshproductions \
-          +forked_old/Logwatch \
-          +forked_old/Misc \
-          +forked_old/Verizon \
           +----DTCC---- \
           +dtcc.edu/INBOX \
 
-source ~/.mutt/gmail.muttrc
+# source ~/.mutt/gmail.muttrc
 
 folder-hook forkedprocess/* source ~/.mutt/forkedprocess.muttrc
-folder-hook gmail/*   source ~/.mutt/gmail.muttrc
+# folder-hook gmail/*   source ~/.mutt/gmail.muttrc
 
 # Open URLs
 macro pager \Cu "|urlview<enter>" "call urlview to open links"
@@ -149,3 +119,11 @@ macro index M "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
 set query_command = "contacts -Sf '%eTOKEN%n' '%s' | sed -e 's/TOKEN/\t/g'"
 bind editor <Tab> complete-query
 bind editor ^T    complete
+# macro index y '<enter-command>unset wait_key<enter><tag-prefix><pipe-entry>/usr/bin/procmail /home/jmosco/.procmailrcc<enter><tag-prefix><delete-message><enter-command>set wait_key<enter>'
+# macro pager y '<enter-command>unset wait_key<enter><pipe-entry>/usr/bin/procmail /home/jmosco/.procmailrc<enter><delete-message><enter-command>set wait_key<enter>'
+
+# mailing list filtering
+save-hook debian-mentors@lists\.debian\.org$ +forkedprocess/lists/debian-mentors
+
+subscribe debian-mentors@lists.debian.org
+subscribe debian-devel@lists.debian.org
