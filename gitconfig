@@ -2,7 +2,7 @@
   name = Jon Mosco
   email = jonny.mosco@gmail.com
 [credential]
-  # helper = osxkeychain
+  helper = cache --timeout 30000
 [color]
   ui = true
 [color "branch"]
