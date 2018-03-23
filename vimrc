@@ -93,8 +93,11 @@ endif
 " Solarized theme
 syntax enable
 set background=dark
+let g:solarized_bold=1
+let g:solarized_italic=1
+let g:solarized_contrast="high"
 colorscheme solarized
-let g:solarized_diffmode="high"
+highlight CursorLineNr ctermfg=220
 
 " Airline
 let g:airline_theme='solarized'
@@ -187,7 +190,14 @@ set listchars=tab:\ \ ,trail:☠
 autocmd FileType * setlocal formatoptions-=ro
 
 " ctags path
-let g:tagbar_ctags_bin='/usr/local/bin/ctags'
+if has("unix")
+  let s:uname = system("uname -s")
+  if s:uname == "Darwin"
+    let g:tagbar_ctags_bin='/usr/local/bin/ctags'
+  elseif s:uname == "Linux"
+    let g:tagbar_ctags_bin='/usr/bin/ctags'
+  endif
+endif
 
 " --------------------------------------------------------------------
 " Custom Mappings

@@ -1,7 +1,12 @@
 #!/bin/bash
 
+# Overwrite when we need secure delete
+secure_delete() {
+  shred -f -n 4 "$1"
+}
+
 # Docker prompt
-function prompt_docker () {
+function prompt_docker() {
   # shellcheck disable=SC1090
   source ~/repos/kube-ps1/kube-ps1.sh
 

@@ -1,16 +1,14 @@
 [general]
 ui = ttyui
 accounts = forkedprocess, dtcc.edu
-pythonfile=~/.mutt/offlineimap.py
+pythonfile = ~/.mutt/offlineimap.py
 fsync = False
 postsynchook = notmuch new
-#ui = quiet
 ui = ttyui
 
 [Account forkedprocess]
 localrepository = forkedprocess-Local
 remoterepository = forkedprocess-Remote
-# status_backend = sqlite
 
 [Repository forkedprocess-Local]
 type = Maildir
@@ -20,13 +18,12 @@ localfolders = ~/.mail/forkedprocess
 type = IMAP
 remotehost = mail.forkedprocess.com
 remoteuser = jon.mosco@forkedprocess.com
-# remotepasseval = get_keychain_pass(account="admin@forkedprocess.com", server="mail.forkedprocess.com")
+remotepasseval = get_pass('fp')
 cert_fingerprint = f5c683664bf9c409b9418d4c255c720bd4d9682b
 
 [Account dtcc.edu]
 localrepository = dtcc.edu-Local
 remoterepository = dtcc.edu-Remote
-# status_backend = sqlite
 
 [Repository dtcc.edu-Local]
 type = Maildir
@@ -37,5 +34,5 @@ type = IMAP
 ssl = yes
 remotehost = imap.dtcc.edu
 remoteuser = jmosco1
-# remotepasseval = get_keychain_pass(account="jmosco1", server="imap.dtcc.edu")
+remotepasseval = get_pass('dtcc')
 cert_fingerprint = c0bf7466c228f96232a7e3c3c18ef37c2ae1a21f

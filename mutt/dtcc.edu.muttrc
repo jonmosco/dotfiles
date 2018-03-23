@@ -1,0 +1,6 @@
+set from      = "jmosco1@dtcc.edu"
+set sendmail  = "/usr/bin/msmtp -a dtcc"
+set mbox      = "+dtcc.edu/INBOX.sent"
+unset record
+set postponed = "+dtcc.edu/INBOX.Drafts"
+set signature = ~/.mutt/sig_dtcc
