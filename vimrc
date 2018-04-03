@@ -12,6 +12,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
+Plugin 'qpkorr/vim-bufkill'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'}
 Plugin 'tpope/vim-fugitive'

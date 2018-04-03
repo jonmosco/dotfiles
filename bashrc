@@ -39,9 +39,7 @@ case $OSTYPE in
     ;;
   Linux)
     export PATH="${HOME}/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin:$PATH"
-    export LS_OPTIONS='--color=auto'
-    export LSCOLORS=GxFxCxDxbxDxDxxbadacad
-    alias ls='ls -F --color'
+    #export LS_OPTIONS='--color=auto'
     ;;
   *BSD)
     if [ -e /usr/local/bin/colors ]; then
@@ -61,6 +59,11 @@ for files in ~/.{bash_prompt,aliases,dockerfunctions,localrc,functions}; do
   fi
 done
 
+if [[ -r ~/.dircolors ]]; then
+  eval `dircolors ~/.dircolors`
+  alias ls='ls -F --color=auto'
+fi
+
 # Confirm we want to exit when in a container to avoid loosing all the work
 # we might have done
 if [ -f /.dockerenv ]; then
@@ -74,3 +77,7 @@ fi
 if command -v kubectl >/dev/null; then
   source <(kubectl completion bash)
 fi
+
+GIT_PROMPT_ONLY_IN_REPO=1
+GIT_PROMPT_THEME=solarized
+source ~/.bash-git-prompt/gitprompt.sh
