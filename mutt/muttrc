@@ -97,13 +97,22 @@ mailboxes +ForkedProcess \
           +forkedprocess/lists.Debian.security \
           +Lists/Kernel \
           +forkedprocess/lists.kernel.newbies \
+          +forkedprocess/lists.kernel.netdev \
+          +Lists/Nmap \
+          +forkedprocess/lists.nmap.announce \
+          +forkedprocess/lists.nmap.dev \
           +Lists/Security \
           +forkedprocess/lists.bugtraq \
+          +forkedprocess/lists.fulldisclosure \
+          +forkedprocess/lists.snort-users \
           +DTCC \
-          +dtcc.edu/INBOX
+          +dtcc.edu/INBOX \
+          +Greengate \
+          +greengate/INBOX
 
 folder-hook forkedprocess/* source ~/.mutt/forkedprocess.muttrc
 folder-hook dtcc.edu/* source ~/.mutt/dtcc.edu.muttrc
+folder-hook greengate/* source ~/.mutt/greengate.muttrc
 
 # Open URLs
 macro pager \Cu "|urlview<enter>" "call urlview to open links"

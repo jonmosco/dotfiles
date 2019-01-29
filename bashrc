@@ -18,6 +18,7 @@ export PAGER=less
 export LESS='-R -i -g'
 export GREP_COLORS='1;37;41'
 export MAIL=$HOME/.mail
+export XAUTHORITY=~/.Xauthority
 
 # alias definitions
 alias l='ls -lFha'
@@ -61,6 +62,7 @@ done
 
 if [[ -r ~/.dircolors ]]; then
   eval `dircolors ~/.dircolors`
+  # eval "$(dircolors ~/.dircolors)"
   alias ls='ls -F --color=auto'
 fi
 
@@ -78,6 +80,11 @@ if command -v kubectl >/dev/null; then
   source <(kubectl completion bash)
 fi
 
-GIT_PROMPT_ONLY_IN_REPO=1
-GIT_PROMPT_THEME=solarized
-source ~/.bash-git-prompt/gitprompt.sh
+# Color man pages
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;38;5;74m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[38;5;246m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[04;38;5;146m'

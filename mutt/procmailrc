@@ -1,0 +1,31 @@
+# procmailrc
+
+MAILDIR=$HOME/.mail
+LOGFILE=$HOME/.procmail.log
+SHELL=/bin/sh
+VERBOSE=yes
+
+:0:
+* List-Id: debian-bugs@lists.debian.org
+$MAILDIR/forkedprocess/debian-bugs
+
+:0:
+* List-Id: debian-mentors@lists.debian.org
+$MAILDIR/forkedprocess/debian-mentor
+
+:0:
+* List-Id: debian-devel@lists.debian.org
+$MAILDIR/forkedprocess/debian-devel
+
+:0
+* ^List-Id:.*kernelnewbies.kernelnewbies.org
+$MAILDIR/forkedprocess/kernelnewbies
+
+:0:
+* From: *capitalone@sparkbusiness\.com
+$MAILDIR/forkedprocess/business
+
+# Default rule
+:0:
+* ^(To|Cc).*jon.mosco@forkedprocess.com
+$MAILDIR/INBOX

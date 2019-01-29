@@ -14,3 +14,4 @@ application/pdf; ~/.mutt/view_attachment.sh %s pdf
 # HTML
 #text/html; ~/.mutt/view_attachment.sh %s html
 text/html; w3m -I %{charset} -T text/html; copiousoutput;
+# text/html;  /usr/bin/firefox %s >/dev/null 2>&1; needsterminal

@@ -42,6 +42,7 @@ Plugin 'junegunn/fzf.vim'
 Plugin 'junegunn/limelight.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'alvan/vim-closetag'
+Plugin 'pangloss/vim-javascript'
 call vundle#end()
 filetype plugin indent on
 
@@ -164,10 +165,11 @@ autocmd FileType python
 
 " Tabs
 " soft tabs, or tabs made up of space characters
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
 set expandtab
+set smarttab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 
 " Ruby
 autocmd FileType ruby setl tabstop=2 shiftwidth=2 softtabstop=2 expandtab

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+mkd () {
+  mkdir -p "$@" && cd "$@" || exit
+}
+
 # Overwrite when we need secure delete
 secure_delete() {
   shred -f -n 4 "$1"
@@ -41,6 +45,10 @@ function prompt_issue_27() {
   source ~/repos/kube-ps1/kube-ps1.sh
   source ~/.zsh/prompt/agnoster.zsh
   PROMPT='$(kube_ps1) ' $PROMPT
+}
+
+function prompt_issue_65() {
+  export KUBE_PS1_SYMBOL_DEFAULT='lll'
 }
 
 # Restore default prompt

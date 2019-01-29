@@ -1,0 +1,6 @@
+set from      = "admin@greengatesecurity.com"
+set sendmail  = "/usr/bin/msmtp -a greengate"
+set mbox      = "+greengate/INBOX.sent"
+unset record
+set postponed = "+greengate/INBOX.Drafts"
+set signature = ~/.mutt/sig_dtcc
