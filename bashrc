@@ -88,3 +88,9 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[38;5;246m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/jmosco/Downloads/google-cloud-sdk/path.bash.inc' ]; then . '/home/jmosco/Downloads/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/jmosco/Downloads/google-cloud-sdk/completion.bash.inc' ]; then . '/home/jmosco/Downloads/google-cloud-sdk/completion.bash.inc'; fi

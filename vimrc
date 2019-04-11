@@ -12,9 +12,8 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
-Plugin 'qpkorr/vim-bufkill'
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'}
+Plugin 'moby/moby' , {'rtp': '/contrib/syntax/vim/'}
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
@@ -26,10 +25,9 @@ Plugin 'plasticboy/vim-markdown'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'fatih/vim-go'
-Plugin 'Gundo'
 Plugin 'majutsushi/tagbar'
 Plugin 'ConradIrwin/vim-bracketed-paste'
-Plugin 'Valloric/YouCompleteMe'
+" Plugin 'Valloric/YouCompleteMe'
 Plugin 'Glench/Vim-Jinja2-Syntax'
 Plugin 'junegunn/goyo.vim'
 Plugin 'tomtom/tcomment_vim'
@@ -43,6 +41,7 @@ Plugin 'junegunn/limelight.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'alvan/vim-closetag'
 Plugin 'pangloss/vim-javascript'
+Plugin 'moll/vim-bbye'
 call vundle#end()
 filetype plugin indent on
 
@@ -70,7 +69,7 @@ set nosi                        " Disable 'smart'-indenting
 set cursorline                  " Highlight the entire line the cursor is on
 set noshowmode                  " No need since we are using powerline
 "set tw=80
-" Create backups.  This was learned the hard way.
+set backup                      " Create backups.  This was learned the hard way.
 set backup
 set backupdir=~/.backups/
 set backupext=.bak              "Append .bak to backup files
@@ -79,13 +78,11 @@ set backspace=indent,eol,start  " Make Backspaces delete sensibly
 set smartcase                   " "Smart" searching
 set ignorecase                  " Ignore case when searching
 
-
 " Set the size of the window
-" - if using desktop, increase font size
+" If using desktop, increase font size
 if has("gui_running")
   let s:uname = system("uname")
   if s:uname == "Darwin\n"
-    "set guifont=Monaco\ For\ Powerline:h14
     set guifont=Inconsolata-Dz\ For\ Powerline:h16
     set lines=30
     set columns=110
@@ -206,14 +203,27 @@ endif
 " Custom Mappings
 " --------------------------------------------------------------------
 
+" Leader key by default is \
+" Remap to ,
+let mapleader = ","
+
+" Close Buffer
+nnoremap <Leader>q :Bdelete<CR>
+
 " Unset the last search pattern by hitting return
 nnoremap <CR>   :noh<CR><CR>
 
 " Undo path
 nnoremap gU :GundoToggle<CR>
 
+" mute highlighting
+nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>
+
 " Toggle Tagbar
 nmap tT :TagbarToggle<CR>
+
+" insert a literal tab
+inoremap <S-Tab> <C-V><Tab>
 
 map <C-J> :bprev<CR>  " previous buffer
 map <C-K> :bnext<CR>  " next buffer
@@ -226,21 +236,12 @@ let g:indent_guides_color_change_percent = 3
 let g:indent_guides_enable_on_vim_startup = 1
 map tI :IndentLinesToggle<CR> " Indent Line
 
-" mute highlighting
-nnoremap <silent> <c-l> :<c-u>nohlsearch<cr><c-l>
-
 " JSON
 au BufRead,BufNewFile *.json set filetype=json
-
-" Leader key by default is \
-" Remap to ,
-let mapleader = ","
 
 let g:go_template_autocreate = 0
 au FileType go nmap <leader>r <Plug>(go-run)
 
-" insert a literal tab
-inoremap <S-Tab> <C-V><Tab>
 
 " Jenkinsfile
 au BufReadPost Jenkinsfile set syntax=groovy
@@ -259,31 +260,31 @@ let g:tagbar_type_ansible = {
   \ }
 
 let g:tagbar_type_go = {
-	\ 'ctagstype' : 'go',
-	\ 'kinds'     : [
-		\ 'p:package',
-		\ 'i:imports:1',
-		\ 'c:constants',
-		\ 'v:variables',
-		\ 't:types',
-		\ 'n:interfaces',
-		\ 'w:fields',
-		\ 'e:embedded',
-		\ 'm:methods',
-		\ 'r:constructor',
-		\ 'f:functions'
-	\ ],
-	\ 'sro' : '.',
-	\ 'kind2scope' : {
-		\ 't' : 'ctype',
-		\ 'n' : 'ntype'
-	\ },
-	\ 'scope2kind' : {
-		\ 'ctype' : 't',
-		\ 'ntype' : 'n'
-	\ },
-	\ 'ctagsbin'  : 'gotags',
-	\ 'ctagsargs' : '-sort -silent'
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+    \ 'p:package',
+    \ 'i:imports:1',
+    \ 'c:constants',
+    \ 'v:variables',
+    \ 't:types',
+    \ 'n:interfaces',
+    \ 'w:fields',
+    \ 'e:embedded',
+    \ 'm:methods',
+    \ 'r:constructor',
+    \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+\ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
 \ }
 
 let g:tagbar_type_groovy = {
