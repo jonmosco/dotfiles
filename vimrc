@@ -14,7 +14,6 @@ Plugin 'VundleVim/Vundle.vim'
 " Plugins
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'moby/moby' , {'rtp': '/contrib/syntax/vim/'}
-Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'rodjek/vim-puppet'
@@ -27,21 +26,21 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'fatih/vim-go'
 Plugin 'majutsushi/tagbar'
 Plugin 'ConradIrwin/vim-bracketed-paste'
-" Plugin 'Valloric/YouCompleteMe'
 Plugin 'Glench/Vim-Jinja2-Syntax'
 Plugin 'junegunn/goyo.vim'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'google/vim-searchindex'
-Plugin 'Yggdroot/indentLine'
 Plugin 'hashivim/vim-terraform'
 Plugin 'tpope/vim-commentary'
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
 Plugin 'junegunn/limelight.vim'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'alvan/vim-closetag'
 Plugin 'pangloss/vim-javascript'
 Plugin 'moll/vim-bbye'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-endwise'
+Plugin 'Yggdroot/indentLine'
 call vundle#end()
 filetype plugin indent on
 
