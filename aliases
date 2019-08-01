@@ -2,6 +2,7 @@
 alias grep='grep --color'
 alias rm='rm -i'
 alias ..="cd .."
+alias sd='shred -vuz'
 
 # kubectl aliases
 alias k='kubectl'

@@ -1,24 +1,28 @@
 #!/bin/bash
 
 battery() {
+  local batt discharging percentage charge
+
   if [[ $(uname) == "Linux" ]]; then
     batt=/sys/class/power_supply/BAT0
     discharging=$(grep -qi "discharging" ${batt}/status && echo "true" || echo "false")
     percentage=$(cat $batt/capacity)
-    charge="${percentage%%%} / 100"
   elif [[ $(uname) == "Darwin" ]]; then
-    batt=$(pmset -g batt)
-    discharging=$(grep -qi "discharging" "${batt}" && echo "true" || echo "false")
-    percentage=$(grep -Eo "[0-9]+%" "${batt}") || return
-    charge="${percentage%%%} / 100"
+    batt="$(pmset -g batt)"
+    discharging="$(echo "${batt}" | grep -qi "discharging" && echo "true" || echo "false")"
+    percentage="$(echo "${batt}" | grep -Eo  "[0-9]+%")" || return
   else
     return 1
   fi
 
+  charge="${percentage%%%} / 100"
+
   [[ "${percentage%%%}" -lt 10 ]] && mode=" blink" || mode=""
 
   battery_bg=$1
+
   columns=$(tmux -q display -p '#{client_width}' 2> /dev/null || echo 120)
+
   if [[ $columns -ge 170 ]]; then
     battery_symbol_count=10
   elif [[ $columns -ge 120 ]]; then

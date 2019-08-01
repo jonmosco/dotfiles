@@ -34,9 +34,13 @@ OSTYPE=$(uname)
 
 case $OSTYPE in
   Darwin)
-    export PATH="${HOME}/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/X11/bin:$PATH"
-    export CLICOLOR=1
-    export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+    export PATH="${HOME}/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/X11/bin:$PATH"
+    if [ -d  /usr/local/opt/coreutils ]; then
+        PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+    else
+        export CLICOLOR=1
+        export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+    fi
     ;;
   Linux)
     export PATH="${HOME}/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin:$PATH"
@@ -60,6 +64,8 @@ for files in ~/.{bash_prompt,aliases,dockerfunctions,localrc,functions}; do
   fi
 done
 
+# Fix to test for gls on MacOS
+# - Check $PATH
 if [[ -r ~/.dircolors ]]; then
   eval `dircolors ~/.dircolors`
   # eval "$(dircolors ~/.dircolors)"
@@ -94,3 +100,6 @@ if [ -f '/home/jmosco/Downloads/google-cloud-sdk/path.bash.inc' ]; then . '/home
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/jmosco/Downloads/google-cloud-sdk/completion.bash.inc' ]; then . '/home/jmosco/Downloads/google-cloud-sdk/completion.bash.inc'; fi
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
