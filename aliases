@@ -3,6 +3,7 @@ alias grep='grep --color'
 alias rm='rm -i'
 alias ..="cd .."
 alias sd='shred -vuz'
+alias l='ls -lFha'
 
 # kubectl aliases
 alias k='kubectl'
