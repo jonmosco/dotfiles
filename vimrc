@@ -69,7 +69,6 @@ set cursorline                  " Highlight the entire line the cursor is on
 set noshowmode                  " No need since we are using powerline
 "set tw=80
 set backup                      " Create backups.  This was learned the hard way.
-set backup
 set backupdir=~/.backups/
 set backupext=.bak              "Append .bak to backup files
 set writebackup
@@ -95,7 +94,7 @@ let g:solarized_bold=1
 let g:solarized_italic=1
 let g:solarized_contrast="high"
 colorscheme solarized
-highlight CursorLineNr ctermfg=220
+highlight CursorLineNr cterm=bold ctermfg=220
 
 " Airline
 let g:airline_theme='solarized'
