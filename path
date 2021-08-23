@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Go
+export GOPATH="${HOME}/code/go"
+
+# add Go to path
+export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"

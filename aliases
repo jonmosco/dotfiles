@@ -27,6 +27,7 @@ alias kgpvc='kubectl get pvc'
 alias kgss='kubectl get statefulset'
 alias kl='kubectl logs'
 alias krm='kubectl delete'
+alias kgcrd='kubectl get crd'
 alias kutil='kubectl run -i --tty debian-util --image=debian:stretch --restart=Never -- sh'
 
 # Docker aliases

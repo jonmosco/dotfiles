@@ -31,16 +31,26 @@ fi
 PS1='\[${userStyle}\]\u\[${reset}\]'
 PS1+='\[${white}\]@\[${reset}\]'
 PS1+='\[${yellow}\]\h\[${reset}\]'
+
 if [ -f /.dockerenv ]; then
   # Unicode Moby
   PS1+=' \[${MOBY}\] '
 fi
+
 PS1+='\[${white}\] in \[${reset}\]'
 PS1+='\[${green}\]\w \[${reset}\]'
-if [[ -f "${HOME}/projects/kube-ps1/github/kube-ps1/kube-ps1.sh" ]]; then
+
+#if [[ -f "${HOME}/projects/kube-ps1/github/kube-ps1/kube-ps1.sh" ]]; then
+#  PS1+='$(kube_ps1) \[${reset}\]'
+#  source "${HOME}/projects/kube-ps1/github/kube-ps1/kube-ps1.sh"
+#fi
+
+# Testing directory
+if [[ -f "${HOME}/projects/kube-ps1/testing/kube-ps1/kube-ps1.sh" ]]; then
   PS1+='$(kube_ps1) \[${reset}\]'
-  source "${HOME}/projects/kube-ps1/github/kube-ps1/kube-ps1.sh"
+  source "${HOME}/projects/kube-ps1/testing/kube-ps1/kube-ps1.sh"
 fi
+
 PS1+="\\n"
 PS1+='\$ \[${reset}\]'
 export PS1

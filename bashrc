@@ -57,7 +57,7 @@ esac
 # Load extra functions and helpers
 # Local environment variables and settings are kept in .localrc
 # These should not go in source control (public)
-for files in ~/.{bash_prompt,aliases,dockerfunctions,localrc,functions}; do
+for files in ~/.{bash_prompt,aliases,dockerfunctions,localrc,path,functions}; do
   if [[ -r "$files" ]] && [[ -f "$files" ]]; then
     # shellcheck disable=SC1090
     source "$files"
