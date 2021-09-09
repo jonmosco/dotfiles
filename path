@@ -5,3 +5,6 @@ export GOPATH="${HOME}/code/go"
 
 # add Go to path
 export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+
+# Krew
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"

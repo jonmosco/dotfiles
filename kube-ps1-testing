@@ -1,0 +1,9 @@
+# kube-ps1 testing
+
+# export KUBE_PS1_CTX_TXT_EFFECT="blink"
+# export KUBE_PS1_NS_TXT_EFFECT="underline"
+# export KUBE_PS1_TXT_EFFECT="underline"
+# export KUBE_PS1_TXT_EFFECT="bold"
+export KUBE_PS1_SYMBOL_PADDING=false
+# export KUBE_PS1_FG_COLOR=white
+# export KUBE_PS1_PREFIX_COLOR=red
