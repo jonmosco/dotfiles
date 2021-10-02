@@ -8,3 +8,6 @@ export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
 
 # Krew
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# pip
+export PATH="${HOME}/.local/bin:${PATH}"

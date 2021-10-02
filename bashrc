@@ -95,11 +95,10 @@ export LESS_TERMCAP_so=$'\E[38;5;246m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/jmosco/Downloads/google-cloud-sdk/path.bash.inc' ]; then . '/home/jmosco/Downloads/google-cloud-sdk/path.bash.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/jmosco/Downloads/google-cloud-sdk/completion.bash.inc' ]; then . '/home/jmosco/Downloads/google-cloud-sdk/completion.bash.inc'; fi
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+# Add tab completion for SSH hostnames based on ~/.ssh/config
+# ignoring wildcards
+[[ -e "$HOME/.ssh/config" ]] && complete -o "default" \
+    -o "nospace" \
+    -W "$(grep "^Host" ~/.ssh/config | \
+    grep -v "[?*]" | cut -d " " -f2 | \
+    tr ' ' '\n')" scp sftp ssh

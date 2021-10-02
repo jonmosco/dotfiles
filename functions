@@ -151,3 +151,8 @@ function k8s_yaml_extract() {
   fi
   kubectl get deployment "$1" -o yaml --export "$2"
 }
+
+# Get the latest Linux Kernel version
+function kver() {
+  curl -s https://www.kernel.org/releases.json | jq '.latest_stable.version' -r
+}

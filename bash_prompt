@@ -56,7 +56,9 @@ export PS2
 export KUBECONFIG=$HOME/.kube/config:$HOME/.kube/k3s-config
 export KUBE_PS1_SYMBOL_PADDING=false
 
+# git prompt
 if [ -f "$HOME/repos/bash-git-prompt/gitprompt.sh" ]; then
     GIT_PROMPT_ONLY_IN_REPO=1
+    GIT_PROMPT_THEME=Solarized
     source $HOME/repos/bash-git-prompt/gitprompt.sh
 fi
