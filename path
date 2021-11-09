@@ -11,3 +11,6 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # pip
 export PATH="${HOME}/.local/bin:${PATH}"
+
+# linkerd
+export PATH=$PATH:/home/jmosco/.linkerd2/bin
