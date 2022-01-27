@@ -14,3 +14,8 @@ export PATH="${HOME}/.local/bin:${PATH}"
 
 # linkerd
 export PATH=$PATH:/home/jmosco/.linkerd2/bin
+
+# kubectl KUBECONFIG files
+# export KUBECONFIG=$HOME/.kube/config:$HOME/.kube/k3s-config:$HOME/.kube/rke2-config
+export KUBECONFIG=$HOME/.kube/rke2-config:$HOME/.kube/k3s-config:$HOME/.kube/config
+# export KUBECONFIG=$HOME/.kube/config:$HOME/.kube/rke2-config:$HOME/.kube/k3s-config

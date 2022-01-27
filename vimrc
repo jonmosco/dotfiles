@@ -41,6 +41,9 @@ Plugin 'moll/vim-bbye'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-endwise'
 Plugin 'Yggdroot/indentLine'
+Plugin 'rust-lang/rust.vim'
+Plugin 'ryanoasis/vim-devicons'
+Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 call vundle#end()
 filetype plugin indent on
 
