@@ -1,12 +1,19 @@
+# Fig pre block. Keep at the top of this file.
+export PATH="${PATH}:${HOME}/.local/bin"
+eval "$(fig init zsh pre)"
+
 # .zshrc
 zmodload zsh/zprof
 
-export PATH="$HOME/bin:/usr/local/bin:/usr/local/go/bin:/usr/local/sbin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
+# source /opt/homebrew/share/antigen/antigen.zsh
+
+export PATH="$HOME/bin:/opt/homebrew/bin:/usr/local/bin:/usr/local/go/bin:/usr/local/sbin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/X11/bin:$HOME/bin/google-cloud-sdk/bin"
 export GREP_COLORS='1;37;41'
 export LESS='-R -i -g'
 export RI='-f ansi'
 export EDITOR=vim
-export GOROOT=/usr/local/go
+# export GOROOT=/usr/local/go
+# export GOROOT=/opt/homebrew/bin/go
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 export LC_ALL="en_US.UTF-8"
@@ -70,19 +77,23 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 # KUBE_PS1_SUFFIX=''
 # KUBE_PS1_NS_ENABLE=false
 # KUBE_PS1_BINARY=tt
-# source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
+KUBE_PS1_SYMBOL_PADDING=false
+source ~/projects/kube-ps1/test/kube-ps1-test.sh
 # source ~/.zsh/prompt/agnoster.zsh
 source ~/.zsh/prompt/steeef.zsh-theme
 # KUBE_PS1_SEPARATOR='!'
 
-if [ -d "${HOME}/.third_party" ]; then
-  for file in "${HOME}/.third_party/zsh-git-prompt/zshrc.sh"; do
+if [ -d "${HOME}/.plugins" ]; then
+  for file in "${HOME}/.plugins/zsh-git-prompt/zshrc.sh"; do
     if [[ -r "$file" ]] && [[ -f "$file" ]]; then
       source $file
-      RPROMPT='$(git_super_status)'
+      # RPROMPT='$(git_super_status)'
     fi
   done
 fi
+# source $HOME/.plugins/git-prompt.sh
+# source $HOME/.plugins/git.zsh
+source $HOME/.plugins/git/git-prompt.sh
 
 # Load extra functions and helpers
 # Local environment variables and settings are kept in .localrc
@@ -125,3 +136,11 @@ if [ -f '/Users/jmosco/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then so
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
+
+# antigen use oh-my-zsh
+# antigen bundle arialdomartini/oh-my-git
+# antigen theme arialdomartini/oh-my-git-themes oppa-lana-style
+
+# Fig post block. Keep at the bottom of this file.
+#eval "$(fig init zsh post)"
+

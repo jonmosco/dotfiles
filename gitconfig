@@ -1,6 +1,6 @@
 [user]
-  name = Jon Mosco
-  email = jonny.mosco@gmail.com
+	name = Jon Mosco
+	email = jon.mosco@rancherfederal.com
 [credential]
   helper = cache --timeout 30000
 [color]

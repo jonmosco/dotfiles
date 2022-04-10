@@ -60,7 +60,7 @@ function steeef_precmd {
 }
 add-zsh-hook precmd steeef_precmd
 
-if [[ -f ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh ]]; then
+# if [[ -f ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh ]]; then
   # export KUBE_PS1_SYMBOL_COLOR=""
   # export KUBE_PS1_CTX_COLOR="5"
   # export KUBE_PS1_NS_COLOR="magenta"
@@ -78,14 +78,14 @@ if [[ -f ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh ]]; then
   # export KUBE_PS1_SYMBOL_USE_IMG=true
 
   # Develop branch
-  export KUBE_PS1_CTX_COLOR="124"
+  # export KUBE_PS1_CTX_COLOR="124"
   # export KUBE_PS1_CTX_COLOR="white"
   # export KUBE_PS1_NS_COLOR="green"
-  source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
+  # source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
 
   # Stable branch
   # source ~/repos/kube-ps1/kube-ps1-stable/kube-ps1/kube-ps1.sh
-fi
+# fi
 
 CROSS="\u2718"
 LIGHTNING="\u26a1"
@@ -116,5 +116,9 @@ prompt_segment() {
 }
 
 PROMPT=$'
-$(RETVAL=$? prompt_status)%F{166%}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(kube_ps1) $(virtualenv_info)
+$(RETVAL=$? prompt_status)%F{166%}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(virtualenv_info)
+$(kube_ps1)
 $ '
+# PROMPT=$'
+# $(RETVAL=$? prompt_status)%F{166%}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(virtualenv_info)
+# $ '

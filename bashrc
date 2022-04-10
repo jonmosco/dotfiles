@@ -1,3 +1,7 @@
+# Fig pre block. Keep at the top of this file.
+export PATH="${PATH}:${HOME}/.local/bin"
+eval "$(fig init bash pre)"
+
 # General settings
 set -o noclobber
 
@@ -102,3 +106,7 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m'
     -W "$(grep "^Host" ~/.ssh/config | \
     grep -v "[?*]" | cut -d " " -f2 | \
     tr ' ' '\n')" scp sftp ssh
+
+# Fig post block. Keep at the bottom of this file.
+eval "$(fig init bash post)"
+
