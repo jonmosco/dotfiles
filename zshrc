@@ -1,7 +1,5 @@
 # Fig pre block. Keep at the top of this file.
-export PATH="${PATH}:${HOME}/.local/bin"
-eval "$(fig init zsh pre)"
-
+. "$HOME/.fig/shell/zshrc.pre.zsh"
 # .zshrc
 zmodload zsh/zprof
 
@@ -142,5 +140,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # antigen theme arialdomartini/oh-my-git-themes oppa-lana-style
 
 # Fig post block. Keep at the bottom of this file.
-#eval "$(fig init zsh post)"
+#
 
+# Fig post block. Keep at the bottom of this file.
+. "$HOME/.fig/shell/zshrc.post.zsh"

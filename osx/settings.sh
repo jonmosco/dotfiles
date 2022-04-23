@@ -23,3 +23,6 @@ sudo systemsetup -setremotelogin on
 
 # Empty Trash securely by default
 defaults write com.apple.finder EmptyTrashSecurely -bool true
+
+# All Key repoeat rate in GoLand to be the same as the system settings
+defaults write com.jetbrains.goland ApplePressAndHoldEnabled -bool false
