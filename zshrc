@@ -1,5 +1,3 @@
-# Fig pre block. Keep at the top of this file.
-. "$HOME/.fig/shell/zshrc.pre.zsh"
 # .zshrc
 zmodload zsh/zprof
 
@@ -10,8 +8,6 @@ export GREP_COLORS='1;37;41'
 export LESS='-R -i -g'
 export RI='-f ansi'
 export EDITOR=vim
-# export GOROOT=/usr/local/go
-# export GOROOT=/opt/homebrew/bin/go
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 export LC_ALL="en_US.UTF-8"
@@ -64,34 +60,21 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 # Prompt
-# KUBE_PS1_SYMBOL_USE_IMG=true
-# KUBE_PS1_BG_COLOR=15
 # source ~/.zsh/prompt/robby_simple.zsh-theme
 # source ~/.zsh/prompt/simple-test.zsh-prompt
-# KUBE_PS1_NS_COLOR=""
-# KUBE_PS1_SYMBOL_ENABLE=false
-# KUBE_PS1_SEPARATOR='!'
-# KUBE_PS1_PREFIX=''
-# KUBE_PS1_SUFFIX=''
-# KUBE_PS1_NS_ENABLE=false
-# KUBE_PS1_BINARY=tt
-KUBE_PS1_SYMBOL_PADDING=false
-source ~/projects/kube-ps1/test/kube-ps1-test.sh
-# source ~/.zsh/prompt/agnoster.zsh
 source ~/.zsh/prompt/steeef.zsh-theme
-# KUBE_PS1_SEPARATOR='!'
 
-if [ -d "${HOME}/.plugins" ]; then
-  for file in "${HOME}/.plugins/zsh-git-prompt/zshrc.sh"; do
-    if [[ -r "$file" ]] && [[ -f "$file" ]]; then
-      source $file
-      # RPROMPT='$(git_super_status)'
-    fi
-  done
-fi
-# source $HOME/.plugins/git-prompt.sh
-# source $HOME/.plugins/git.zsh
-source $HOME/.plugins/git/git-prompt.sh
+# if [ -d "${HOME}/.plugins" ]; then
+#   for file in "${HOME}/.plugins/zsh-git-prompt/zshrc.sh"; do
+#     if [[ -r "$file" ]] && [[ -f "$file" ]]; then
+#       source $file
+#       # RPROMPT='$(git_super_status)'
+#     fi
+#   done
+# fi
+# # source $HOME/.plugins/git-prompt.sh
+# # source $HOME/.plugins/git.zsh
+# source $HOME/.plugins/git/git-prompt.sh
 
 # Load extra functions and helpers
 # Local environment variables and settings are kept in .localrc
@@ -113,6 +96,7 @@ if [[ -e "${HOME}/.dir_colors" ]] && [[ -x /usr/local/bin/gls ]]; then
   alias ls='gls --color -F'
   alias l='gls -lFha --color'
 else
+
   export CLICOLOR=1
   export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
   alias l='ls -lFha'
@@ -138,9 +122,10 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # antigen use oh-my-zsh
 # antigen bundle arialdomartini/oh-my-git
 # antigen theme arialdomartini/oh-my-git-themes oppa-lana-style
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
-# Fig post block. Keep at the bottom of this file.
-#
-
-# Fig post block. Keep at the bottom of this file.
-. "$HOME/.fig/shell/zshrc.post.zsh"
+PATH="/Users/jmosco/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/Users/jmosco/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/jmosco/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/jmosco/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/jmosco/perl5"; export PERL_MM_OPT;

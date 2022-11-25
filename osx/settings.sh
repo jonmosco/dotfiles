@@ -19,7 +19,10 @@ defaults write com.apple.finder AppleShowAllFiles YES
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
 # Start sshd
-sudo systemsetup -setremotelogin on
+# sudo systemsetup -setremotelogin on
+
+# Enable SSH
+sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 
 # Empty Trash securely by default
 defaults write com.apple.finder EmptyTrashSecurely -bool true
