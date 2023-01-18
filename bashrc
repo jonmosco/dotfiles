@@ -1,5 +1,3 @@
-# Fig pre block. Keep at the top of this file.
-. "$HOME/.fig/shell/bashrc.pre.bash"
 # General settings
 set -o noclobber
 
@@ -45,7 +43,7 @@ case $OSTYPE in
     fi
     ;;
   Linux)
-    export PATH="${HOME}/bin:/sbin:/usr/local/bin::/usr/bin:/usr/sbin:bin:/usr/local/sbin:$PATH"
+    export PATH="${HOME}/bin:/bin:/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/usr/local/sbin:$PATH"
     #export LS_OPTIONS='--color=auto'
     ;;
   *BSD)
@@ -80,8 +78,10 @@ if [ -f /.dockerenv ]; then
   set -o ignoreeof
 fi
 
-# shellcheck disable=SC1090
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# fzf
+if [ -x "$(command -v fzf)" ]; then
+  source /usr/share/fzf/shell/key-bindings.bash
+fi
 
 # kubectl completion
 if command -v kubectl >/dev/null; then
@@ -97,13 +97,7 @@ export LESS_TERMCAP_so=$'\E[38;5;246m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
-# Add tab completion for SSH hostnames based on ~/.ssh/config
-# ignoring wildcards
-[[ -e "$HOME/.ssh/config" ]] && complete -o "default" \
-    -o "nospace" \
-    -W "$(grep "^Host" ~/.ssh/config | \
-    grep -v "[?*]" | cut -d " " -f2 | \
-    tr ' ' '\n')" scp sftp ssh
-
-# Fig post block. Keep at the bottom of this file.
-. "$HOME/.fig/shell/bashrc.post.bash"
+if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
+    GIT_PROMPT_ONLY_IN_REPO=1
+    source $HOME/.bash-git-prompt/gitprompt.sh
+fi

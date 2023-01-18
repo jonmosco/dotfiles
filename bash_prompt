@@ -41,9 +41,9 @@ PS1+='\[${white}\] in \[${reset}\]'
 PS1+='\[${green}\]\w \[${reset}\]'
 
 # stable release directory
-if [[ -f "${HOME}/projects/kube-ps1/github/kube-ps1/kube-ps1.sh" ]]; then
+if [[ -f "${HOME}/projects/kube-ps1/kube-ps1.sh" ]]; then
   PS1+='$(kube_ps1) \[${reset}\]'
-  source "${HOME}/projects/kube-ps1/github/kube-ps1/kube-ps1.sh"
+  source "${HOME}/projects/kube-ps1/kube-ps1.sh"
 fi
 
 PS1+="\\n"
@@ -54,7 +54,7 @@ PS2='\[${yellow}\]→ \[${reset}\]'
 export PS2
 
 # export KUBECONFIG=$HOME/.kube/config:$HOME/.kube/k3s-config:$HOME/.kube/rke2-config
-export KUBE_PS1_SYMBOL_PADDING=false
+export KUBE_PS1_SYMBOL_PADDING=true
 
 # git prompt
 if [ -f "$HOME/repos/bash-git-prompt/gitprompt.sh" ]; then
