@@ -172,5 +172,9 @@ function gitsync() {
 }
 
 function oc_rename() {
-    oc config rename-context $(oc config current-context) $1
+    oc config rename-context $(oc config current-context) "${1}"
+}
+
+function pasta() {
+    xclip -sel clip < "${1}"
 }

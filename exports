@@ -1,3 +1,12 @@
-if [[ "${OSTYPE}" == "Linux" ]]; then
-    export VAGRANT_DEFAULT_PROVIDER=libvirt
-fi
+#!/bin/bash
+
+export EDITOR=vim
+export HISTCONTROL=ignoreboth
+export HISTFILESIZE=150000
+export HISTSIZE=150000
+export HISTTIMEFORMAT="%D %I:%M "
+export PAGER=less
+export LESS='-R -i -g'
+export GREP_COLORS='1;37;41'
+export MAIL=$HOME/.mail
+export XAUTHORITY=~/.Xauthority

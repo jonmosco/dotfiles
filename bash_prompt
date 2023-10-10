@@ -46,6 +46,9 @@ if [[ -f "${HOME}/projects/kube-ps1/kube-ps1.sh" ]]; then
   source "${HOME}/projects/kube-ps1/kube-ps1.sh"
 fi
 
+# source ~/dev/work/oss/scripts/vpn_helper/vpn_info.sh
+# PS1+='$(vpn_type) \[${reset}\]'
+
 PS1+="\\n"
 PS1+='\$ \[${reset}\]'
 export PS1

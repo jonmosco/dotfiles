@@ -12,20 +12,13 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
-Plugin 'altercation/vim-colors-solarized'
+Plugin 'pearofducks/ansible-vim'
 Plugin 'moby/moby' , {'rtp': '/contrib/syntax/vim/'}
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'rodjek/vim-puppet'
 Plugin 'scrooloose/syntastic'
-Plugin 'pearofducks/ansible-vim'
 Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'fatih/vim-go'
 Plugin 'majutsushi/tagbar'
-Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'Glench/Vim-Jinja2-Syntax'
 Plugin 'junegunn/goyo.vim'
 Plugin 'tomtom/tcomment_vim'
@@ -34,16 +27,19 @@ Plugin 'hashivim/vim-terraform'
 Plugin 'tpope/vim-commentary'
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
-Plugin 'junegunn/limelight.vim'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'pangloss/vim-javascript'
-Plugin 'moll/vim-bbye'
+Plugin 'rust-lang/rust.vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-endwise'
-" Plugin 'Yggdroot/indentLine'
-Plugin 'rust-lang/rust.vim'
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'ryanoasis/vim-devicons'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'pangloss/vim-javascript'
+Plugin 'plasticboy/vim-markdown'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plugin 'fatih/vim-go'
+Plugin 'overcache/NeoSolarized'
 " Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 call vundle#end()
 filetype plugin indent on
@@ -60,7 +56,7 @@ set vb t_vb=                    " go away BELLS
 set noerrorbells                " Please be quiet
 set sc                          " show current command
 set directory=~/.backups/       " swap file location
-set redraw optimize             " Keep the screen tidy
+" set redraw optimize             " Keep the screen tidy
 set history=10000               " history lines
 set title                       " Inherit the term title from Vim
 set titleold=""                 " No "Thanks for Flying Vim" message
@@ -80,6 +76,10 @@ set backspace=indent,eol,start  " Make Backspaces delete sensibly
 set smartcase                   " "Smart" searching
 set ignorecase                  " Ignore case when searching
 
+if has("termguicolors")
+    set termguicolors
+endif
+
 " Set the size of the window
 " If using desktop, increase font size
 if has("gui_running")
@@ -94,10 +94,11 @@ endif
 " Solarized theme
 syntax enable
 set background=dark
-let g:solarized_bold=1
-let g:solarized_italic=1
-let g:solarized_contrast="high"
-colorscheme solarized
+" let g:solarized_bold=1
+" let g:solarized_italic=1
+" let g:solarized_contrast="high"
+" colorscheme solarized
+" colorscheme NeoSolarized
 highlight CursorLineNr cterm=bold ctermfg=220
 
 " Airline
@@ -130,6 +131,7 @@ let NERDTreeMapOpenInTab='\r'
 let NERDChristmasTree=1
 let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
+let NERDTreeWinSize=40
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Markdown

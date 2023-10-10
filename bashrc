@@ -9,17 +9,6 @@ shopt -s cdspell
 shopt -s login_shell
 shopt -s extglob
 
-export EDITOR=vim
-export HISTCONTROL=ignoreboth
-export HISTFILESIZE=150000
-export HISTSIZE=150000
-export HISTTIMEFORMAT="%D %I:%M "
-export PAGER=less
-export LESS='-R -i -g'
-export GREP_COLORS='1;37;41'
-export MAIL=$HOME/.mail
-export XAUTHORITY=~/.Xauthority
-
 # alias definitions
 alias l='ls -lFha'
 alias lt='ls -ltr'
@@ -43,7 +32,7 @@ case $OSTYPE in
     fi
     ;;
   Linux)
-    export PATH="${HOME}/bin:/bin:/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/usr/local/sbin:$PATH"
+    export PATH="${HOME}/bin:${HOME}/.local/bin:/bin:/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/usr/local/sbin:$PATH"
     #export LS_OPTIONS='--color=auto'
     ;;
   *BSD)
@@ -57,7 +46,7 @@ esac
 # Load extra functions and helpers
 # Local environment variables and settings are kept in .localrc
 # These should not go in source control (public)
-for files in ~/.{bash_prompt,aliases,dockerfunctions,localrc,path,functions}; do
+for files in ~/.{bash_prompt,aliases,dockerfunctions,exports,path,functions}; do
   if [[ -r "$files" ]] && [[ -f "$files" ]]; then
     # shellcheck disable=SC1090
     source "$files"
@@ -83,11 +72,24 @@ if [ -x "$(command -v fzf)" ]; then
   source /usr/share/fzf/shell/key-bindings.bash
 fi
 
-# kubectl completion
-if command -v kubectl >/dev/null; then
+# source kubectl bash completion
+if hash kubectl 2>/dev/null; then
+  # shellcheck source=/dev/null
   source <(kubectl completion bash)
 fi
 
+# gh completions
+if hash gh 2>/dev/null; then
+  eval "$(gh completion -s bash)"
+fi
+
+# source oc bash completion
+if hash oc 2>/dev/null; then
+  # shellcheck source=/dev/null
+  source <(oc completion bash)
+fi
+
+export LESS="-r"
 # Color man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;38;5;74m'
