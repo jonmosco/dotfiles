@@ -1,3 +1,6 @@
+# NeoVim FTW
+alias vim='nvim'
+
 # General
 alias grep='grep --color'
 alias rm='rm -i'
