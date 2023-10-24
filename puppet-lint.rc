@@ -1,8 +1,0 @@
-# Puppet Lint configuration
-
-# Do not warn about inheriting from parms class, this is good practice
---no-class_inherits_from_params_class-check
---no-80chars-check
---no-puppet_url_without_modules-check
---no-autoloader_layout-check
---no-variable_scope-check
