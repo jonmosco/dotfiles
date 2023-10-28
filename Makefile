@@ -35,3 +35,9 @@ shell:
 	mkdir -p $(HOME)/.third_party
 	git clone https://github.com/olivierverdier/zsh-git-prompt.git ${HOME}/.third_party/zsh-git-prompt
 	git clone https://github.com/jonmosco/kube-ps1.git ${HOME}/.third_party/kube-ps1
+
+all:
+	stow --verbose --target=$$HOME --restow */
+
+delete:
+	stow --verbose --target=$$HOME --delete */

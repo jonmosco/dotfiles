@@ -12,6 +12,12 @@ Consistency.
 Mac OSX:
 * iTerm2
 * Homebrew
+* Stow
+
+Linux:
+* Alacritty
+* i3/Sway
+* Stow
 
 ## Installation
 
