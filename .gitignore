@@ -7,3 +7,5 @@ tmux/plugins/
 zsh/local*
 vim/bundle/
 third_party/*
+
+nvim/.config/nvim/lua/personal-projects/

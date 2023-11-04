@@ -7,7 +7,7 @@ end)
 require('mason').setup({})
 
 require('mason-lspconfig').setup({
-  ensure_installed = { 'ansiblels', 'clangd', 'gopls', 'lua_ls', 'tsserver', 'rust_analyzer', 'yamlls' },
+  ensure_installed = { 'ansiblels', 'bashls', 'clangd', 'gopls', 'lua_ls', 'pyright', 'tsserver', 'rust_analyzer', 'yamlls' },
   handlers = {
     lsp_zero.default_setup,
     ["lua_ls"] = function ()

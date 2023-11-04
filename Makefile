@@ -1,24 +1,12 @@
 # Makefile for setting up dotfiles and misc workstation settings
 
-DOTFILES = aliases zshrc vimrc gitconfig gitignore_global \
-	dir_colors bashrc bash_profile functions dockerfunctions \
-	bash_prompt zsh
-
 UNAME := $(shell uname)
+XDG_CONFIG_HOME ?= $(HOME)/.config
 
-.PHONY: clean links vim shell
+.PHONY: clean vim shell
 
-all: links vim shell
-
-clean:
-	for file in $(DOTFILES); do \
-		rm $(HOME)/.$$file
-	done
-
-links:
-	for file in $(DOTFILES); do \
-		ln -sf $(HOME)/.dotfiles/$$file $(HOME)/$(addprefix .,$$file); \
-	done
+all: stow vim shell
+clean: unstow
 
 vim:
 	mkdir -p $(HOME)/.backups
@@ -31,13 +19,16 @@ brew:
 	brew install shellcheck
 endif
 
+# TODO: use git submodules here
 shell:
 	mkdir -p $(HOME)/.third_party
 	git clone https://github.com/olivierverdier/zsh-git-prompt.git ${HOME}/.third_party/zsh-git-prompt
 	git clone https://github.com/jonmosco/kube-ps1.git ${HOME}/.third_party/kube-ps1
 
-all:
+# GNU Stow
+.PHONY: stow unstow
+stow:
 	stow --verbose --target=$$HOME --restow */
 
-delete:
+unstow:
 	stow --verbose --target=$$HOME --delete */
