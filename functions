@@ -178,3 +178,9 @@ function oc_rename() {
 function pasta() {
     xclip -sel clip < "${1}"
 }
+
+add_to_path_front() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$1:$PATH
+    fi
+}
