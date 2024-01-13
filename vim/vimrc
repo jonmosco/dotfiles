@@ -325,3 +325,102 @@ let g:tagbar_type_terraform = {
     \ ],
     \ 'sort' : 0
     \ }
+
+" function! OpenQontractSchemaDef()
+"     " ~/dev/work/commercial/app-sre/qontract-schemas/schemas
+"     let env_var = getenv("QONTRACT_SCHEMAS")
+"     " /openshift/cluster-1.yml
+"     " let original_path = expand("%:p")
+"     let line = getline('.') 
+"     " let original_path = expand('<cfile>')
+"     " let schemas_path = env_var . original_path
+"     " echo schemas_path
+
+"     " if schemas_path[0:8] == "$schema:"
+"     if line =~  "^\$schema:"
+"         echo line
+"         let schemas_path = matchstr(line, '\$schema:\s*\zs.\+')
+"         echo schemas_path
+"         let schemas_path = substitute(schemas_path, '\s*$', '', '')
+"         echo schemas_path
+"         echo env_var
+"         let full_schema_path = env_var + schemas_path
+"         echo full_schema_path
+"         gf full_schemas_path
+"         " execute 'normal gfl' . env_var . schemas_path
+"     endif
+" endfunction
+
+" function! OpenQontractSchemaDef()
+"     " Get the line under the cursor
+"     let line = getline('.')
+    
+"     " Check if the line contains $schema:
+"     if line =~ '\$schema:'
+"         " Extract the file path after $schema: using regex
+"         let file_path = matchstr(line, '\$schema:\s*\zs.\+')
+
+"         " Remove leading and trailing whitespaces
+"         let file_path = substitute(file_path, '\s*$', '', '')
+"         " echo file_path
+"         " Prepend environment variable to the file path
+"         let env_var = getenv("QONTRACT_SCHEMAS")
+"         " echo env_var
+"         " let env_variable = $QONTRACT_SCHEMAS  " Replace with your environment variable name
+"         let env_path = env_var . file_path
+"         " echo env_path
+
+"         " Open the file using gf
+"         " execute 'normal gfl' . env_path
+"         gf env_path 
+"     else
+"         echo "No $schema: found in the current line."
+"     endif
+" endfunction
+
+" nnoremap <f8> :call OpenQontractSchemaDef()<cr>
+
+function! OpenQontractSchemaDef()
+    let filename = expand("<cfile>")
+    let env_var = getenv("QONTRACT_SCHEMAS")
+    let full_path = env_var . filename
+
+    let line = getline('.')
+    
+    " Check if the line contains $schema:
+    if line =~ '\$schema:'
+        execute 'edit ' . full_path
+    endif
+endfunction
+
+nnoremap <f8> :call OpenQontractSchemaDef()<cr>
+
+function! OpenQontractSchemaDef()
+    let filename = expand("<cfile>")
+    let env_var = getenv("QONTRACT_SCHEMAS")
+    let full_path = env_var . filename
+
+    let line = getline('.')
+    
+    " Check if the line contains $schema:
+    if line =~ '\$schema:'
+        execute 'edit ' . full_path
+    endif
+endfunction
+
+nnoremap <f8> :call OpenQontractSchemaDef()<cr>
+
+function! OpenAppInterfaceDataRef()
+    let filename = expand("<cfile>")
+    let env_var = getenv("APP_INTERFACE_DATA")
+    let full_path = env_var . filename
+
+    let line = getline('.')
+    
+    " Check if the line contains $schema:
+    if line =~ '\$ref:'
+        execute 'edit ' . full_path
+    endif
+endfunction
+
+nnoremap <f9> :call OpenAppInterfaceDataRef()<cr>

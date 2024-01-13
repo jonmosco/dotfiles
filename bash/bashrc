@@ -105,3 +105,7 @@ if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+. "$HOME/.cargo/env"
+
+export FZF_CTRL_R_OPTS="--reverse"
+export FZF_TMUX_OPTS="-p"
