@@ -40,6 +40,8 @@ Plugin 'plasticboy/vim-markdown'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'fatih/vim-go'
 Plugin 'overcache/NeoSolarized'
+Plugin 'joshdick/onedark.vim'
+Plugin 'nordtheme/vim'
 " Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 call vundle#end()
 filetype plugin indent on
@@ -98,12 +100,12 @@ set background=dark
 " let g:solarized_italic=1
 " let g:solarized_contrast="high"
 " colorscheme solarized
-" colorscheme NeoSolarized
+colorscheme onedark
 highlight CursorLineNr cterm=bold ctermfg=220
 
 " Airline
-let g:airline_theme='solarized'
-let g:airline_solarized_bg='dark'
+" let g:airline_theme='solarized'
+" let g:airline_solarized_bg='dark'
 let g:airline_powerline_fonts=1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
@@ -386,7 +388,7 @@ function! OpenQontractSchemaDef()
     let full_path = env_var . filename
 
     let line = getline('.')
-    
+
     " Check if the line contains $schema:
     if line =~ '\$schema:'
         execute 'edit ' . full_path
@@ -401,7 +403,7 @@ function! OpenQontractSchemaDef()
     let full_path = env_var . filename
 
     let line = getline('.')
-    
+
     " Check if the line contains $schema:
     if line =~ '\$schema:'
         execute 'edit ' . full_path
@@ -416,7 +418,7 @@ function! OpenAppInterfaceDataRef()
     let full_path = env_var . filename
 
     let line = getline('.')
-    
+
     " Check if the line contains $schema:
     if line =~ '\$ref:'
         execute 'edit ' . full_path
