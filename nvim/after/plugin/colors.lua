@@ -1,4 +1,4 @@
-require('colorbuddy').setup()
+-- require('colorbuddy').setup()
 
 -- vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#b58900'} )
 

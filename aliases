@@ -37,6 +37,7 @@ alias krm='kubectl delete'
 alias kutil='kubectl run -i --tty debian-util --image=debian:stretch --restart=Never -- sh'
 
 # oc (OpenShift CLI) aliases
+alias o='oc'
 alias oca='oc get'
 
 # Docker aliases

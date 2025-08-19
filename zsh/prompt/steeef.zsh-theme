@@ -86,6 +86,9 @@ add-zsh-hook precmd steeef_precmd
   # Stable branch
   # source ~/repos/kube-ps1/kube-ps1-stable/kube-ps1/kube-ps1.sh
 # fi
+if [[ -f ~/dev/projects/kube-ps1/kube-ps1.sh ]]; then
+  source ~/dev/projects/kube-ps1/kube-ps1.sh
+fi
 
 CROSS="\u2718"
 LIGHTNING="\u26a1"
@@ -116,8 +119,7 @@ prompt_segment() {
 }
 
 PROMPT=$'
-$(RETVAL=$? prompt_status)%F{166%}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(virtualenv_info)
-$(kube_ps1)
+$(RETVAL=$? prompt_status)%F{166%}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(virtualenv_info)$(kube_ps1)
 $ '
 # PROMPT=$'
 # $(RETVAL=$? prompt_status)%F{166%}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~${PR_RST} $(virtualenv_info)

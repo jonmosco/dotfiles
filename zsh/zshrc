@@ -129,3 +129,14 @@ PERL5LIB="/Users/jmosco/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5L
 PERL_LOCAL_LIB_ROOT="/Users/jmosco/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/Users/jmosco/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/Users/jmosco/perl5"; export PERL_MM_OPT;
+
+# Add Podman to PATH if installed under /opt/podman
+if [[ -x /opt/podman/bin/podman ]]; then
+  path=(/opt/podman/bin $path)
+elif [[ -x /opt/podman/podman ]]; then
+  path=(/opt/podman $path)
+fi
+
+# de-duplicate and sync PATH<->path
+typeset -U path PATH
+
