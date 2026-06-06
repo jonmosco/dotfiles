@@ -9,31 +9,18 @@ shopt -s cdspell
 shopt -s login_shell
 shopt -s extglob
 
-# alias definitions
-alias l='ls -lFha'
-alias lt='ls -ltr'
-alias h='history'
-alias ..='cd ..'
-alias grep='grep --color'
-alias rmi='rm -i'
-alias tree='tree -C'
+# the most import setting of all
+export EDITOR=nvim
 
 # Set OS specific settings
 OSTYPE=$(uname)
 
 case $OSTYPE in
   Darwin)
-    export PATH="${HOME}/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/X11/bin:$PATH"
-    if [ -d  /usr/local/opt/coreutils ]; then
-        PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-    else
+    if [ ! -d /usr/local/opt/coreutils ]; then
         export CLICOLOR=1
         export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
     fi
-    ;;
-  Linux)
-    export PATH="${HOME}/bin:${HOME}/.local/bin:/bin:/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/usr/local/sbin:$PATH"
-    #export LS_OPTIONS='--color=auto'
     ;;
   *BSD)
     if [ -e /usr/local/bin/colors ]; then
@@ -89,7 +76,7 @@ if hash oc 2>/dev/null; then
   source <(oc completion bash)
 fi
 
-export LESS="-r"
+export LESS='-R -i -g'
 # Color man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;38;5;74m'
@@ -109,3 +96,34 @@ fi
 
 export FZF_CTRL_R_OPTS="--reverse"
 export FZF_TMUX_OPTS="-p"
+
+complete -C /usr/bin/vault vault
+
+# if [ -z "${SSH_AUTH_SOCK}" ]; then
+#     eval "$(ssh-agent -s)"
+# fi
+
+# Fix SSH auth socket location so agent forwarding works with tmux
+# if test "${SSH_AUTH_SOCK}" ; then
+#     ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+# fi
+
+# Start ssh-agent if it is not running
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    eval "$(ssh-agent -s)"
+fi
+
+# Set the SSH_AUTH_SOCK environment variable to point to the running agent
+export SSH_AUTH_SOCK=$(find /tmp/ssh-* -type s -user "$USER" 2>/dev/null | head -n 1)
+
+eval "$(pyenv init -)"
+
+# Compoletions
+eval "$(uv generate-shell-completion bash)"
+eval "$(uvx --generate-shell-completion bash)"
+
+# . "$HOME/.atuin/bin/env"
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+# eval "$(atuin init bash)"
+source ~/.work_env

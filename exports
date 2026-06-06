@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export EDITOR=vim
+export EDITOR=nvim
 export HISTCONTROL=ignoreboth
 export HISTFILESIZE=150000
 export HISTSIZE=150000

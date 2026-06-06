@@ -1,21 +1,32 @@
 #!/bin/bash
 
+# Home directories
+export PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
+
 # Go
 export GOPATH="${HOME}/code/go"
+export PATH="/usr/local/go/bin:${GOPATH}/bin:${HOME}/go/bin:${PATH}"
 
-# add Go to path
-export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
-
-# Krew
+# Krew (kubectl plugin manager)
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-# pip
-export PATH="${HOME}/.local/bin:${PATH}"
+# tfenv
+export PATH="${HOME}/.tfenv/bin:$PATH"
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 
 # linkerd
-export PATH=$PATH:/home/jmosco/.linkerd2/bin
+export PATH="${HOME}/.linkerd2/bin:${PATH}"
 
-# kubectl KUBECONFIG files
-# export KUBECONFIG=$HOME/.kube/config:$HOME/.kube/k3s-config:$HOME/.kube/rke2-config
+# neovim
+export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
+
+# macOS coreutils
+if [[ "$(uname)" == "Darwin" ]] && [[ -d /usr/local/opt/coreutils ]]; then
+    export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+fi
+
+# KUBECONFIG
 export KUBECONFIG=$HOME/.kube/rke2-config:$HOME/.kube/k3s-config:$HOME/.kube/config
-# export KUBECONFIG=$HOME/.kube/config:$HOME/.kube/rke2-config:$HOME/.kube/k3s-config

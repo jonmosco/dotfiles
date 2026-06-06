@@ -1,5 +1,7 @@
 # NeoVim FTW
 alias vim='nvim'
+alias n='nvim'
+alias v='nvim'
 
 # General
 alias grep='grep --color'
@@ -7,7 +9,13 @@ alias rm='rm -i'
 alias ..="cd .."
 alias sd='shred -vuz'
 alias l='ls -lFha'
+alias lt='ls -ltr'
+alias h='history'
+alias tree='tree -C'
 alias c='xclip -selection clipboard'
+
+# Fat finger mistakes
+alias valut='vault'
 
 # kubectl aliases
 alias k='kubectl'
@@ -39,11 +47,25 @@ alias kutil='kubectl run -i --tty debian-util --image=debian:stretch --restart=N
 # oc (OpenShift CLI) aliases
 alias o='oc'
 alias oca='oc get'
+alias o='oc'
+alias oa='oc apply -f'
+# change ordering on the terminal to show the most recent first
+alias ocgp='oc get pods --sort-by=.metadata.creationTimestamp'
+alias ocge='oc get events --sort-by=.metadata.creationTimestamp'
+
+# tkn (tekton cli) aliases
+alias ttl='tkn task list'
+alias tpl='tkn pipeline list'
+alias tprl='tkn pipelinerun list'
 
 # Docker aliases
 alias d='docker'
 alias de='docker exec -ti'
 alias dps='docker ps'
+
+# Podman aliases
+alias pm='podman'
+alias pmps='podman ps'
 
 # Vagrant aliases
 alias vu='vagrant up'

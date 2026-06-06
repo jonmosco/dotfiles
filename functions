@@ -184,3 +184,8 @@ add_to_path_front() {
         export PATH=$1:$PATH
     fi
 }
+
+function gitall() {
+    git checkout master
+    gitup
+}

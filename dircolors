@@ -473,7 +473,7 @@ EXEC 01;31  # Unix
 .gpg 34
 .gpg 34
 .pgp 34
-.asc 34
+.asc 35
 .3des 34
 .aes 34
 .enc 34

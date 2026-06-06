@@ -35,9 +35,9 @@ battery() {
   battery_symbol_empty=◻
 
   if [[ "$discharging" == "true" ]]; then
-    printf "%s " 🔋
+    printf "%s " 󰂌
   else
-    printf "%s " ⚡
+    printf "%s " 󰂄
   fi
 
   palette="124 160 196 202 208 214 220 226 190 154 118 82 46 40 34"
