@@ -64,9 +64,3 @@ export PS2
 # export KUBE_PS1_SYMBOL_PADDING=true
 # kube_ps1_symbol oc
 
-# git prompt
-if [ -f "$HOME/repos/bash-git-prompt/gitprompt.sh" ]; then
-    GIT_PROMPT_ONLY_IN_REPO=1
-    GIT_PROMPT_THEME=Solarized
-    source $HOME/repos/bash-git-prompt/gitprompt.sh
-fi

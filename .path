@@ -4,17 +4,13 @@
 export PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 
 # Go
-export GOPATH="${HOME}/code/go"
-export PATH="/usr/local/go/bin:${GOPATH}/bin:${HOME}/go/bin:${PATH}"
+export PATH="/usr/local/go/bin:${HOME}/go/bin:${PATH}"
 
 # Krew (kubectl plugin manager)
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # tfenv
 export PATH="${HOME}/.tfenv/bin:$PATH"
-
-# linkerd
-export PATH="${HOME}/.linkerd2/bin:${PATH}"
 
 # neovim
 export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
@@ -25,4 +21,4 @@ if [[ "$(uname)" == "Darwin" ]] && [[ -d /usr/local/opt/coreutils ]]; then
 fi
 
 # KUBECONFIG
-export KUBECONFIG=$HOME/.kube/rke2-config:$HOME/.kube/k3s-config:$HOME/.kube/config
+export KUBECONFIG=$HOME/.kube/config

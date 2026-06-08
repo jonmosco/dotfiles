@@ -42,7 +42,7 @@ alias kgss='kubectl get statefulset'
 alias kgcrd='kubectl get crd'
 alias kl='kubectl logs'
 alias krm='kubectl delete'
-alias kutil='kubectl run -i --tty debian-util --image=debian:stretch --restart=Never -- sh'
+alias kutil='kubectl run -i --tty debian-util --image=debian:stable-slim --restart=Never -- sh'
 
 # oc (OpenShift CLI) aliases
 alias o='oc'
