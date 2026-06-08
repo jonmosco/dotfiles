@@ -13,10 +13,6 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 # tfenv
 export PATH="${HOME}/.tfenv/bin:$PATH"
 
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-
 # linkerd
 export PATH="${HOME}/.linkerd2/bin:${PATH}"
 
