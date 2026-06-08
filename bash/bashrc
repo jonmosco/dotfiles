@@ -75,20 +75,12 @@ if [[ -r ~/.bash_prompt ]] && [[ -f ~/.bash_prompt ]]; then
 fi
 
 # =============================================================================
-# 6. Completions
+# 6. Completions (lazy-loaded by bash-completion framework)
 # =============================================================================
-if hash kubectl 2>/dev/null; then
-  # shellcheck source=/dev/null
-  source <(kubectl completion bash)
-fi
-
-if hash gh 2>/dev/null; then
-  eval "$(gh completion -s bash)"
-fi
-
-if hash oc 2>/dev/null; then
-  # shellcheck source=/dev/null
-  source <(oc completion bash)
+# Completions for kubectl, gh, oc live in ~/.local/share/bash-completion/completions/
+# and are loaded on first tab-complete, not at startup.
+if [[ -r /usr/share/bash-completion/bash_completion ]]; then
+  . /usr/share/bash-completion/bash_completion
 fi
 
 complete -C /usr/bin/vault vault
