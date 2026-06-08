@@ -3,5 +3,3 @@
 if [[ -r "${HOME}/.bashrc" ]]; then
     source "${HOME}/.bashrc"
 fi
-
-. "$HOME/.atuin/bin/env"

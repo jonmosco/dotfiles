@@ -1,4 +1,6 @@
-# General settings
+# =============================================================================
+# 1. Shell settings
+# =============================================================================
 set -o noclobber
 
 shopt -s cmdhist
@@ -6,15 +8,25 @@ shopt -s checkhash
 shopt -s histappend
 shopt -s checkwinsize
 shopt -s cdspell
-shopt -s login_shell
 shopt -s extglob
 
-# the most import setting of all
+# =============================================================================
+# 2. PATH (before anything that uses hash/command -v)
+# =============================================================================
+for files in ~/.{path,exports}; do
+  if [[ -r "$files" ]] && [[ -f "$files" ]]; then
+    # shellcheck disable=SC1090
+    source "$files"
+  fi
+done
+
+# =============================================================================
+# 3. Environment variables
+# =============================================================================
 export EDITOR=nvim
 
 # Set OS specific settings
 OSTYPE=$(uname)
-
 case $OSTYPE in
   Darwin)
     if [ ! -d /usr/local/opt/coreutils ]; then
@@ -30,54 +42,7 @@ case $OSTYPE in
     ;;
 esac
 
-# Load extra functions and helpers
-# Local environment variables and settings are kept in .localrc
-# These should not go in source control (public)
-for files in ~/.{bash_prompt,aliases,dockerfunctions,exports,path,functions}; do
-  if [[ -r "$files" ]] && [[ -f "$files" ]]; then
-    # shellcheck disable=SC1090
-    source "$files"
-  fi
-done
-
-# Fix to test for gls on MacOS
-# - Check $PATH
-if [[ -r ~/.dircolors ]]; then
-  eval `dircolors ~/.dircolors`
-  # eval "$(dircolors ~/.dircolors)"
-  alias ls='ls -F --color=auto'
-fi
-
-# Confirm we want to exit when in a container to avoid loosing all the work
-# we might have done
-if [ -f /.dockerenv ]; then
-  set -o ignoreeof
-fi
-
-# fzf
-if [ -x "$(command -v fzf)" ]; then
-  source /usr/share/fzf/shell/key-bindings.bash
-fi
-
-# source kubectl bash completion
-if hash kubectl 2>/dev/null; then
-  # shellcheck source=/dev/null
-  source <(kubectl completion bash)
-fi
-
-# gh completions
-if hash gh 2>/dev/null; then
-  eval "$(gh completion -s bash)"
-fi
-
-# source oc bash completion
-if hash oc 2>/dev/null; then
-  # shellcheck source=/dev/null
-  source <(oc completion bash)
-fi
-
 export LESS='-R -i -g'
-# Color man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;38;5;74m'
 export LESS_TERMCAP_me=$'\E[0m'
@@ -86,44 +51,79 @@ export LESS_TERMCAP_so=$'\E[38;5;246m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
+
+export FZF_CTRL_R_OPTS="--reverse"
+export FZF_TMUX_OPTS="-p"
+
+# =============================================================================
+# 4. Aliases and functions
+# =============================================================================
+for files in ~/.{aliases,dockerfunctions,functions}; do
+  if [[ -r "$files" ]] && [[ -f "$files" ]]; then
+    # shellcheck disable=SC1090
+    source "$files"
+  fi
+done
+
+# =============================================================================
+# 5. Prompt
+# =============================================================================
+if [[ -r ~/.bash_prompt ]] && [[ -f ~/.bash_prompt ]]; then
+  # shellcheck disable=SC1090
+  source ~/.bash_prompt
+fi
+
+# =============================================================================
+# 6. Completions
+# =============================================================================
+if hash kubectl 2>/dev/null; then
+  # shellcheck source=/dev/null
+  source <(kubectl completion bash)
+fi
+
+if hash gh 2>/dev/null; then
+  eval "$(gh completion -s bash)"
+fi
+
+if hash oc 2>/dev/null; then
+  # shellcheck source=/dev/null
+  source <(oc completion bash)
+fi
+
+complete -C /usr/bin/vault vault
+
+# =============================================================================
+# 7. Tool init
+# =============================================================================
+if [[ -r ~/.dircolors ]]; then
+  eval "$(dircolors ~/.dircolors)"
+  alias ls='ls -F --color=auto'
+fi
+
+if [ -x "$(command -v fzf)" ]; then
+  source /usr/share/fzf/shell/key-bindings.bash
+fi
+
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
+
+if hash pyenv 2>/dev/null; then
+  eval "$(pyenv init -)"
+fi
+
 if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     GIT_PROMPT_ONLY_IN_REPO=1
     source $HOME/.bash-git-prompt/gitprompt.sh
 fi
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-. "$HOME/.cargo/env"
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 
-export FZF_CTRL_R_OPTS="--reverse"
-export FZF_TMUX_OPTS="-p"
-
-complete -C /usr/bin/vault vault
-
-# if [ -z "${SSH_AUTH_SOCK}" ]; then
-#     eval "$(ssh-agent -s)"
-# fi
-
-# Fix SSH auth socket location so agent forwarding works with tmux
-# if test "${SSH_AUTH_SOCK}" ; then
-#     ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
-# fi
-
-# Start ssh-agent if it is not running
-if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    eval "$(ssh-agent -s)"
+# Confirm we want to exit when in a container to avoid losing all the work
+if [ -f /.dockerenv ]; then
+  set -o ignoreeof
 fi
 
-# Set the SSH_AUTH_SOCK environment variable to point to the running agent
-export SSH_AUTH_SOCK=$(find /tmp/ssh-* -type s -user "$USER" 2>/dev/null | head -n 1)
-
-eval "$(pyenv init -)"
-
-# Compoletions
-eval "$(uv generate-shell-completion bash)"
-eval "$(uvx --generate-shell-completion bash)"
-
-# . "$HOME/.atuin/bin/env"
-
-[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
-# eval "$(atuin init bash)"
-source ~/.work_env
+# =============================================================================
+# 8. Local overrides (not in source control)
+# =============================================================================
+[[ -f ~/.work_env ]] && source ~/.work_env
