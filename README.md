@@ -21,12 +21,28 @@ Linux:
 
 ## Installation
 
-* Checkout the git repo
-  NOTE: From the Advanced Bash Scripting guide:
-  Caution: invoking a Bash script by sh scriptname turns off Bash-specific
-  extensions, and the script may therefore fail to execute.
-* run the Makefile.  The default target will provide all the necessary components
-* Logout and log back in (or . .bashrc)
-* open vim, and run :VundleInstall to install the plugins
+Clone with submodules:
+
+```bash
+git clone --recurse-submodules https://github.com/<user>/dotfiles.git ~/.dotfiles
+```
+
+If already cloned without submodules:
+
+```bash
+git submodule update --init --recursive
+```
+
+Run the Makefile. The default target will provide all the necessary components:
+
+```bash
+make
+```
+
+Logout and log back in (or `. ~/.bashrc`)
+
+## Submodules
+
+* [tpm](https://github.com/tmux-plugins/tpm) — Tmux Plugin Manager (`tmux/.config/tmux/plugins/tpm`)
 
 Enjoy (or criticize) !

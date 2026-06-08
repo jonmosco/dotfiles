@@ -3,7 +3,8 @@ mutt/personal/
 mutt/sig
 mutt/temp
 mutt/offlineimap.pyc
-tmux/plugins/
+tmux/.config/tmux/plugins/*
+!tmux/.config/tmux/plugins/tpm
 zsh/local*
 vim/bundle/
 third_party/*
