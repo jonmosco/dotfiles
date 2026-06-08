@@ -9,15 +9,16 @@ Consistency.
 
 ## Dependencies
 
-Mac OSX:
-* iTerm2
+Common:
+* [GNU Stow](https://www.gnu.org/software/stow/)
+* [Ghostty](https://ghostty.org/)
+
+macOS:
 * Homebrew
-* Stow
+* iTerm2
 
 Linux:
-* Ghostty
 * Sway
-* Stow
 
 ## Installation
 
