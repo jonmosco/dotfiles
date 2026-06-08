@@ -15,8 +15,8 @@ Mac OSX:
 * Stow
 
 Linux:
-* Alacritty
-* i3/Sway
+* Ghostty
+* Sway
 * Stow
 
 ## Installation
@@ -33,13 +33,46 @@ If already cloned without submodules:
 git submodule update --init --recursive
 ```
 
-Run the Makefile. The default target will provide all the necessary components:
+### Stow
+
+[GNU Stow](https://www.gnu.org/software/stow/) manages symlinks from the dotfiles repo into `$HOME`. Each top-level directory is a stow package that mirrors the target directory structure.
+
+Symlink all packages:
 
 ```bash
-make
+cd ~/.dotfiles
+stow --verbose --target=$HOME */
 ```
 
-Logout and log back in (or `. ~/.bashrc`)
+Symlink a specific package:
+
+```bash
+stow --verbose --target=$HOME bash
+```
+
+Remove all symlinks:
+
+```bash
+stow --verbose --target=$HOME --delete */
+```
+
+Re-stow (remove then re-symlink, useful after reorganizing):
+
+```bash
+stow --verbose --target=$HOME --restow */
+```
+
+### Makefile
+
+The Makefile wraps common setup tasks:
+
+```bash
+make          # stow all packages + vim/shell setup
+make stow     # symlink all packages
+make unstow   # remove all symlinks
+make vim      # set up Vim/Vundle
+make shell    # clone shell dependencies (kube-ps1, zsh-git-prompt)
+```
 
 ## Submodules
 
