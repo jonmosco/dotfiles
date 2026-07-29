@@ -118,3 +118,5 @@ fi
 
 # opencode
 export PATH=/home/jmosco/.opencode/bin:$PATH
+
+complete -C /usr/bin/hcp hcp

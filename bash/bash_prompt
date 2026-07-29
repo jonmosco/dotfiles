@@ -47,7 +47,7 @@ PS1+='\[${green}\]\w \[${reset}\]'
 # fi
 if [[ -f "${HOME}/Documents/1-Projects/kube-ps1/kube-ps1.sh" ]]; then
   PS1+='$(kube_ps1) \[${reset}\]'
-  source "${HOME}/gh/kube-ps1/kube-ps1.sh"
+  source "${HOME}/repos/gh/kube-ps1/kube-ps1.sh"
 fi
 
 # source ~/dev/work/oss/scripts/vpn_helper/vpn_info.sh
