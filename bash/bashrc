@@ -14,7 +14,7 @@ shopt -s extglob
 # 2. PATH (before anything that uses hash/command -v)
 # =============================================================================
 for files in ~/.{path,exports}; do
-  if [[ -r "$files" ]] && [[ -f "$files" ]]; then
+  if [[ -r "$files" ]]; then
     # shellcheck disable=SC1090
     source "$files"
   fi
@@ -26,8 +26,7 @@ done
 export EDITOR=nvim
 
 # Set OS specific settings
-OSTYPE=$(uname)
-case $OSTYPE in
+case $(uname) in
   Darwin)
     if [ ! -d /usr/local/opt/coreutils ]; then
         export CLICOLOR=1
@@ -60,7 +59,7 @@ export FZF_TMUX_OPTS="-p"
 # 4. Aliases and functions
 # =============================================================================
 for files in ~/.{aliases,dockerfunctions,functions}; do
-  if [[ -r "$files" ]] && [[ -f "$files" ]]; then
+  if [[ -r "$files" ]]; then
     # shellcheck disable=SC1090
     source "$files"
   fi
@@ -93,7 +92,7 @@ if [[ -r ~/.dircolors ]]; then
   alias ls='ls -F --color=auto'
 fi
 
-if [ -x "$(command -v fzf)" ]; then
+if command -v fzf &>/dev/null; then
   source /usr/share/fzf/shell/key-bindings.bash
 fi
 
@@ -117,6 +116,6 @@ fi
 [[ -f ~/.work_env ]] && source ~/.work_env
 
 # opencode
-export PATH=/home/jmosco/.opencode/bin:$PATH
+export PATH=$HOME/.opencode/bin:$PATH
 
 complete -C /usr/bin/hcp hcp

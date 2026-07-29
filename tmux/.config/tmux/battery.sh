@@ -4,7 +4,8 @@ battery() {
   local batt discharging percentage charge
 
   if [[ $(uname) == "Linux" ]]; then
-    batt=/sys/class/power_supply/BAT0
+    batt=$(ls /sys/class/power_supply/BAT* 2>/dev/null | head -1)
+    [[ -z "$batt" ]] && return 1
     discharging=$(grep -qi "discharging" ${batt}/status && echo "true" || echo "false")
     percentage=$(cat $batt/capacity)
   elif [[ $(uname) == "Darwin" ]]; then
@@ -31,17 +32,19 @@ battery() {
     battery_symbol_count=6
   fi
 
-  battery_symbol_full=◼
-  battery_symbol_empty=◻
+  battery_symbol_full=█
+  battery_symbol_empty=░
 
   if [[ "$discharging" == "true" ]]; then
     printf "%s " 󰂌
-  else
+  elif [[ $(uname) == "Linux" ]] && grep -qi "^charging$" ${batt}/status 2>/dev/null; then
     printf "%s " 󰂄
+  else
+    printf "%s " 󰁹
   fi
 
   palette="124 160 196 202 208 214 220 226 190 154 118 82 46 40 34"
-  count=$(echo $(echo $palette | wc -w))
+  count=$(echo $palette | wc -w)
 
   eval set -- "$palette"
   palette=$(eval echo $(eval echo $(printf "\\$\{\$(expr %s \* $count / $battery_symbol_count)\} " $(seq 1 $battery_symbol_count))))
