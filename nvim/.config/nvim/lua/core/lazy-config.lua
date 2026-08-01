@@ -45,6 +45,16 @@ require("lazy").setup({
      },
    },
 
+   {'stevearc/conform.nvim'},
+   {'folke/zen-mode.nvim'},
+   {'akinsho/toggleterm.nvim', version = "*"},
+   {
+       'iamcco/markdown-preview.nvim',
+       cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+       ft = { "markdown" },
+       build = function() vim.fn["mkdp#util#install"]() end,
+   },
+
    -- vim plugins
    {'tpope/vim-commentary'},
    {'tpope/vim-fugitive'},
