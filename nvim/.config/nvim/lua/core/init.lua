@@ -19,7 +19,6 @@ vim.opt.linebreak = true
 vim.opt.autoindent = true
 vim.opt.showmode = false
 vim.opt.showtabline = 2
-vim.opt.relativenumber = true
 vim.opt.showmatch = true
 
 vim.opt.swapfile = false
@@ -38,6 +37,33 @@ vim.opt.listchars = {
 }
 
 vim.cmd([[autocmd FileType * set formatoptions-=ro]])
+
+vim.lsp.enable({ 'gopls', 'pyright', 'lua_ls' })
+
+vim.diagnostic.config({
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = "●",
+            [vim.diagnostic.severity.WARN] = "▲",
+            [vim.diagnostic.severity.INFO] = "●",
+            [vim.diagnostic.severity.HINT] = "●",
+        },
+    },
+    virtual_text = false,
+    underline = true,
+    float = {
+        focusable = false,
+        style = "minimal",
+        border = "rounded",
+        source = true,
+        header = "",
+        prefix = "",
+    },
+})
+
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Previous diagnostic" })
+vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, { desc = "Next diagnostic" })
 
 vim.keymap.set("n", "<C-J>", "<cmd>bprev<cr>", { desc = "Previous buffer" })
 vim.keymap.set("n", "<C-K>", "<cmd>bnext<cr>", { desc = "Next buffer" })

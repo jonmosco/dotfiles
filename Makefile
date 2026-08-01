@@ -41,3 +41,5 @@ check:
 
 links:
 	ln -sf $(CURDIR)/dircolors $(HOME)/.dircolors
+	ln -sf $(CURDIR)/.path $(HOME)/.path
+	ln -sf $(CURDIR)/exports $(HOME)/.exports

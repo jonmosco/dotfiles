@@ -12,7 +12,7 @@ require("nvim-tree").setup({
 })
 
 -- Open NvimTree
-vim.keymap.set("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", { silent = true })
+vim.keymap.set("n", "<C-t>", "<cmd>NvimTreeToggle<cr>", { silent = true })
 
 vim.api.nvim_create_autocmd("QuitPre", {
   callback = function()
