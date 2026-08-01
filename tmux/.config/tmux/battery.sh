@@ -4,7 +4,7 @@ battery() {
   local batt discharging percentage charge
 
   if [[ $(uname) == "Linux" ]]; then
-    batt=$(ls /sys/class/power_supply/BAT* 2>/dev/null | head -1)
+    batt=$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -1)
     [[ -z "$batt" ]] && return 1
     discharging=$(grep -qi "discharging" ${batt}/status && echo "true" || echo "false")
     percentage=$(cat $batt/capacity)
@@ -43,7 +43,7 @@ battery() {
     printf "%s " 󰁹
   fi
 
-  palette="124 160 196 202 208 214 220 226 190 154 118 82 46 40 34"
+  palette="52 88 124 130 136 142 106 70 34 28 22"
   count=$(echo $palette | wc -w)
 
   eval set -- "$palette"

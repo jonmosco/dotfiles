@@ -1,6 +1,6 @@
 require('lualine').setup{
     options = {
-        theme = 'nord',
+        theme = 'dracula',
         disabled_filetypes = {
             'NvimTree',
         },

@@ -1,3 +1,0 @@
--- NeoVim
-
-require("core")

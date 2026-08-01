@@ -1,1 +1,0 @@
--- map gF :execute ":tabedit " . glob("$HOME/dev/work/commercial/**/" . expand("<cfile>"))<CR>

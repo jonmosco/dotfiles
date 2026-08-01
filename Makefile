@@ -2,8 +2,9 @@
 
 UNAME := $(shell uname)
 XDG_CONFIG_HOME ?= $(HOME)/.config
+LINUX_PACKAGES = bash git tmux nvim bin sway waybar systemd alacritty gnupg
 
-.PHONY: clean vim shell
+.PHONY: clean vim shell stow unstow linux check links
 
 all: stow vim shell
 clean: unstow
@@ -26,9 +27,17 @@ shell:
 	git clone https://github.com/jonmosco/kube-ps1.git ${HOME}/.third_party/kube-ps1
 
 # GNU Stow
-.PHONY: stow unstow
 stow:
 	stow --verbose --target=$$HOME --restow */
 
 unstow:
 	stow --verbose --target=$$HOME --delete */
+
+linux: links
+	stow --verbose --target=$$HOME --restow $(LINUX_PACKAGES)
+
+check:
+	stow --verbose --simulate --target=$$HOME --restow $(LINUX_PACKAGES)
+
+links:
+	ln -sf $(CURDIR)/dircolors $(HOME)/.dircolors

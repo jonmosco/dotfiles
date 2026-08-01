@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#
+# Simple script to sync git repos
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+git fetch upstream "${BRANCH}"
+git checkout "${BRANCH}"
+git rebase upstream/"${BRANCH}"
+git push jmosco "${BRANCH}"
