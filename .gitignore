@@ -11,3 +11,4 @@ third_party/*
 
 nvim/.config/nvim/lua/personal-projects/
 nvim/.local/share/nvim/site/pack/themes/start/dracula_pro/
+ghostty/.config/ghostty/themes/dracula-pro

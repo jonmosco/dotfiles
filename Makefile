@@ -2,7 +2,7 @@
 
 UNAME := $(shell uname)
 XDG_CONFIG_HOME ?= $(HOME)/.config
-LINUX_PACKAGES = bash git tmux nvim bin sway waybar systemd alacritty gnupg
+LINUX_PACKAGES = bash git tmux nvim bin sway waybar systemd alacritty gnupg ghostty
 
 .PHONY: clean vim shell stow unstow linux check links
 
