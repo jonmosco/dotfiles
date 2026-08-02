@@ -16,7 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
    { dir = vim.fn.stdpath("data") .. "/site/pack/themes/start/dracula_pro" },
    {
-       'nvim-telescope/telescope.nvim', tag = '0.1.4',
+       'nvim-telescope/telescope.nvim', branch = '0.1.x',
        dependencies = { 'nvim-lua/plenary.nvim' }
    },
    {'nvim-telescope/telescope-ui-select.nvim'},
@@ -37,16 +37,19 @@ require("lazy").setup({
 
    {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'},
 
-   { "nvim-tree/nvim-tree.lua",
-     version = "*",
+   { "nvim-neo-tree/neo-tree.nvim",
+     branch = "v3.x",
      lazy = false,
      dependencies = {
+         "nvim-lua/plenary.nvim",
+         "MunifTanjim/nui.nvim",
          "nvim-tree/nvim-web-devicons",
      },
    },
 
    {'stevearc/conform.nvim'},
    {'folke/zen-mode.nvim'},
+   {'folke/which-key.nvim', event = "VeryLazy"},
    {'akinsho/toggleterm.nvim', version = "*"},
    {
        'iamcco/markdown-preview.nvim',
@@ -60,4 +63,6 @@ require("lazy").setup({
    {'tpope/vim-fugitive'},
    {'tpope/vim-projectionist'},
 
+}, {
+    rocks = { enabled = false },
 })

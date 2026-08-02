@@ -6,6 +6,9 @@ export PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 # Go
 export PATH="/usr/local/go/bin:${HOME}/go/bin:${PATH}"
 
+# Rust/Cargo
+export PATH="${HOME}/.cargo/bin:${PATH}"
+
 # Krew (kubectl plugin manager)
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
