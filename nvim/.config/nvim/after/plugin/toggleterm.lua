@@ -7,6 +7,7 @@ require("toggleterm").setup({
 local Terminal = require("toggleterm.terminal").Terminal
 local float_term = Terminal:new({ direction = "float", float_opts = { border = "rounded" } })
 vim.keymap.set("n", "<leader>tf", function() float_term:toggle() end, { desc = "Toggle floating terminal" })
+vim.keymap.set("n", "<leader>ta", "<cmd>ToggleTermToggleAll<cr>", { desc = "Toggle all terminals" })
 
 vim.api.nvim_create_autocmd("TermOpen", {
     pattern = "term://*",

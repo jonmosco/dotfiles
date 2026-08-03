@@ -49,7 +49,7 @@ require("lazy").setup({
 
    {'stevearc/conform.nvim'},
    {'folke/zen-mode.nvim'},
-   {'folke/which-key.nvim', event = "VeryLazy"},
+   {'folke/which-key.nvim', event = "VeryLazy", opts = { delay = 500 }},
    {'akinsho/toggleterm.nvim', version = "*"},
    {
        'iamcco/markdown-preview.nvim',

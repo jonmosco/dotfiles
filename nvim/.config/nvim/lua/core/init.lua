@@ -38,7 +38,7 @@ vim.opt.listchars = {
 
 vim.cmd([[autocmd FileType * set formatoptions-=ro]])
 
-vim.lsp.enable({ 'gopls', 'pyright', 'lua_ls' })
+vim.lsp.enable({ 'gopls', 'pyright', 'lua_ls', 'bashls' })
 
 vim.diagnostic.config({
     signs = {
@@ -64,6 +64,23 @@ vim.diagnostic.config({
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic" })
 vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Previous diagnostic" })
 vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, { desc = "Next diagnostic" })
+
+vim.api.nvim_create_autocmd("BufEnter", {
+    callback = function()
+        local wins = vim.api.nvim_list_wins()
+        local file_wins = 0
+        for _, w in ipairs(wins) do
+            local buf = vim.api.nvim_win_get_buf(w)
+            local bt = vim.bo[buf].buftype
+            if bt == "" or bt == "acwrite" then
+                file_wins = file_wins + 1
+            end
+        end
+        if file_wins == 0 then
+            vim.cmd("quitall")
+        end
+    end,
+})
 
 vim.keymap.set("n", "<C-J>", "<cmd>bprev<cr>", { desc = "Previous buffer" })
 vim.keymap.set("n", "<C-K>", "<cmd>bnext<cr>", { desc = "Next buffer" })
