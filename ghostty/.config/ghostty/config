@@ -1,2 +1,11 @@
 theme = dracula-pro
 font-family = Hack Nerd Font Mono
+font-size = 14
+gtk-single-instance = true
+gtk-titlebar = false
+window-decoration = none
+class = ghostty
+window-padding-x = 8
+window-padding-y = 8
+window-padding-balance = true
+scrollback-limit = 50000

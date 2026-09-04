@@ -1,0 +1,22 @@
+require("monitors")
+require("look")
+require("binds")
+require("rules")
+
+hl.on("hyprland.start", function()
+	hl.exec_cmd("hyprpaper")
+	hl.exec_cmd([[sh -c 'sleep 0.5; w=$(cat ~/.config/quickshell/wallpaper.conf 2>/dev/null); if [ -n "$w" ] && [ -f "$w" ]; then hyprctl hyprpaper preload "$w" && hyprctl hyprpaper wallpaper ,"$w"; fi']])
+	hl.exec_cmd("quickshell")
+	hl.exec_cmd("hypridle")
+	hl.exec_cmd("systemctl --user start hyprpolkitagent")
+	hl.exec_cmd("nm-applet --indicator")
+	hl.exec_cmd("blueman-applet")
+	hl.exec_cmd("wl-paste --watch cliphist store")
+end)
+
+hl.env("XCURSOR_SIZE", "24")
+hl.env("HYPRCURSOR_SIZE", "24")
+hl.env("QT_AUTO_SCREEN_SCALE_FACTOR", "1")
+
+hl.permission("/usr/(bin|local/bin)/grim", "screencopy", "allow")
+hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencopy", "allow")

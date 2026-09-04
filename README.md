@@ -18,7 +18,11 @@ macOS:
 * iTerm2
 
 Linux:
-* Sway
+* Hyprland
+* Quickshell
+* Ghostty
+
+Legacy desktop configs (sway, i3, alacritty, wofi) are in `legacy/` and are not deployed by default.
 
 ## Installation
 
@@ -38,11 +42,11 @@ git submodule update --init --recursive
 
 [GNU Stow](https://www.gnu.org/software/stow/) manages symlinks from the dotfiles repo into `$HOME`. Each top-level directory is a stow package that mirrors the target directory structure.
 
-Symlink all packages:
+Symlink all active packages:
 
 ```bash
 cd ~/.dotfiles
-stow --verbose --target=$HOME */
+make stow
 ```
 
 Symlink a specific package:
@@ -51,16 +55,16 @@ Symlink a specific package:
 stow --verbose --target=$HOME bash
 ```
 
-Remove all symlinks:
+Remove all active symlinks:
 
 ```bash
-stow --verbose --target=$HOME --delete */
+make unstow
 ```
 
-Re-stow (remove then re-symlink, useful after reorganizing):
+Re-stow (useful after reorganizing):
 
 ```bash
-stow --verbose --target=$HOME --restow */
+make stow
 ```
 
 ### Makefile
@@ -68,9 +72,10 @@ stow --verbose --target=$HOME --restow */
 The Makefile wraps common setup tasks:
 
 ```bash
-make          # stow all packages + vim/shell setup
-make stow     # symlink all packages
-make unstow   # remove all symlinks
+make          # stow active packages + vim/shell setup
+make stow     # symlink active packages (see STOW_PACKAGES in Makefile)
+make unstow   # remove active symlinks
+make check    # dry-run stow
 make vim      # set up Vim/Vundle
 make shell    # clone shell dependencies (kube-ps1, zsh-git-prompt)
 ```

@@ -2,9 +2,12 @@
 
 UNAME := $(shell uname)
 XDG_CONFIG_HOME ?= $(HOME)/.config
-LINUX_PACKAGES = bash git tmux nvim bin sway waybar systemd alacritty gnupg ghostty
 
-.PHONY: clean vim shell stow unstow linux check links
+# Active packages stowed on Linux. Desktop WM configs (sway, i3, alacritty, wofi)
+# live under legacy/ and are not deployed.
+STOW_PACKAGES = bash git tmux nvim bin systemd gnupg ghostty hyprland quickshell
+
+.PHONY: clean vim shell stow unstow linux check links restow-desktop
 
 all: stow vim shell
 clean: unstow
@@ -26,20 +29,25 @@ shell:
 	git clone https://github.com/olivierverdier/zsh-git-prompt.git ${HOME}/.third_party/zsh-git-prompt
 	git clone https://github.com/jonmosco/kube-ps1.git ${HOME}/.third_party/kube-ps1
 
-# GNU Stow
-stow:
-	stow --verbose --target=$$HOME --restow */
+stow: links restow-desktop
+	stow --verbose --target=$$HOME --restow $(STOW_PACKAGES)
 
 unstow:
-	stow --verbose --target=$$HOME --delete */
+	stow --verbose --target=$$HOME --delete $(STOW_PACKAGES)
 
-linux: links
-	stow --verbose --target=$$HOME --restow $(LINUX_PACKAGES)
+linux: stow
 
-check:
-	stow --verbose --simulate --target=$$HOME --restow $(LINUX_PACKAGES)
+check: links
+	stow --verbose --simulate --target=$$HOME --restow $(STOW_PACKAGES)
+
+# Remove manual absolute symlinks that block stow, then restow desktop configs
+restow-desktop:
+	rm -f $(HOME)/.config/hypr/hypridle.conf $(HOME)/.config/hypr/hyprlock.conf $(HOME)/.config/hypr/hyprpaper.conf
+	rm -f $(HOME)/.config/quickshell
+	stow --verbose --target=$$HOME --restow hyprland quickshell
 
 links:
 	ln -sf $(CURDIR)/dircolors $(HOME)/.dircolors
 	ln -sf $(CURDIR)/.path $(HOME)/.path
 	ln -sf $(CURDIR)/exports $(HOME)/.exports
+	ln -sf $(CURDIR)/aliases $(HOME)/.aliases

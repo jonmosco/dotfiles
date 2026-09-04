@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export HISTCONTROL=ignoreboth
+export HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/bash/history"
 export HISTFILESIZE=150000
 export HISTSIZE=150000
 export HISTTIMEFORMAT="%D %I:%M "

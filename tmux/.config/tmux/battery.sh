@@ -1,7 +1,7 @@
 #!/bin/bash
 
 battery() {
-  local batt discharging percentage charge
+  local batt discharging percentage
 
   if [[ $(uname) == "Linux" ]]; then
     batt=$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -1)
@@ -16,44 +16,38 @@ battery() {
     return 1
   fi
 
-  charge="${percentage%%%} / 100"
+  local pct="${percentage%%%}"
 
-  [[ "${percentage%%%}" -lt 10 ]] && mode=" blink" || mode=""
-
-  battery_bg=$1
-
-  columns=$(tmux -q display -p '#{client_width}' 2> /dev/null || echo 120)
-
-  if [[ $columns -ge 170 ]]; then
-    battery_symbol_count=10
-  elif [[ $columns -ge 120 ]]; then
-    battery_symbol_count=8
+  # Dracula colors: green=#50fa7b orange=#ffb86c red=#ff5555
+  if [[ $pct -le 20 ]]; then
+    color="203"
+  elif [[ $pct -le 50 ]]; then
+    color="215"
   else
-    battery_symbol_count=6
+    color="84"
   fi
 
-  battery_symbol_full=█
-  battery_symbol_empty=░
-
+  # Status icon
   if [[ "$discharging" == "true" ]]; then
-    printf "%s " 󰂌
+    status_icon="󰂌"
   elif [[ $(uname) == "Linux" ]] && grep -qi "^charging$" ${batt}/status 2>/dev/null; then
-    printf "%s " 󰂄
+    status_icon="󰂄"
   else
-    printf "%s " 󰁹
+    status_icon="󰁹"
   fi
 
-  palette="52 88 124 130 136 142 106 70 34 28 22"
-  count=$(echo $palette | wc -w)
+  # Charge level icon (unicode block elements)
+  if   [[ $pct -ge 95 ]]; then level="█"
+  elif [[ $pct -ge 80 ]]; then level="▇"
+  elif [[ $pct -ge 65 ]]; then level="▆"
+  elif [[ $pct -ge 50 ]]; then level="▅"
+  elif [[ $pct -ge 35 ]]; then level="▄"
+  elif [[ $pct -ge 20 ]]; then level="▃"
+  elif [[ $pct -ge 5  ]]; then level="▂"
+  else                         level="▁"
+  fi
 
-  eval set -- "$palette"
-  palette=$(eval echo $(eval echo $(printf "\\$\{\$(expr %s \* $count / $battery_symbol_count)\} " $(seq 1 $battery_symbol_count))))
-
-  full=$(printf %.0f $(awk "BEGIN{print $charge * $battery_symbol_count}"))
-  printf '#[bg=%s]' $battery_bg
-  [ $full -gt 0 ] && printf "#[fg=colour%s${mode}]$battery_symbol_full" $(echo $palette | cut -d' ' -f1-$full)
-  empty=$((battery_symbol_count - full))
-  [ $empty -gt 0 ] && printf "#[fg=colour%s]$battery_symbol_empty" $(echo $palette | cut -d' ' -f$((full+1))-$(($full + $empty)))
+  printf "#[fg=colour%s]%s %s %s%%" "$color" "$status_icon" "$level" "$pct"
 }
 
 battery "$@"

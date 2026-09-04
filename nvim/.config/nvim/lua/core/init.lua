@@ -20,6 +20,7 @@ vim.opt.autoindent = true
 vim.opt.showmode = false
 vim.opt.showtabline = 2
 vim.opt.showmatch = true
+vim.opt.scrolloff = 8
 
 vim.opt.swapfile = false
 vim.opt.backup = false
@@ -29,6 +30,7 @@ vim.opt.undodir = vim.fn.expand('~/.vim/undodir')
 vim.opt.signcolumn = "yes"
 
 vim.opt.termguicolors = true
+vim.opt.clipboard = "unnamedplus"
 
 vim.opt.list = false
 vim.opt.listchars = {
@@ -38,7 +40,18 @@ vim.opt.listchars = {
 
 vim.cmd([[autocmd FileType * set formatoptions-=ro]])
 
-vim.lsp.enable({ 'gopls', 'pyright', 'lua_ls', 'bashls' })
+require("mason").setup()
+require("mason-lspconfig").setup({
+    ensure_installed = { 'gopls', 'pyright', 'lua_ls', 'bashls', 'yamlls', 'helm_ls' },
+})
+vim.lsp.enable({ 'gopls', 'pyright', 'lua_ls', 'bashls', 'yamlls', 'helm_ls' })
+
+vim.filetype.add({
+    pattern = {
+        [".*/templates/.*%.yaml"] = "helm",
+        [".*/templates/.*%.tpl"] = "helm",
+    },
+})
 
 vim.diagnostic.config({
     signs = {
@@ -67,6 +80,10 @@ vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, { d
 
 vim.api.nvim_create_autocmd("BufEnter", {
     callback = function()
+        local bt = vim.bo.buftype
+        if bt == "nofile" or bt == "help" or bt == "quickfix" or bt == "prompt" then
+            return
+        end
         local wins = vim.api.nvim_list_wins()
         local file_wins = 0
         for _, w in ipairs(wins) do

@@ -12,7 +12,11 @@ alias l='ls -lFha'
 alias lt='ls -ltr'
 alias h='history'
 alias tree='tree -C'
-alias c='xclip -selection clipboard'
+if [[ -n "${WAYLAND_DISPLAY:-}" ]] && command -v wl-copy &>/dev/null; then
+  alias c='wl-copy'
+elif command -v xclip &>/dev/null; then
+  alias c='xclip -selection clipboard'
+fi
 
 # Fat finger mistakes
 alias valut='vault'
@@ -47,7 +51,6 @@ alias kutil='kubectl run -i --tty debian-util --image=debian:stable-slim --resta
 # oc (OpenShift CLI) aliases
 alias o='oc'
 alias oca='oc get'
-alias o='oc'
 alias oa='oc apply -f'
 # change ordering on the terminal to show the most recent first
 alias ocgp='oc get pods --sort-by=.metadata.creationTimestamp'

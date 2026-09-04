@@ -12,3 +12,17 @@ third_party/*
 nvim/.config/nvim/lua/personal-projects/
 nvim/.local/share/nvim/site/pack/themes/start/dracula_pro/
 ghostty/.config/ghostty/themes/dracula-pro
+
+# Local overrides (may contain secrets — never commit)
+.work_env
+work_env
+
+# Local editor/agent settings
+.claude/
+
+# Generated or machine-specific runtime config
+quickshell/.config/quickshell/keybindings.json
+quickshell/.config/quickshell/wallpaper.conf
+quickshell/.config/quickshell/theme-switcher/wallpaper-theme.json
+hyprland/.config/hypr/monitors.conf
+hyprland/.config/hypr/theme-borders.conf
