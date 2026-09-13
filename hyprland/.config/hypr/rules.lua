@@ -69,6 +69,13 @@ hl.window_rule({
 })
 
 hl.window_rule({
+	name = "oidc-float",
+	match = { title = "^(localhost)(.*)$" },
+	float = true,
+	center = true,
+})
+
+hl.window_rule({
 	name = "move-hyprland-run",
 	match = { class = "hyprland-run" },
 	move = "20 monitor_h-120",

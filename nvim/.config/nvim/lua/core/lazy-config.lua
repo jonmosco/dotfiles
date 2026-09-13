@@ -29,7 +29,7 @@ require("lazy").setup({
        vim.notify = notify
    end},
    {
-       'nvim-telescope/telescope.nvim', branch = '0.1.x',
+       'nvim-telescope/telescope.nvim', branch = 'master',
        dependencies = { 'nvim-lua/plenary.nvim' }
    },
    {'nvim-telescope/telescope-ui-select.nvim'},
@@ -53,13 +53,10 @@ require("lazy").setup({
 
    {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'},
 
-   { "nvim-neo-tree/neo-tree.nvim",
-     branch = "v3.x",
-     lazy = false,
+   { "stevearc/oil.nvim",
      dependencies = {
-         "nvim-lua/plenary.nvim",
-         "MunifTanjim/nui.nvim",
          "nvim-tree/nvim-web-devicons",
+         "refractalize/oil-git-status.nvim",
      },
    },
 
@@ -96,7 +93,7 @@ require("lazy").setup({
            { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select model" },
            { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
            { "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
-           { "<leader>as", "<cmd>ClaudeCodeTreeAdd<cr>", desc = "Add file", ft = { "neo-tree" } },
+           { "<leader>as", "<cmd>ClaudeCodeTreeAdd<cr>", desc = "Add file", ft = { "oil" } },
            { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
            { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
        },

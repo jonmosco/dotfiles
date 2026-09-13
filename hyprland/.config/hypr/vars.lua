@@ -1,6 +1,6 @@
 return {
 	terminal = "ghostty",
-	fileManager = "dolphin",
+	fileManager = "nautilus",
 	menu = "qs ipc call launcher toggle",
 	mainMod = "SUPER",
 }

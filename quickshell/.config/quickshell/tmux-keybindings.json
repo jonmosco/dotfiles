@@ -1,0 +1,53 @@
+[
+  {
+    "category": "Sessions & Prefix",
+    "bindings": [
+      {"key": "Ctrl+A", "desc": "Command prefix"},
+      {"key": "Ctrl+A d", "desc": "Detach from session"},
+      {"key": "Ctrl+A s", "desc": "Choose session"},
+      {"key": "Ctrl+A $", "desc": "Rename session"},
+      {"key": "Ctrl+A Ctrl+A", "desc": "Send Ctrl+A to application"},
+      {"key": "Ctrl+A a", "desc": "Send prefix to nested tmux"}
+    ]
+  },
+  {
+    "category": "Windows",
+    "bindings": [
+      {"key": "Ctrl+A c", "desc": "Create window"},
+      {"key": "Ctrl+A n / p", "desc": "Next / previous window"},
+      {"key": "Ctrl+A 1–9", "desc": "Select window"},
+      {"key": "Ctrl+A ,", "desc": "Rename window"},
+      {"key": "Ctrl+A &", "desc": "Close window"},
+      {"key": "Ctrl+A w", "desc": "Choose window"}
+    ]
+  },
+  {
+    "category": "Panes",
+    "bindings": [
+      {"key": "Ctrl+A |", "desc": "Split pane horizontally"},
+      {"key": "Ctrl+A -", "desc": "Split pane vertically"},
+      {"key": "Ctrl+A h/j/k/l", "desc": "Focus pane left/down/up/right"},
+      {"key": "Ctrl+A H/R/J/K", "desc": "Resize pane by 5 cells"},
+      {"key": "Ctrl+A z", "desc": "Toggle pane zoom"},
+      {"key": "Ctrl+A x", "desc": "Close pane"},
+      {"key": "Ctrl+A S", "desc": "Toggle synchronized input"}
+    ]
+  },
+  {
+    "category": "Copy Mode",
+    "bindings": [
+      {"key": "Ctrl+A [", "desc": "Enter copy mode"},
+      {"key": "v", "desc": "Begin selection"},
+      {"key": "y", "desc": "Copy selection to Wayland clipboard"},
+      {"key": "q", "desc": "Exit copy mode"},
+      {"key": "Mouse drag", "desc": "Copy selection to Wayland clipboard"}
+    ]
+  },
+  {
+    "category": "Configuration",
+    "bindings": [
+      {"key": "Ctrl+A r", "desc": "Reload tmux configuration"},
+      {"key": "Ctrl+A ?", "desc": "Show all tmux keybindings"}
+    ]
+  }
+]

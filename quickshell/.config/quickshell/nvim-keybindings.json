@@ -1,0 +1,55 @@
+[
+  {
+    "category": "File Navigation",
+    "bindings": [
+      {"key": "; f f", "desc": "Find files"},
+      {"key": "; f g", "desc": "Live grep"},
+      {"key": "; f b", "desc": "Buffers"},
+      {"key": "; f h", "desc": "Help tags"},
+      {"key": "Ctrl+P", "desc": "Git files"},
+      {"key": "; p s", "desc": "Grep search"},
+      {"key": "; p w s", "desc": "Grep word under cursor"},
+      {"key": "-", "desc": "Open parent directory (Oil)"},
+      {"key": "Ctrl+T", "desc": "Open Oil float"}
+    ]
+  },
+  {
+    "category": "Buffers & Windows",
+    "bindings": [
+      {"key": "; w", "desc": "Close buffer, retain split"},
+      {"key": "; z", "desc": "Toggle Zen Mode"},
+      {"key": "; u", "desc": "Toggle undo tree"}
+    ]
+  },
+  {
+    "category": "Terminal",
+    "bindings": [
+      {"key": "; t f", "desc": "Toggle floating terminal"},
+      {"key": "; t a", "desc": "Toggle all terminals"},
+      {"key": "Ctrl+]", "desc": "Exit terminal mode"},
+      {"key": "Esc", "desc": "Exit terminal mode (in term)"},
+      {"key": "Ctrl+H/J/K/L", "desc": "Navigate from terminal"}
+    ]
+  },
+  {
+    "category": "Claude Code",
+    "bindings": [
+      {"key": "; a c", "desc": "Toggle Claude"},
+      {"key": "; a f", "desc": "Focus Claude"},
+      {"key": "; a r", "desc": "Resume Claude"},
+      {"key": "; a m", "desc": "Select model"},
+      {"key": "; a b", "desc": "Add current buffer"},
+      {"key": "; a s", "desc": "Send to Claude (visual)"},
+      {"key": "; a a", "desc": "Accept diff"},
+      {"key": "; a d", "desc": "Deny diff"}
+    ]
+  },
+  {
+    "category": "Editing",
+    "bindings": [
+      {"key": "; f", "desc": "Format buffer"},
+      {"key": "p (visual)", "desc": "Paste without yanking"},
+      {"key": "; m p", "desc": "Toggle Markdown preview"}
+    ]
+  }
+]

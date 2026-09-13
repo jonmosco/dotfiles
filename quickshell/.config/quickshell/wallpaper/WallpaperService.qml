@@ -51,7 +51,7 @@ Singleton {
     currentWallpaper = path;
 
     setProcess.command = ["sh", "-c",
-      "hyprctl hyprpaper preload \"$1\" && hyprctl hyprpaper wallpaper ,\"$1\"", "sh", path];
+      "hyprctl hyprpaper wallpaper ,\"$1\"", "sh", path];
     setProcess.running = true;
 
     // Save to config

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Pair and manage devices selected from the Quickshell Bluetooth panel.
+set -u
+
+action=${1:-}
+address=${2:-}
+
+if [[ ! $action =~ ^(pair|connect|disconnect|forget)$ ]] ||
+   [[ ! $address =~ ^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$ ]]; then
+  echo "Usage: ${0##*/} pair|connect|disconnect|forget XX:XX:XX:XX:XX:XX" >&2
+  exit 2
+fi
+
+power_on() {
+  if ! timeout 2 bluetoothctl show 2>/dev/null | grep -q 'Powered: yes'; then
+    rfkill unblock bluetooth >/dev/null 2>&1 || true
+    timeout 5 bluetoothctl power on >/dev/null 2>&1 || true
+  fi
+}
+
+case "$action" in
+  pair)
+    power_on
+    timeout 30 bluetoothctl pair "$address" >/dev/null 2>&1 || true
+    bluetoothctl trust "$address" >/dev/null 2>&1 || true
+    timeout 20 bluetoothctl connect "$address" >/dev/null 2>&1 || true
+    ;;
+  connect)
+    power_on
+    bluetoothctl trust "$address" >/dev/null 2>&1 || true
+    timeout 20 bluetoothctl connect "$address" >/dev/null 2>&1 || true
+    ;;
+  disconnect)
+    timeout 10 bluetoothctl disconnect "$address" >/dev/null 2>&1 || true
+    ;;
+  forget)
+    timeout 10 bluetoothctl disconnect "$address" >/dev/null 2>&1 || true
+    timeout 10 bluetoothctl remove "$address" >/dev/null 2>&1 || true
+    ;;
+esac

@@ -20,10 +20,18 @@ Scope {
   property bool barVisible: true
   property bool historyOpen: false
   property bool volumeOpen: false
+  property real volumeAnchorCenterX: 0
   property bool clipboardOpen: false
   property var clipboardItems: []
   property bool keysOpen: false
   property var keybindings: []
+  property bool nvimKeysOpen: false
+  property var nvimKeybindings: []
+  property bool tmuxKeysOpen: false
+  property var tmuxKeybindings: []
+  property bool ghosttyKeysOpen: false
+  property var ghosttyKeybindings: []
+  readonly property color ghosttyAccent: "#bd93f9"
   property bool systemOpen: false
   property bool weatherOpen: false
   property bool vpnOpen: false
@@ -39,6 +47,16 @@ Scope {
   property string weatherHumidity: ""
   property string weatherWind: ""
   property var weatherForecast: []
+
+  BluetoothPanel {
+    id: bluetoothPanel
+    theme: root.theme
+    barScreen: root.barScreen
+    font: root.font
+    iconSize: root.curIconSize
+    textSize: root.curTextSize
+    smallTextSize: root.curSmallTextSize
+  }
 
   // MPRIS active player
   property var activePlayer: {
@@ -61,6 +79,9 @@ Scope {
       }
     }
     function keys_toggle(): void { root.keysOpen = !root.keysOpen; }
+    function nvim_keys_toggle(): void { root.nvimKeysOpen = !root.nvimKeysOpen; }
+    function tmux_keys_toggle(): void { root.tmuxKeysOpen = !root.tmuxKeysOpen; }
+    function ghostty_keys_toggle(): void { root.ghosttyKeysOpen = !root.ghosttyKeysOpen; }
   }
 
   FileView {
@@ -74,6 +95,51 @@ Scope {
         root.keybindings = JSON.parse(raw);
       } catch (e) {
         console.error("Failed to parse keybindings.json:", e);
+      }
+    }
+  }
+
+  FileView {
+    id: nvimKeybindingsFile
+    path: Quickshell.env("HOME") + "/.config/quickshell/nvim-keybindings.json"
+    watchChanges: true
+    onTextChanged: {
+      const raw = nvimKeybindingsFile.text();
+      if (!raw) return;
+      try {
+        root.nvimKeybindings = JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse nvim-keybindings.json:", e);
+      }
+    }
+  }
+
+  FileView {
+    id: tmuxKeybindingsFile
+    path: Quickshell.env("HOME") + "/.config/quickshell/tmux-keybindings.json"
+    watchChanges: true
+    onTextChanged: {
+      const raw = tmuxKeybindingsFile.text();
+      if (!raw) return;
+      try {
+        root.tmuxKeybindings = JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse tmux-keybindings.json:", e);
+      }
+    }
+  }
+
+  FileView {
+    id: ghosttyKeybindingsFile
+    path: Quickshell.env("HOME") + "/.config/quickshell/ghostty-keybindings.json"
+    watchChanges: true
+    onTextChanged: {
+      const raw = ghosttyKeybindingsFile.text();
+      if (!raw) return;
+      try {
+        root.ghosttyKeybindings = JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse ghostty-keybindings.json:", e);
       }
     }
   }
@@ -325,11 +391,12 @@ Scope {
                 id: wsPill
                 required property var modelData
                 property bool urgentBlink: false
+                visible: !(modelData.name && modelData.name.startsWith("special:"))
 
                 Accessible.role: Accessible.Button
                 Accessible.name: "Workspace " + modelData.id + (modelData.focused ? ", active" : "") + (modelData.urgent ? ", urgent" : "")
 
-                width: modelData.focused ? root.pillHeight : root.pillHeight - 4
+                width: Math.max(modelData.focused ? root.pillHeight : root.pillHeight - 4, wsLabel.implicitWidth + 16)
                 height: root.pillHeight
                 radius: 12
                 color: modelData.focused ? root.theme.accentPrimary :
@@ -352,8 +419,9 @@ Scope {
                 }
 
                 Text {
+                  id: wsLabel
                   anchors.centerIn: parent
-                  text: wsPill.modelData.id
+                  text: wsPill.modelData.name && wsPill.modelData.name.startsWith("special:") ? wsPill.modelData.name.substring(8) : wsPill.modelData.id
                   color: wsPill.modelData.focused ? root.theme.bgBase : root.theme.textPrimary
                   font.pixelSize: root.curSmallTextSize
                   font.family: root.font
@@ -466,6 +534,7 @@ Scope {
 
           // Volume
           Rectangle {
+            id: volumePill
             height: root.pillHeight
             width: volContent.width + 16
             radius: 12
@@ -525,6 +594,8 @@ Scope {
                   const sink = Pipewire.defaultAudioSink;
                   if (sink && sink.audio) sink.audio.muted = !sink.audio.muted;
                 } else {
+                  const position = volumePill.mapToItem(null, 0, 0);
+                  root.volumeAnchorCenterX = position.x + volumePill.width / 2;
                   root.volumeOpen = !root.volumeOpen;
                 }
               }
@@ -629,6 +700,53 @@ Scope {
               id: netGroup
               anchors.centerIn: parent
               spacing: 6
+
+          // NetworkManager and NetBird applets
+          Repeater {
+            model: SystemTray.items
+
+            MouseArea {
+              id: networkTrayDelegate
+              required property SystemTrayItem modelData
+              readonly property bool isNetworkingApplet: modelData.id === "nm-applet" || modelData.id === "NetBird"
+
+              visible: isNetworkingApplet
+              width: isNetworkingApplet ? 26 : 0
+              height: isNetworkingApplet ? root.pillHeight : 0
+              acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+              cursorShape: Qt.PointingHandCursor
+
+              onClicked: (mouse) => {
+                if (mouse.button === Qt.LeftButton) {
+                  modelData.activate()
+                } else if (mouse.button === Qt.RightButton && modelData.hasMenu) {
+                  networkMenuAnchor.open()
+                } else if (mouse.button === Qt.MiddleButton) {
+                  modelData.secondaryActivate()
+                }
+              }
+
+              IconImage {
+                anchors.centerIn: parent
+                source: networkTrayDelegate.modelData.icon
+                implicitSize: 18
+              }
+
+              QsMenuAnchor {
+                id: networkMenuAnchor
+                menu: networkTrayDelegate.modelData.menu
+                anchor.window: networkTrayDelegate.QsWindow.window
+                anchor.adjustment: PopupAdjustment.Flip
+                anchor.onAnchoring: {
+                  const window = networkTrayDelegate.QsWindow.window;
+                  const widgetRect = window.contentItem.mapFromItem(
+                    networkTrayDelegate, 0, networkTrayDelegate.height,
+                    networkTrayDelegate.width, networkTrayDelegate.height);
+                  networkMenuAnchor.anchor.rect = widgetRect;
+                }
+              }
+            }
+          }
 
           // VPN Status
           Rectangle {
@@ -758,6 +876,53 @@ Scope {
             } // end netGroup Row
           } // end Networking group
 
+          // Bluetooth
+          Rectangle {
+            height: root.pillHeight
+            width: bluetoothContent.width + 14
+            radius: 12
+            color: bluetoothHover.containsMouse || bluetoothPanel.open ? root.theme.bgHover : root.theme.bgSurface
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+
+            Row {
+              id: bluetoothContent
+              anchors.centerIn: parent
+              spacing: 6
+
+              Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: bluetoothPanel.icon
+                color: bluetoothPanel.adapter && bluetoothPanel.adapter.enabled ? root.theme.accentPrimary : root.theme.textMuted
+                font.pixelSize: root.curIconSize
+                font.family: root.font
+              }
+
+              Text {
+                anchors.verticalCenter: parent.verticalCenter
+                visible: bluetoothPanel.connectedCount > 0
+                text: bluetoothPanel.connectedCount
+                color: root.theme.textPrimary
+                font.pixelSize: root.curSmallTextSize
+                font.family: root.font
+              }
+            }
+
+            MouseArea {
+              id: bluetoothHover
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              acceptedButtons: Qt.LeftButton | Qt.RightButton
+              onClicked: (mouse) => {
+                if (mouse.button === Qt.RightButton && bluetoothPanel.adapter)
+                  bluetoothPanel.adapter.enabled = !bluetoothPanel.adapter.enabled;
+                else
+                  bluetoothPanel.togglePanel();
+              }
+            }
+          }
+
           // System Tray
           Rectangle {
             implicitHeight: root.pillHeight
@@ -777,11 +942,14 @@ Scope {
                   id: trayDelegate
                   required property SystemTrayItem modelData
 
+                  readonly property bool hidden: modelData.id === "blueman" || modelData.id === "nm-applet" || modelData.id === "NetBird"
+
                   Accessible.role: Accessible.Button
                   Accessible.name: modelData.tooltipTitle || modelData.title || "System tray item"
 
-                  Layout.preferredWidth: 24
-                  Layout.preferredHeight: 24
+                  visible: !hidden
+                  Layout.preferredWidth: hidden ? 0 : 24
+                  Layout.preferredHeight: hidden ? 0 : 24
 
                   acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 
@@ -930,20 +1098,39 @@ Scope {
             }
           }
 
-          // Keybindings cheat sheet
+          // Keybinding cheat sheets
+          Rectangle {
+            height: root.pillHeight + 4
+            width: keybindingsGroup.width + 12
+            radius: 14
+            color: Qt.rgba(root.theme.bgSurface.r, root.theme.bgSurface.g, root.theme.bgSurface.b, 0.5)
+            border.width: 1
+            border.color: root.theme.bgBorder
+
+            Row {
+              id: keybindingsGroup
+              anchors.centerIn: parent
+              spacing: 5
+
+          // Hyprland keybindings cheat sheet
           Rectangle {
             height: root.pillHeight
-            width: 32
+            width: 34
             radius: 12
-            color: keysPillHover.containsMouse || root.keysOpen ? root.theme.bgHover : root.theme.bgSurface
+            color: Qt.rgba(root.theme.accentCyan.r, root.theme.accentCyan.g, root.theme.accentCyan.b,
+                           keysPillHover.containsMouse || root.keysOpen ? 0.24 : 0.10)
+            border.width: 1
+            border.color: Qt.rgba(root.theme.accentCyan.r, root.theme.accentCyan.g, root.theme.accentCyan.b,
+                                  keysPillHover.containsMouse || root.keysOpen ? 0.75 : 0.35)
 
             Behavior on color { ColorAnimation { duration: 150 } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
 
             Text {
               anchors.centerIn: parent
-              text: "󰌌"
-              color: keysPillHover.containsMouse || root.keysOpen ? root.theme.accentPrimary : root.theme.textMuted
-              font.pixelSize: root.curIconSize
+              text: ""
+              color: root.theme.accentCyan
+              font.pixelSize: root.curIconSize + 1
               font.family: root.font
             }
 
@@ -955,6 +1142,100 @@ Scope {
               onClicked: root.keysOpen = !root.keysOpen
             }
           }
+
+          // Neovim keybindings cheat sheet
+          Rectangle {
+            height: root.pillHeight
+            width: 34
+            radius: 12
+            color: Qt.rgba(root.theme.accentGreen.r, root.theme.accentGreen.g, root.theme.accentGreen.b,
+                           nvimKeysPillHover.containsMouse || root.nvimKeysOpen ? 0.24 : 0.10)
+            border.width: 1
+            border.color: Qt.rgba(root.theme.accentGreen.r, root.theme.accentGreen.g, root.theme.accentGreen.b,
+                                  nvimKeysPillHover.containsMouse || root.nvimKeysOpen ? 0.75 : 0.35)
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
+
+            Text {
+              anchors.centerIn: parent
+              text: ""
+              color: root.theme.accentGreen
+              font.pixelSize: root.curIconSize + 1
+              font.family: root.font
+            }
+
+            MouseArea {
+              id: nvimKeysPillHover
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: root.nvimKeysOpen = !root.nvimKeysOpen
+            }
+          }
+
+          // tmux keybindings cheat sheet
+          Rectangle {
+            height: root.pillHeight
+            width: 34
+            radius: 12
+            color: Qt.rgba(root.theme.accentOrange.r, root.theme.accentOrange.g, root.theme.accentOrange.b,
+                           tmuxKeysPillHover.containsMouse || root.tmuxKeysOpen ? 0.24 : 0.10)
+            border.width: 1
+            border.color: Qt.rgba(root.theme.accentOrange.r, root.theme.accentOrange.g, root.theme.accentOrange.b,
+                                  tmuxKeysPillHover.containsMouse || root.tmuxKeysOpen ? 0.75 : 0.35)
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
+
+            Text {
+              anchors.centerIn: parent
+              text: ""
+              color: root.theme.accentOrange
+              font.pixelSize: root.curIconSize + 1
+              font.family: root.font
+            }
+
+            MouseArea {
+              id: tmuxKeysPillHover
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: root.tmuxKeysOpen = !root.tmuxKeysOpen
+            }
+          }
+
+          // Ghostty keybindings cheat sheet
+          Rectangle {
+            height: root.pillHeight
+            width: 34
+            radius: 12
+            color: Qt.rgba(root.ghosttyAccent.r, root.ghosttyAccent.g, root.ghosttyAccent.b,
+                           ghosttyKeysPillHover.containsMouse || root.ghosttyKeysOpen ? 0.24 : 0.10)
+            border.width: 1
+            border.color: Qt.rgba(root.ghosttyAccent.r, root.ghosttyAccent.g, root.ghosttyAccent.b,
+                                  ghosttyKeysPillHover.containsMouse || root.ghosttyKeysOpen ? 0.75 : 0.35)
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
+
+            IconImage {
+              anchors.centerIn: parent
+              source: Quickshell.iconPath("com.mitchellh.ghostty")
+              implicitSize: root.curIconSize + 2
+            }
+
+            MouseArea {
+              id: ghosttyKeysPillHover
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: root.ghosttyKeysOpen = !root.ghosttyKeysOpen
+            }
+          }
+
+            } // end keybindingsGroup
+          } // end keybinding cheat sheets
         }
       }
 
@@ -2244,11 +2525,10 @@ Scope {
 
       anchors {
         top: true
+        bottom: true
         left: true
         right: true
       }
-
-      implicitHeight: 130
 
       MouseArea {
         anchors.fill: parent
@@ -2257,101 +2537,264 @@ Scope {
 
       Rectangle {
         anchors.top: parent.top
-        anchors.right: parent.right
+        anchors.left: parent.left
         anchors.topMargin: 54
-        anchors.rightMargin: parent.width * 0.35
-        width: 320
-        height: 70
+        anchors.leftMargin: Math.max(10, Math.min(parent.width - width - 10,
+                                                  root.volumeAnchorCenterX - width / 2))
+        width: 400
+        height: volumeColumn.implicitHeight + 40
         radius: 14
-        color: Qt.rgba(root.theme.bgBase.r, root.theme.bgBase.g, root.theme.bgBase.b, 0.95)
+        color: Qt.rgba(root.theme.bgBase.r, root.theme.bgBase.g, root.theme.bgBase.b, 0.96)
         border.width: 1
         border.color: root.theme.bgBorder
 
-        Row {
-          anchors.centerIn: parent
-          anchors.margins: 16
-          spacing: 12
+        MouseArea { anchors.fill: parent; onClicked: {} }
 
-          Text {
-            anchors.verticalCenter: parent.verticalCenter
-            text: {
-              const sink = Pipewire.defaultAudioSink;
-              if (!sink || !sink.audio || sink.audio.muted || sink.audio.volume <= 0) return "󰖁";
-              if (sink.audio.volume < 0.33) return "󰕿";
-              if (sink.audio.volume < 0.66) return "󰖀";
-              return "󰕾";
-            }
-            color: {
-              const sink = Pipewire.defaultAudioSink;
-              if (!sink || !sink.audio || sink.audio.muted) return root.theme.textMuted;
-              return root.theme.accentPrimary;
-            }
-            font.pixelSize: 22
-            font.family: root.font
+        Column {
+          id: volumeColumn
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          anchors.margins: 20
+          spacing: 14
 
-            MouseArea {
-              anchors.fill: parent
-              cursorShape: Qt.PointingHandCursor
-              onClicked: {
+          Row {
+            width: parent.width
+            height: root.pillHeight
+            spacing: 10
+
+            Text {
+              anchors.verticalCenter: parent.verticalCenter
+              text: {
                 const sink = Pipewire.defaultAudioSink;
-                if (sink && sink.audio) sink.audio.muted = !sink.audio.muted;
+                if (!sink || !sink.audio || sink.audio.muted || sink.audio.volume <= 0) return "󰖁";
+                if (sink.audio.volume < 0.33) return "󰕿";
+                if (sink.audio.volume < 0.66) return "󰖀";
+                return "󰕾";
+              }
+              color: {
+                const sink = Pipewire.defaultAudioSink;
+                return !sink || !sink.audio || sink.audio.muted ? root.theme.textMuted : root.theme.accentPrimary;
+              }
+              font.pixelSize: root.curIconSize + 2
+              font.family: root.font
+            }
+
+            Column {
+              anchors.verticalCenter: parent.verticalCenter
+              width: parent.width - 44
+              spacing: 1
+
+              Text {
+                text: "Volume"
+                color: root.theme.textPrimary
+                font.pixelSize: root.curTextSize
+                font.family: root.font
+                font.bold: true
+              }
+
+              Text {
+                width: parent.width
+                text: {
+                  const sink = Pipewire.defaultAudioSink;
+                  if (!sink) return "No output device";
+                  return sink.description || sink.nickname || sink.name || "Unknown output device";
+                }
+                color: root.theme.textMuted
+                font.pixelSize: 11
+                font.family: root.font
+                elide: Text.ElideRight
               }
             }
           }
 
-          Slider {
-            id: volDropSlider
-            anchors.verticalCenter: parent.verticalCenter
-            width: 200
-            from: 0
-            to: 1.0
-            value: {
-              const sink = Pipewire.defaultAudioSink;
-              return (sink && sink.audio) ? sink.audio.volume : 0;
-            }
-            onMoved: {
-              const sink = Pipewire.defaultAudioSink;
-              if (sink && sink.audio) sink.audio.volume = value;
+          Rectangle { width: parent.width; height: 1; color: root.theme.bgBorder }
+
+          Column {
+            width: parent.width
+            spacing: 8
+
+            Text {
+              width: parent.width
+              text: {
+                const sink = Pipewire.defaultAudioSink;
+                if (!sink) return "No audio output selected";
+                return "Adjusting: " + (sink.description || sink.nickname || sink.name || "Unknown output");
+              }
+              color: root.theme.textSecondary
+              font.pixelSize: 12
+              font.family: root.font
+              elide: Text.ElideRight
             }
 
-            background: Rectangle {
-              x: volDropSlider.leftPadding
-              y: volDropSlider.topPadding + volDropSlider.availableHeight / 2 - height / 2
-              width: volDropSlider.availableWidth
-              height: 6
-              radius: 3
-              color: root.theme.bgBorder
+            Row {
+              width: parent.width
+              height: 34
+              spacing: 12
 
               Rectangle {
-                width: volDropSlider.visualPosition * parent.width
-                height: parent.height
-                radius: 3
-                color: root.theme.accentPrimary
+                anchors.verticalCenter: parent.verticalCenter
+                width: 30
+                height: 30
+                radius: 9
+                color: volumeMuteHover.containsMouse ? root.theme.bgHover : root.theme.bgSurface
+                border.width: 1
+                border.color: root.theme.bgBorder
+
+                Text {
+                  anchors.centerIn: parent
+                  text: {
+                    const sink = Pipewire.defaultAudioSink;
+                    return !sink || !sink.audio || sink.audio.muted ? "󰖁" : "󰕾";
+                  }
+                  color: {
+                    const sink = Pipewire.defaultAudioSink;
+                    return !sink || !sink.audio || sink.audio.muted ? root.theme.textMuted : root.theme.accentPrimary;
+                  }
+                  font.pixelSize: root.curIconSize
+                  font.family: root.font
+                }
+
+                MouseArea {
+                  id: volumeMuteHover
+                  anchors.fill: parent
+                  enabled: Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio
+                  hoverEnabled: true
+                  cursorShape: Qt.PointingHandCursor
+                  onClicked: {
+                    const sink = Pipewire.defaultAudioSink;
+                    if (sink && sink.audio) sink.audio.muted = !sink.audio.muted;
+                  }
+                }
+              }
+
+              // Use an explicit pointer-driven slider rather than Controls.Slider.
+              // This follows Omarchy's PanelSlider approach and ensures the full
+              // track receives clicks, drags, and wheel events in a layer window.
+              Item {
+                id: volDropSlider
+                anchors.verticalCenter: parent.verticalCenter
+                width: 260
+                height: 34
+                enabled: !!(Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio)
+
+                readonly property real sinkValue: {
+                  const sink = Pipewire.defaultAudioSink;
+                  return sink && sink.audio ? sink.audio.volume : 0;
+                }
+                property real liveValue: sinkValue
+                property bool dragging: false
+                readonly property real progress: Math.max(0, Math.min(1, liveValue))
+
+                onSinkValueChanged: if (!dragging) liveValue = sinkValue
+
+                function volumeFromX(x): real {
+                  return Math.max(0, Math.min(1, x / width));
+                }
+
+                function setVolume(value): void {
+                  liveValue = value;
+                  const sink = Pipewire.defaultAudioSink;
+                  if (sink && sink.audio) {
+                    sink.audio.volume = value;
+                    if (sink.audio.muted && value > 0) sink.audio.muted = false;
+                  }
+                }
+
+                Rectangle {
+                  id: volumeTrack
+                  anchors.left: parent.left
+                  anchors.right: parent.right
+                  anchors.verticalCenter: parent.verticalCenter
+                  height: 7
+                  radius: 4
+                  color: root.theme.bgBorder
+                }
+
+                Rectangle {
+                  anchors.left: volumeTrack.left
+                  anchors.verticalCenter: volumeTrack.verticalCenter
+                  width: volumeTrack.width * volDropSlider.progress
+                  height: volumeTrack.height
+                  radius: volumeTrack.radius
+                  color: root.theme.accentPrimary
+
+                  Behavior on width {
+                    enabled: !volDropSlider.dragging
+                    NumberAnimation { duration: 100; easing.type: Easing.OutCubic }
+                  }
+                }
+
+                Rectangle {
+                  width: 18
+                  height: 18
+                  radius: 9
+                  anchors.verticalCenter: volumeTrack.verticalCenter
+                  x: Math.max(0, Math.min(volumeTrack.width - width,
+                                          volumeTrack.width * volDropSlider.progress - width / 2))
+                  color: volumeSliderMouse.pressed ? root.theme.accentCyan : root.theme.accentPrimary
+                  border.width: 2
+                  border.color: root.theme.bgBase
+                  scale: volumeSliderMouse.containsMouse || volDropSlider.dragging ? 1.12 : 1
+
+                  Behavior on x {
+                    enabled: !volDropSlider.dragging
+                    NumberAnimation { duration: 100; easing.type: Easing.OutCubic }
+                  }
+                  Behavior on scale { NumberAnimation { duration: 100 } }
+                }
+
+                MouseArea {
+                  id: volumeSliderMouse
+                  anchors.fill: parent
+                  z: 10
+                  hoverEnabled: true
+                  preventStealing: true
+                  acceptedButtons: Qt.LeftButton
+                  cursorShape: Qt.PointingHandCursor
+
+                  onPressed: (mouse) => {
+                    volDropSlider.dragging = true;
+                    volDropSlider.setVolume(volDropSlider.volumeFromX(mouse.x));
+                  }
+                  onPositionChanged: (mouse) => {
+                    if (volDropSlider.dragging)
+                      volDropSlider.setVolume(volDropSlider.volumeFromX(mouse.x));
+                  }
+                  onReleased: {
+                    volDropSlider.dragging = false;
+                    volDropSlider.liveValue = volDropSlider.sinkValue;
+                  }
+                  onCanceled: {
+                    volDropSlider.dragging = false;
+                    volDropSlider.liveValue = volDropSlider.sinkValue;
+                  }
+                  onWheel: (wheel) => {
+                    const next = Math.max(0, Math.min(1,
+                      volDropSlider.liveValue + (wheel.angleDelta.y > 0 ? 0.05 : -0.05)));
+                    volDropSlider.setVolume(next);
+                  }
+                }
+              }
+
+              Text {
+                anchors.verticalCenter: parent.verticalCenter
+                width: 46
+                horizontalAlignment: Text.AlignRight
+                text: {
+                  const sink = Pipewire.defaultAudioSink;
+                  if (!sink || !sink.audio) return "–";
+                  return Math.round(sink.audio.volume * 100) + "%";
+                }
+                color: {
+                  const sink = Pipewire.defaultAudioSink;
+                  return sink && sink.audio && sink.audio.volume > 1 ? root.theme.accentOrange : root.theme.textPrimary;
+                }
+                font.pixelSize: root.curTextSize
+                font.family: root.font
+                font.bold: true
               }
             }
-
-            handle: Rectangle {
-              x: volDropSlider.leftPadding + volDropSlider.visualPosition * (volDropSlider.availableWidth - width)
-              y: volDropSlider.topPadding + volDropSlider.availableHeight / 2 - height / 2
-              width: 18
-              height: 18
-              radius: 9
-              color: volDropSlider.pressed ? root.theme.accentCyan : root.theme.accentPrimary
-            }
-          }
-
-          Text {
-            anchors.verticalCenter: parent.verticalCenter
-            text: {
-              const sink = Pipewire.defaultAudioSink;
-              if (!sink || !sink.audio) return "–";
-              if (sink.audio.muted) return "Mute";
-              return Math.round(sink.audio.volume * 100) + "%";
-            }
-            color: root.theme.textPrimary
-            font.pixelSize: root.curTextSize
-            font.family: root.font
-            font.bold: true
           }
         }
       }
@@ -2420,15 +2863,15 @@ Scope {
               spacing: 8
 
               Text {
-                text: "󰌌"
-                color: root.theme.accentPrimary
-                font.pixelSize: root.curIconSize
+                text: ""
+                color: root.theme.accentCyan
+                font.pixelSize: root.curIconSize + 1
                 font.family: root.font
                 anchors.verticalCenter: parent.verticalCenter
               }
 
               Text {
-                text: "Keybindings"
+                text: "Hyprland Keybindings"
                 color: root.theme.textPrimary
                 font.pixelSize: root.curTextSize
                 font.family: root.font
@@ -2478,6 +2921,534 @@ Scope {
                     Rectangle {
                       required property var modelData
                       width: keysColumn.width
+                      height: 32
+                      radius: 8
+                      property bool hovered: false
+                      color: hovered ? root.theme.bgHover : root.theme.bgSurface
+
+                      Behavior on color { ColorAnimation { duration: 100 } }
+
+                      Row {
+                        anchors.fill: parent
+                        anchors.leftMargin: 12
+                        anchors.rightMargin: 12
+                        spacing: 12
+
+                        Text {
+                          anchors.verticalCenter: parent.verticalCenter
+                          width: 150
+                          text: modelData.key
+                          color: root.theme.accentPrimary
+                          font.pixelSize: 12
+                          font.family: root.font
+                          font.bold: true
+                          elide: Text.ElideRight
+                        }
+
+                        Text {
+                          anchors.verticalCenter: parent.verticalCenter
+                          width: parent.width - 162
+                          text: modelData.desc
+                          color: root.theme.textPrimary
+                          font.pixelSize: 13
+                          font.family: root.font
+                          elide: Text.ElideRight
+                        }
+                      }
+
+                      MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: parent.hovered = true
+                        onExited: parent.hovered = false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Ghostty keybindings dropdown overlay
+  Variants {
+    model: root.ghosttyKeysOpen && root.barScreen ? [root.barScreen] : []
+
+    PanelWindow {
+      required property var modelData
+      screen: modelData
+      visible: true
+      focusable: true
+      color: "transparent"
+
+      WlrLayershell.layer: WlrLayer.Overlay
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+      WlrLayershell.namespace: "quickshell-ghostty-keybindings"
+
+      Keys.onEscapePressed: root.ghosttyKeysOpen = false
+      exclusionMode: ExclusionMode.Ignore
+
+      anchors {
+        top: true
+        bottom: true
+        left: true
+        right: true
+      }
+
+      MouseArea {
+        anchors.fill: parent
+        onClicked: root.ghosttyKeysOpen = false
+      }
+
+      Rectangle {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: 54
+        anchors.rightMargin: 10
+        width: 400
+        height: Math.min(ghosttyKeysColumn.implicitHeight + 64, 640)
+        radius: 14
+        color: Qt.rgba(root.theme.bgBase.r, root.theme.bgBase.g, root.theme.bgBase.b, 0.95)
+        border.width: 1
+        border.color: root.theme.bgBorder
+        clip: true
+
+        MouseArea { anchors.fill: parent; onClicked: {} }
+
+        Column {
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          anchors.margins: 16
+          spacing: 12
+
+          Row {
+            width: parent.width
+            height: root.pillHeight
+            spacing: 8
+
+            IconImage {
+              source: Quickshell.iconPath("com.mitchellh.ghostty")
+              implicitSize: root.curIconSize + 3
+              anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+              text: "Ghostty Keybindings"
+              color: root.theme.textPrimary
+              font.pixelSize: root.curTextSize
+              font.family: root.font
+              font.bold: true
+              anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+              text: "(defaults)"
+              color: root.theme.textMuted
+              font.pixelSize: root.curSmallTextSize
+              font.family: root.font
+              anchors.verticalCenter: parent.verticalCenter
+            }
+          }
+
+          Rectangle {
+            width: parent.width
+            height: 1
+            color: root.theme.bgBorder
+          }
+
+          Flickable {
+            width: parent.width
+            height: Math.min(ghosttyKeysColumn.implicitHeight, 540)
+            contentHeight: ghosttyKeysColumn.implicitHeight
+            clip: true
+            boundsMovement: Flickable.StopAtBounds
+
+            Column {
+              id: ghosttyKeysColumn
+              width: parent.width
+              spacing: 16
+
+              Repeater {
+                model: root.ghosttyKeybindings
+
+                Column {
+                  required property var modelData
+                  width: ghosttyKeysColumn.width
+                  spacing: 6
+
+                  Text {
+                    text: modelData.category
+                    color: root.ghosttyAccent
+                    font.pixelSize: root.curSmallTextSize
+                    font.family: root.font
+                    font.bold: true
+                  }
+
+                  Repeater {
+                    model: modelData.bindings
+
+                    Rectangle {
+                      required property var modelData
+                      width: ghosttyKeysColumn.width
+                      height: 32
+                      radius: 8
+                      property bool hovered: false
+                      color: hovered ? root.theme.bgHover : root.theme.bgSurface
+
+                      Behavior on color { ColorAnimation { duration: 100 } }
+
+                      Row {
+                        anchors.fill: parent
+                        anchors.leftMargin: 12
+                        anchors.rightMargin: 12
+                        spacing: 12
+
+                        Text {
+                          anchors.verticalCenter: parent.verticalCenter
+                          width: 150
+                          text: modelData.key
+                          color: root.ghosttyAccent
+                          font.pixelSize: 12
+                          font.family: root.font
+                          font.bold: true
+                          elide: Text.ElideRight
+                        }
+
+                        Text {
+                          anchors.verticalCenter: parent.verticalCenter
+                          width: parent.width - 162
+                          text: modelData.desc
+                          color: root.theme.textPrimary
+                          font.pixelSize: 13
+                          font.family: root.font
+                          elide: Text.ElideRight
+                        }
+                      }
+
+                      MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: parent.hovered = true
+                        onExited: parent.hovered = false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // tmux keybindings dropdown overlay
+  Variants {
+    model: root.tmuxKeysOpen && root.barScreen ? [root.barScreen] : []
+
+    PanelWindow {
+      required property var modelData
+      screen: modelData
+      visible: true
+      focusable: true
+      color: "transparent"
+
+      WlrLayershell.layer: WlrLayer.Overlay
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+      WlrLayershell.namespace: "quickshell-tmux-keybindings"
+
+      Keys.onEscapePressed: root.tmuxKeysOpen = false
+      exclusionMode: ExclusionMode.Ignore
+
+      anchors {
+        top: true
+        bottom: true
+        left: true
+        right: true
+      }
+
+      MouseArea {
+        anchors.fill: parent
+        onClicked: root.tmuxKeysOpen = false
+      }
+
+      Rectangle {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: 54
+        anchors.rightMargin: 10
+        width: 400
+        height: Math.min(tmuxKeysColumn.implicitHeight + 64, 640)
+        radius: 14
+        color: Qt.rgba(root.theme.bgBase.r, root.theme.bgBase.g, root.theme.bgBase.b, 0.95)
+        border.width: 1
+        border.color: root.theme.bgBorder
+        clip: true
+
+        MouseArea { anchors.fill: parent; onClicked: {} }
+
+        Column {
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          anchors.margins: 16
+          spacing: 12
+
+          Row {
+            width: parent.width
+            height: root.pillHeight
+            spacing: 8
+
+            Text {
+              text: ""
+              color: root.theme.accentOrange
+              font.pixelSize: root.curIconSize + 1
+              font.family: root.font
+              anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+              text: "tmux Keybindings"
+              color: root.theme.textPrimary
+              font.pixelSize: root.curTextSize
+              font.family: root.font
+              font.bold: true
+              anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+              text: "(prefix = Ctrl+A)"
+              color: root.theme.textMuted
+              font.pixelSize: root.curSmallTextSize
+              font.family: root.font
+              anchors.verticalCenter: parent.verticalCenter
+            }
+          }
+
+          Rectangle {
+            width: parent.width
+            height: 1
+            color: root.theme.bgBorder
+          }
+
+          Flickable {
+            width: parent.width
+            height: Math.min(tmuxKeysColumn.implicitHeight, 540)
+            contentHeight: tmuxKeysColumn.implicitHeight
+            clip: true
+            boundsMovement: Flickable.StopAtBounds
+
+            Column {
+              id: tmuxKeysColumn
+              width: parent.width
+              spacing: 16
+
+              Repeater {
+                model: root.tmuxKeybindings
+
+                Column {
+                  required property var modelData
+                  width: tmuxKeysColumn.width
+                  spacing: 6
+
+                  Text {
+                    text: modelData.category
+                    color: root.theme.accentOrange
+                    font.pixelSize: root.curSmallTextSize
+                    font.family: root.font
+                    font.bold: true
+                  }
+
+                  Repeater {
+                    model: modelData.bindings
+
+                    Rectangle {
+                      required property var modelData
+                      width: tmuxKeysColumn.width
+                      height: 32
+                      radius: 8
+                      property bool hovered: false
+                      color: hovered ? root.theme.bgHover : root.theme.bgSurface
+
+                      Behavior on color { ColorAnimation { duration: 100 } }
+
+                      Row {
+                        anchors.fill: parent
+                        anchors.leftMargin: 12
+                        anchors.rightMargin: 12
+                        spacing: 12
+
+                        Text {
+                          anchors.verticalCenter: parent.verticalCenter
+                          width: 150
+                          text: modelData.key
+                          color: root.theme.accentOrange
+                          font.pixelSize: 12
+                          font.family: root.font
+                          font.bold: true
+                          elide: Text.ElideRight
+                        }
+
+                        Text {
+                          anchors.verticalCenter: parent.verticalCenter
+                          width: parent.width - 162
+                          text: modelData.desc
+                          color: root.theme.textPrimary
+                          font.pixelSize: 13
+                          font.family: root.font
+                          elide: Text.ElideRight
+                        }
+                      }
+
+                      MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: parent.hovered = true
+                        onExited: parent.hovered = false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Neovim keybindings dropdown overlay
+  Variants {
+    model: root.nvimKeysOpen && root.barScreen ? [root.barScreen] : []
+
+    PanelWindow {
+      required property var modelData
+      screen: modelData
+      visible: true
+      focusable: true
+      color: "transparent"
+
+      WlrLayershell.layer: WlrLayer.Overlay
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+      WlrLayershell.namespace: "quickshell-nvim-keybindings"
+
+      Keys.onEscapePressed: root.nvimKeysOpen = false
+
+      exclusionMode: ExclusionMode.Ignore
+
+      anchors {
+        top: true
+        bottom: true
+        left: true
+        right: true
+      }
+
+      MouseArea {
+        anchors.fill: parent
+        onClicked: root.nvimKeysOpen = false
+      }
+
+      Rectangle {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: 54
+        anchors.rightMargin: 10
+        width: 400
+        height: Math.min(nvimKeysColumn.implicitHeight + 64, 640)
+        radius: 14
+        color: Qt.rgba(root.theme.bgBase.r, root.theme.bgBase.g, root.theme.bgBase.b, 0.95)
+        border.width: 1
+        border.color: root.theme.bgBorder
+        clip: true
+
+        MouseArea { anchors.fill: parent; onClicked: {} }
+
+        Column {
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          anchors.margins: 16
+          spacing: 12
+
+          Row {
+            width: parent.width
+            height: root.pillHeight
+
+            Row {
+              anchors.verticalCenter: parent.verticalCenter
+              spacing: 8
+
+              Text {
+                text: ""
+                color: root.theme.accentGreen
+                font.pixelSize: root.curIconSize + 1
+                font.family: root.font
+                anchors.verticalCenter: parent.verticalCenter
+              }
+
+              Text {
+                text: "Neovim Keybindings"
+                color: root.theme.textPrimary
+                font.pixelSize: root.curTextSize
+                font.family: root.font
+                font.bold: true
+                anchors.verticalCenter: parent.verticalCenter
+              }
+
+              Text {
+                text: "(leader = ;)"
+                color: root.theme.textMuted
+                font.pixelSize: root.curSmallTextSize
+                font.family: root.font
+                anchors.verticalCenter: parent.verticalCenter
+              }
+            }
+          }
+
+          Rectangle {
+            width: parent.width
+            height: 1
+            color: root.theme.bgBorder
+          }
+
+          Flickable {
+            width: parent.width
+            height: Math.min(nvimKeysColumn.implicitHeight, 540)
+            contentHeight: nvimKeysColumn.implicitHeight
+            clip: true
+            boundsMovement: Flickable.StopAtBounds
+
+            Column {
+              id: nvimKeysColumn
+              width: parent.width
+              spacing: 16
+
+              Repeater {
+                model: root.nvimKeybindings
+
+                Column {
+                  required property var modelData
+                  width: nvimKeysColumn.width
+                  spacing: 6
+
+                  Text {
+                    text: modelData.category
+                    color: root.theme.accentCyan
+                    font.pixelSize: root.curSmallTextSize
+                    font.family: root.font
+                    font.bold: true
+                  }
+
+                  Repeater {
+                    model: modelData.bindings
+
+                    Rectangle {
+                      required property var modelData
+                      width: nvimKeysColumn.width
                       height: 32
                       radius: 8
                       property bool hovered: false

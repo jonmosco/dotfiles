@@ -132,3 +132,6 @@ fi
 # 8. Local overrides (not in source control)
 # =============================================================================
 [[ -f ~/.work_env ]] && source ~/.work_env
+
+# Added by the Hunk installer (https://hunk.dev)
+export PATH='/home/jmosco/.hunk/bin':"$PATH"

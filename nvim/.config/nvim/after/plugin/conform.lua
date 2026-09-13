@@ -1,8 +1,5 @@
 require("conform").setup({
-    format_on_save = {
-        timeout_ms = 5000,
-        lsp_format = "fallback",
-    },
+    format_on_save = false,
     formatters_by_ft = {
         go = { "gofmt" },
         lua = { "stylua" },

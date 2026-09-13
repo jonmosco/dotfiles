@@ -1,0 +1,57 @@
+[
+  {
+    "category": "Clipboard & Selection",
+    "bindings": [
+      {"key": "Ctrl+Shift+C", "desc": "Copy selection"},
+      {"key": "Ctrl+Shift+V", "desc": "Paste from clipboard"},
+      {"key": "Ctrl+Insert", "desc": "Copy selection"},
+      {"key": "Shift+Insert", "desc": "Paste primary selection"},
+      {"key": "Ctrl+Shift+A", "desc": "Select all"}
+    ]
+  },
+  {
+    "category": "Tabs & Windows",
+    "bindings": [
+      {"key": "Ctrl+Shift+T", "desc": "Open new tab"},
+      {"key": "Ctrl+Tab", "desc": "Next tab"},
+      {"key": "Ctrl+Shift+Tab", "desc": "Previous tab"},
+      {"key": "Alt+1–8", "desc": "Select tab"},
+      {"key": "Alt+9", "desc": "Select last tab"},
+      {"key": "Ctrl+Shift+W", "desc": "Close current tab"},
+      {"key": "Ctrl+Shift+N", "desc": "Open new window"},
+      {"key": "Ctrl+Shift+Q", "desc": "Quit Ghostty"}
+    ]
+  },
+  {
+    "category": "Splits",
+    "bindings": [
+      {"key": "Ctrl+Shift+O", "desc": "Create split to the right"},
+      {"key": "Ctrl+Shift+E", "desc": "Create split below"},
+      {"key": "Ctrl+Alt+Arrow", "desc": "Focus split in direction"},
+      {"key": "Ctrl+Shift+Enter", "desc": "Toggle split zoom"}
+    ]
+  },
+  {
+    "category": "Navigation & Search",
+    "bindings": [
+      {"key": "Shift+Page Up/Down", "desc": "Scroll one page"},
+      {"key": "Shift+Home", "desc": "Scroll to top"},
+      {"key": "Shift+End", "desc": "Scroll to bottom"},
+      {"key": "Ctrl+Shift+F", "desc": "Search terminal contents"},
+      {"key": "Ctrl+Shift+Page Up/Down", "desc": "Jump between prompts"},
+      {"key": "Escape", "desc": "Close search"}
+    ]
+  },
+  {
+    "category": "Display & Configuration",
+    "bindings": [
+      {"key": "Ctrl++ / Ctrl+-", "desc": "Increase / decrease font size"},
+      {"key": "Ctrl+0", "desc": "Reset font size"},
+      {"key": "Ctrl+Enter", "desc": "Toggle fullscreen"},
+      {"key": "Ctrl+Shift+P", "desc": "Open command palette"},
+      {"key": "Ctrl+,", "desc": "Open Ghostty configuration"},
+      {"key": "Ctrl+Shift+,", "desc": "Reload Ghostty configuration"},
+      {"key": "Ctrl+Shift+I", "desc": "Toggle terminal inspector"}
+    ]
+  }
+]

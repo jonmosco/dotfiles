@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Keep the internal panel enabled when it is the only usable display. This
+# follows Omarchy's clamshell rule: disable a laptop panel only while an
+# external Hyprland output is active.
+set -eu
+
+action=${1:-}
+
+case "$action" in
+  close)
+    monitors=$(/usr/bin/hyprctl monitors all -j) || exit 0
+    internal=$(printf '%s' "$monitors" | /usr/bin/jq -r \
+      '[.[] | select(.name | test("^(eDP|LVDS|DSI)-"))][0].name // empty')
+
+    if [ -n "$internal" ] && printf '%s' "$monitors" | /usr/bin/jq -e \
+      '.[] | select(.disabled != true) | select(.name | test("^(eDP|LVDS|DSI)-") | not)' \
+      >/dev/null; then
+      /usr/bin/hyprctl keyword monitor "$internal,disable" >/dev/null
+    fi
+    ;;
+  open)
+    # Reapply monitors.lua so the panel returns with its configured mode,
+    # position, and scale rather than duplicating those values here.
+    /usr/bin/hyprctl reload >/dev/null
+    ;;
+  *)
+    echo "Usage: ${0##*/} close|open" >&2
+    exit 2
+    ;;
+esac

@@ -1,0 +1,14 @@
+[Unit]
+Description=Wayland clipboard history watcher
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/wl-paste --watch /usr/bin/cliphist store
+Restart=on-failure
+Slice=session.slice
+
+[Install]
+WantedBy=graphical-session.target

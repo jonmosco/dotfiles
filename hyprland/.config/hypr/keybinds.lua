@@ -68,14 +68,14 @@ local categories = {
 					)
 				)
 			end
-			table.insert(bindings, bind(m .. " + S", "Toggle special workspace", m .. " + S", hl.dsp.workspace.toggle_special("magic")))
+			table.insert(bindings, bind(m .. " + S", "Toggle special workspace", m .. " + S", hl.dsp.workspace.toggle_special("scratch")))
 			table.insert(
 				bindings,
 				bind(
 					m .. " + SHIFT + S",
 					"Move to special workspace",
 					m .. " + SHIFT + S",
-					hl.dsp.window.move({ workspace = "special:magic" })
+					hl.dsp.window.move({ workspace = "special:scratch" })
 				)
 			)
 			table.insert(bindings, bind(m .. " + Scroll ↓", "Next workspace", m .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" })))
