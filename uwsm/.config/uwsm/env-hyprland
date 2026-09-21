@@ -1,0 +1,2 @@
+# Hyprland-specific environment loaded by UWSM before the compositor starts.
+export HYPRCURSOR_SIZE=24

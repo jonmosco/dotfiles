@@ -6,5 +6,5 @@ color_space = "labmixed"
 
 [templates]
 quickshell.template = "quickshell.json"
-quickshell.target = '~/.config/quickshell/theme-switcher/wallpaper-theme.json'
+quickshell.target = '~/.config/quickshell/themeSwitcher/wallpaper-theme.json'
 quickshell.new_engine = true

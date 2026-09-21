@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Make a connected Bluetooth audio sink the PipeWire default once it appears.
+set -u
+
+address=${1:-}
+if [[ ! $address =~ ^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$ ]]; then
+  echo "Usage: ${0##*/} XX:XX:XX:XX:XX:XX" >&2
+  exit 2
+fi
+
+for _ in {1..20}; do
+  node_id=$(pw-dump 2>/dev/null | jq -r --arg address "$address" '
+    first(
+      .[]
+      | select(.type == "PipeWire:Interface:Node")
+      | select(.info.props["media.class"] == "Audio/Sink")
+      | select(.info.props["api.bluez5.address"] == $address)
+      | .id
+    ) // empty
+  ')
+
+  if [[ -n $node_id ]] && wpctl set-default "$node_id"; then
+    exit 0
+  fi
+  sleep 0.5
+done
+
+echo "No PipeWire Bluetooth sink appeared for $address" >&2
+exit 1

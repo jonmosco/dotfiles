@@ -1,0 +1,17 @@
+{
+  "name": "Wallpaper Fallback",
+  "family": "Tokyo Night",
+  "bgBase": "#1a1b26",
+  "bgSurface": "#24283b",
+  "bgHover": "#1e2235",
+  "bgSelected": "#283457",
+  "bgBorder": "#32364a",
+  "textPrimary": "#c0caf5",
+  "textSecondary": "#a9b1d6",
+  "textMuted": "#565f89",
+  "accentPrimary": "#7aa2f7",
+  "accentCyan": "#7dcfff",
+  "accentGreen": "#9ece6a",
+  "accentOrange": "#ff9e64",
+  "accentRed": "#f7768e"
+}

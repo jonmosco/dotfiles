@@ -1,0 +1,103 @@
+[
+  {
+    "category": "Editors & Shell",
+    "bindings": [
+      {"key": "vim", "desc": "nvim"},
+      {"key": "n", "desc": "nvim"},
+      {"key": "v", "desc": "nvim"},
+      {"key": "c", "desc": "wl-copy (or X11 clipboard)"},
+      {"key": "h", "desc": "history"},
+      {"key": "..", "desc": "cd .."}
+    ]
+  },
+  {
+    "category": "Files & Utilities",
+    "bindings": [
+      {"key": "l", "desc": "ls -lFha"},
+      {"key": "lt", "desc": "ls -ltr"},
+      {"key": "ls", "desc": "ls -F --color=auto"},
+      {"key": "tree", "desc": "tree -C"},
+      {"key": "grep", "desc": "grep --color"},
+      {"key": "rm", "desc": "rm -i"},
+      {"key": "sd", "desc": "shred -vuz"},
+      {"key": "valut", "desc": "vault (typo helper)"}
+    ]
+  },
+  {
+    "category": "Vault",
+    "bindings": [
+      {"key": "vcs", "desc": "Vault login: Commercial stage"},
+      {"key": "vcp", "desc": "Vault login: Commercial production"},
+      {"key": "vfs", "desc": "Vault login: FedRAMP stage"},
+      {"key": "vfp", "desc": "Vault login: FedRAMP production"}
+    ]
+  },
+  {
+    "category": "Kubernetes",
+    "bindings": [
+      {"key": "k", "desc": "kubectl"},
+      {"key": "ka", "desc": "kubectl apply -f"},
+      {"key": "kd", "desc": "kubectl describe"},
+      {"key": "ke", "desc": "kubectl exec -ti"},
+      {"key": "kg", "desc": "kubectl get"},
+      {"key": "kga", "desc": "kubectl get common resources"},
+      {"key": "kwa", "desc": "watch kubectl get common resources"},
+      {"key": "kgcm", "desc": "kubectl get configmap"},
+      {"key": "kgd", "desc": "kubectl get deployment"},
+      {"key": "kgds", "desc": "kubectl get daemonset"},
+      {"key": "kgp", "desc": "kubectl get pods"},
+      {"key": "kgj", "desc": "kubectl get jobs"},
+      {"key": "kgi", "desc": "kubectl get ingress"},
+      {"key": "kgn", "desc": "kubectl get nodes"},
+      {"key": "kgns", "desc": "kubectl get namespaces"},
+      {"key": "kgs", "desc": "kubectl get secrets"},
+      {"key": "kgsvc", "desc": "kubectl get service"},
+      {"key": "kgsa", "desc": "kubectl get serviceaccounts"},
+      {"key": "kgpv", "desc": "kubectl get pv"},
+      {"key": "kgpvc", "desc": "kubectl get pvc"},
+      {"key": "kgss", "desc": "kubectl get statefulset"},
+      {"key": "kgcrd", "desc": "kubectl get crd"},
+      {"key": "kl", "desc": "kubectl logs"},
+      {"key": "krm", "desc": "kubectl delete"},
+      {"key": "kutil", "desc": "Run an interactive Debian utility pod"}
+    ]
+  },
+  {
+    "category": "OpenShift & Tekton",
+    "bindings": [
+      {"key": "o", "desc": "oc"},
+      {"key": "oca", "desc": "oc get"},
+      {"key": "oa", "desc": "oc apply -f"},
+      {"key": "ocgp", "desc": "oc get pods, oldest to newest"},
+      {"key": "ocge", "desc": "oc get events, oldest to newest"},
+      {"key": "ttl", "desc": "tkn task list"},
+      {"key": "tpl", "desc": "tkn pipeline list"},
+      {"key": "tprl", "desc": "tkn pipelinerun list"}
+    ]
+  },
+  {
+    "category": "Containers",
+    "bindings": [
+      {"key": "d", "desc": "docker"},
+      {"key": "de", "desc": "docker exec -ti"},
+      {"key": "dps", "desc": "docker ps"},
+      {"key": "pm", "desc": "podman"},
+      {"key": "pmps", "desc": "podman ps"}
+    ]
+  },
+  {
+    "category": "Vagrant",
+    "bindings": [
+      {"key": "vu", "desc": "vagrant up"},
+      {"key": "vf", "desc": "vagrant up --provider=vmware_fusion"},
+      {"key": "vv", "desc": "vagrant up --provider=virtualbox"},
+      {"key": "vpp", "desc": "vagrant up --provider=parallels"},
+      {"key": "vkvm", "desc": "vagrant up --provider=libvirt"},
+      {"key": "vs", "desc": "vagrant status"},
+      {"key": "vd", "desc": "vagrant destroy --force"},
+      {"key": "vgs", "desc": "vagrant global-status"},
+      {"key": "vssh", "desc": "vagrant ssh"},
+      {"key": "vp", "desc": "vagrant provision"}
+    ]
+  }
+]

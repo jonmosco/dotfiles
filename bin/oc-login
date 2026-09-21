@@ -1,0 +1,318 @@
+#!/usr/bin/env python3
+"""Select an OpenShift cluster from Visual App-Interface and log in with oc."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shutil
+import signal
+import subprocess
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+from dataclasses import dataclass
+from typing import NoReturn
+
+
+COMMERCIAL_VISUAL_URL = "https://visual-app-interface.devshift.net/clusters"
+FEDRAMP_VISUAL_URL = "https://visual-app-interface.appsre.devshiftusgov.com/"
+GRAPHQL_QUERY = """
+query LoginClusters {
+  clusters_v1 {
+    name
+    description
+    serverUrl
+    consoleUrl
+    spec {
+      product
+      provider
+      region
+      version
+      private
+      fips
+    }
+  }
+}
+"""
+
+
+@dataclass(frozen=True)
+class Cluster:
+    name: str
+    server_url: str
+    description: str
+    product: str
+    region: str
+    private: bool
+
+    def selection_line(self, index: int) -> str:
+        visibility = "private" if self.private else "public"
+        return (
+            f"{index}\t"
+            f"{fit_column(self.name, 22)} "
+            f"{fit_column(self.product, 10)} "
+            f"{fit_column(self.region, 14)} "
+            f"{fit_column(visibility, 8)} "
+            f"{fit_column(self.description, 42)}  "
+            f"{self.server_url}"
+        )
+
+
+def fit_column(value: str, width: int) -> str:
+    """Normalize, truncate, and pad text for the fzf table."""
+    value = " ".join(value.split())
+    if len(value) > width:
+        value = value[: width - 1] + "…"
+    return f"{value:<{width}}"
+
+
+def fail(message: str, status: int = 1) -> NoReturn:
+    print(f"oc-login: {message}", file=sys.stderr)
+    raise SystemExit(status)
+
+
+def graphql_url(visual_url: str) -> str:
+    """Turn either the Visual /clusters URL or base URL into its API URL."""
+    parsed = urllib.parse.urlsplit(visual_url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        fail(f"invalid Visual App-Interface URL: {visual_url}")
+    return urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, "/graphql", "", ""))
+
+
+def fetch_clusters(visual_url: str, timeout: float) -> list[Cluster]:
+    endpoint = graphql_url(visual_url)
+    body = json.dumps({"query": GRAPHQL_QUERY}).encode()
+    request = urllib.request.Request(
+        endpoint,
+        data=body,
+        headers={
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "User-Agent": "oc-login/1",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            payload = json.load(response)
+    except urllib.error.HTTPError as error:
+        detail = error.read(512).decode(errors="replace").strip()
+        fail(f"Visual App-Interface returned HTTP {error.code}: {detail}")
+    except (urllib.error.URLError, TimeoutError) as error:
+        fail(
+            f"cannot reach Visual App-Interface ({error}); "
+            "check that the appropriate Commercial or FedRAMP VPN is connected"
+        )
+    except (json.JSONDecodeError, UnicodeDecodeError) as error:
+        fail(f"Visual App-Interface returned invalid JSON: {error}")
+
+    if payload.get("errors"):
+        messages = "; ".join(
+            error.get("message", str(error)) for error in payload["errors"]
+        )
+        fail(f"GraphQL query failed: {messages}")
+
+    records = payload.get("data", {}).get("clusters_v1")
+    if not isinstance(records, list):
+        fail("GraphQL response did not contain a cluster list")
+
+    clusters: list[Cluster] = []
+    for record in records:
+        # The page treats records with no spec as external, non-OpenShift clusters.
+        spec = record.get("spec")
+        server_url = record.get("serverUrl")
+        if not spec or not server_url:
+            continue
+        clusters.append(
+            Cluster(
+                name=record["name"],
+                server_url=server_url,
+                description=record.get("description") or "",
+                product=spec.get("product") or "unknown",
+                region=spec.get("region") or "unknown",
+                private=bool(spec.get("private")),
+            )
+        )
+
+    if not clusters:
+        fail("Visual App-Interface returned no OpenShift clusters")
+    return sorted(clusters, key=lambda cluster: cluster.name.casefold())
+
+
+def detect_network_realm() -> str:
+    """Match the VPN detection used by the desktop network indicator."""
+    try:
+        links = subprocess.run(
+            ["ip", "-o", "link", "show", "type", "tun"],
+            text=True,
+            capture_output=True,
+            timeout=3,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return "Commercial"
+
+    domains: list[str] = []
+    for line in links.stdout.splitlines():
+        fields = line.split(":", 2)
+        if len(fields) < 2:
+            continue
+        interface = fields[1].strip()
+        try:
+            result = subprocess.run(
+                ["resolvectl", "domain", interface],
+                text=True,
+                capture_output=True,
+                timeout=3,
+            )
+            domains.append(result.stdout.casefold())
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            continue
+
+    domain_text = "\n".join(domains)
+    if "fedramp" in domain_text or "openshiftusgov" in domain_text:
+        return "FedRAMP"
+    return "Commercial"
+
+
+def infer_realm(clusters: list[Cluster]) -> str:
+    fedramp_markers = ("openshiftusgov", "fedramp", "us-gov-", ".gov")
+    fedramp_count = sum(
+        any(marker in cluster.server_url.casefold() for marker in fedramp_markers)
+        for cluster in clusters
+    )
+    return "FedRAMP" if fedramp_count > len(clusters) / 2 else "Commercial"
+
+
+def select_with_fzf(clusters: list[Cluster], realm: str, query: str) -> Cluster | None:
+    lines = [cluster.selection_line(index) for index, cluster in enumerate(clusters)]
+    header = (
+        f"{'NAME':<22} {'PRODUCT':<10} {'REGION':<14} "
+        f"{'ACCESS':<8} {'DESCRIPTION':<42}  API"
+    )
+    command = [
+        "fzf",
+        "--delimiter=\t",
+        "--with-nth=2",
+        f"--prompt=OpenShift ({realm})> ",
+        f"--header={header}",
+        "--height=80%",
+        "--layout=reverse",
+        "--border",
+    ]
+    if query:
+        command.extend(("--query", query))
+
+    result = subprocess.run(command, input="\n".join(lines), text=True, capture_output=True)
+    if result.returncode in {1, 130}:
+        return None
+    if result.returncode != 0:
+        fail(result.stderr.strip() or f"fzf exited with status {result.returncode}")
+    return clusters[int(result.stdout.split("\t", 1)[0])]
+
+
+def select_with_prompt(clusters: list[Cluster], realm: str) -> Cluster | None:
+    print(f"OpenShift clusters ({realm}):", file=sys.stderr)
+    for index, cluster in enumerate(clusters, start=1):
+        print(
+            f"{index:3}. {cluster.name:<28} {cluster.product:<8} "
+            f"{cluster.region:<12} {cluster.description}",
+            file=sys.stderr,
+        )
+    try:
+        answer = input("Cluster number (blank to cancel): ").strip()
+    except (EOFError, KeyboardInterrupt):
+        return None
+    if not answer:
+        return None
+    try:
+        return clusters[int(answer) - 1]
+    except (ValueError, IndexError):
+        fail(f"invalid cluster number: {answer}")
+
+
+def choose_cluster(
+    clusters: list[Cluster], realm: str, requested: str | None
+) -> Cluster | None:
+    if requested:
+        exact = [cluster for cluster in clusters if cluster.name.casefold() == requested.casefold()]
+        if exact:
+            return exact[0]
+
+        matches = [
+            cluster for cluster in clusters if requested.casefold() in cluster.name.casefold()
+        ]
+        if len(matches) == 1:
+            return matches[0]
+        if not matches:
+            fail(f"no {realm} cluster matches {requested!r}")
+        clusters = matches
+
+    if shutil.which("fzf"):
+        return select_with_fzf(clusters, realm, requested or "")
+    return select_with_prompt(clusters, realm)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Select the current VPN realm's OpenShift cluster from Visual "
+            "App-Interface and run 'oc login --web'."
+        )
+    )
+    parser.add_argument("cluster", nargs="?", help="exact name or selection filter")
+    parser.add_argument("--list", action="store_true", help="list clusters without logging in")
+    parser.add_argument("--dry-run", action="store_true", help="show the login command only")
+    parser.add_argument(
+        "--visual-url",
+        default=os.environ.get("VISUAL_APP_INTERFACE_URL"),
+        help=(
+            "override the Visual App-Interface URL (default: choose the "
+            "Commercial or FedRAMP URL from the active VPN)"
+        ),
+    )
+    parser.add_argument(
+        "--timeout", type=float, default=20.0, help="API request timeout in seconds"
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    detected_realm = detect_network_realm()
+    visual_url = args.visual_url or (
+        FEDRAMP_VISUAL_URL
+        if detected_realm == "FedRAMP"
+        else COMMERCIAL_VISUAL_URL
+    )
+    clusters = fetch_clusters(visual_url, args.timeout)
+    realm = infer_realm(clusters) if args.visual_url else detected_realm
+
+    if args.list:
+        print(f"# {realm}: {len(clusters)} OpenShift clusters")
+        for cluster in clusters:
+            print(f"{cluster.name}\t{cluster.server_url}\t{cluster.description}")
+        return 0
+
+    cluster = choose_cluster(clusters, realm, args.cluster)
+    if cluster is None:
+        return 130
+
+    command = ["oc", "login", cluster.server_url, "--web"]
+    print(f"Selected {cluster.name} ({realm})")
+    print(f"API: {cluster.server_url}")
+    if args.dry_run:
+        print("Command: " + " ".join(command))
+        return 0
+
+    if not shutil.which("oc"):
+        fail("oc is not installed or is not in PATH")
+    return subprocess.run(command).returncode
+
+
+if __name__ == "__main__":
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+    raise SystemExit(main())

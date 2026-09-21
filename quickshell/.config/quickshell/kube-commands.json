@@ -1,0 +1,67 @@
+[
+  {
+    "category": "Context and identity",
+    "bindings": [
+      { "key": "oc-login", "desc": "Select and log in to an OpenShift cluster" },
+      { "key": "oc whoami", "desc": "Show the current OpenShift user" },
+      { "key": "kubectl config current-context", "desc": "Show the active kubeconfig context" },
+      { "key": "kubectl config get-contexts", "desc": "List available contexts" },
+      { "key": "kubectl config use-context CONTEXT", "desc": "Switch to another context" },
+      { "key": "kubectl config set-context --current --namespace=NS", "desc": "Set the default namespace" },
+      { "key": "oc project [PROJECT]", "desc": "Show or switch OpenShift project" }
+    ]
+  },
+  {
+    "category": "Inspect resources",
+    "bindings": [
+      { "key": "kubectl get pods -A", "desc": "List pods in every namespace" },
+      { "key": "kubectl get all -n NS", "desc": "List common workload resources" },
+      { "key": "kubectl get RESOURCE NAME -o yaml", "desc": "Print complete resource YAML" },
+      { "key": "kubectl describe RESOURCE NAME", "desc": "Show details and recent events" },
+      { "key": "kubectl api-resources", "desc": "List supported resource types" },
+      { "key": "kubectl explain RESOURCE.FIELD", "desc": "Read resource schema documentation" },
+      { "key": "oc get routes -n NS", "desc": "List OpenShift routes" },
+      { "key": "oc status", "desc": "Summarize the current project" }
+    ]
+  },
+  {
+    "category": "Logs and troubleshooting",
+    "bindings": [
+      { "key": "kubectl logs -f POD [-c CONTAINER]", "desc": "Follow container logs" },
+      { "key": "kubectl logs POD --previous", "desc": "Show logs from the previous container" },
+      { "key": "kubectl exec -it POD -- sh", "desc": "Open a shell in a pod" },
+      { "key": "kubectl get events --sort-by=.lastTimestamp", "desc": "Show events in chronological order" },
+      { "key": "kubectl top pods [-n NS]", "desc": "Show pod CPU and memory usage" },
+      { "key": "kubectl top nodes", "desc": "Show node CPU and memory usage" },
+      { "key": "kubectl auth can-i VERB RESOURCE", "desc": "Check current-user authorization" },
+      { "key": "oc debug pod/POD", "desc": "Create an OpenShift debug pod" },
+      { "key": "oc debug node/NODE", "desc": "Open an OpenShift node debug shell" }
+    ]
+  },
+  {
+    "category": "Apply and manage",
+    "bindings": [
+      { "key": "kubectl diff -f FILE", "desc": "Preview declarative changes" },
+      { "key": "kubectl apply -f FILE", "desc": "Apply a manifest" },
+      { "key": "kubectl delete -f FILE", "desc": "Delete resources from a manifest" },
+      { "key": "kubectl rollout status deploy/NAME", "desc": "Wait for a deployment rollout" },
+      { "key": "kubectl rollout restart deploy/NAME", "desc": "Restart deployment pods" },
+      { "key": "kubectl rollout undo deploy/NAME", "desc": "Roll back a deployment" },
+      { "key": "kubectl scale deploy/NAME --replicas=N", "desc": "Change deployment replica count" },
+      { "key": "kubectl port-forward svc/NAME LOCAL:REMOTE", "desc": "Forward a local port to a service" }
+    ]
+  },
+  {
+    "category": "OpenShift-specific",
+    "bindings": [
+      { "key": "oc new-app IMAGE_OR_REPO", "desc": "Create an application from an image or source" },
+      { "key": "oc expose service/NAME", "desc": "Create a route for a service" },
+      { "key": "oc get clusterversion", "desc": "Show OpenShift cluster version" },
+      { "key": "oc get clusteroperators", "desc": "Show cluster operator health" },
+      { "key": "oc adm top pods", "desc": "Show pod resource usage" },
+      { "key": "oc adm top nodes", "desc": "Show node resource usage" },
+      { "key": "oc adm must-gather", "desc": "Collect OpenShift diagnostic data" },
+      { "key": "oc rsh POD", "desc": "Open a remote shell in a pod" }
+    ]
+  }
+]

@@ -9,8 +9,6 @@ Singleton {
 
   property string cpuUsage: "0%"
   property string memoryUsage: "0%"
-  property string networkInfo: "Disconnected"
-  property string networkType: "disconnected"
   property int batteryLevelRaw: 0
   property string batteryLevel: "0%"
   property string batteryIcon: "󰂎"
@@ -39,24 +37,6 @@ Singleton {
     stdout: StdioCollector {
       onStreamFinished: {
         root.memoryUsage = text.trim()
-      }
-    }
-  }
-
-  // Network Info (ethernet takes priority over wifi)
-  Process {
-    id: netProc
-    command: ["sh", "-c", "eth=$(nmcli -t -f type,state dev 2>/dev/null | grep '^ethernet:connected'); if [ -n \"$eth\" ]; then echo 'ethernet:Ethernet'; else wifi=$(nmcli -t -f active,ssid dev wifi 2>/dev/null | grep '^yes' | cut -d: -f2); if [ -n \"$wifi\" ]; then echo \"wifi:$wifi\"; else echo 'disconnected:'; fi; fi"]
-    running: true
-
-    stdout: StdioCollector {
-      onStreamFinished: {
-        const result = text.trim()
-        const colonIdx = result.indexOf(':')
-        const type = result.substring(0, colonIdx)
-        const info = result.substring(colonIdx + 1)
-        root.networkType = type
-        root.networkInfo = info || "Disconnected"
       }
     }
   }
@@ -95,7 +75,7 @@ Singleton {
   // Temperature
   Process {
     id: tempProc
-    command: ["sh", "-c", "curl -s 'wttr.in/16063?format=%t&u' 2>/dev/null || echo 'N/A'"]
+    command: ["sh", "-c", "curl -s 'wttr.in/16063,USA?format=%t&u' 2>/dev/null || echo 'N/A'"]
     running: true
 
     stdout: StdioCollector {
@@ -113,7 +93,6 @@ Singleton {
     onTriggered: {
       cpuProc.running = true
       memProc.running = true
-      netProc.running = true
       batteryProc.running = true
     }
   }

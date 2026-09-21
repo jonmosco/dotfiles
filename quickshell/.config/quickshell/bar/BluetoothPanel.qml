@@ -41,7 +41,25 @@ Scope {
   }
 
   function runDeviceAction(device, action): void {
-    if (!device || !device.address || bluetoothAction.running) return;
+    if (!device || !device.address) return;
+
+    // Use Quickshell's live BlueZ object for connection changes. This keeps
+    // the button state synchronized and avoids waiting on a detached
+    // bluetoothctl process.
+    if (action === "connect") {
+      device.trusted = true;
+      device.connected = true;
+      bluetoothDefaultOutput.command = [Quickshell.env("HOME") + "/.config/hypr/scripts/bluetooth-default-output", device.address];
+      bluetoothDefaultOutput.running = true;
+      return;
+    }
+    if (action === "disconnect") {
+      device.connected = false;
+      return;
+    }
+
+    // Pairing and forgetting retain the helper's timeout and trust handling.
+    if (bluetoothAction.running) return;
     bluetoothAction.command = [Quickshell.env("HOME") + "/.config/hypr/scripts/bluetooth-device", action, device.address];
     bluetoothAction.running = true;
   }
@@ -67,6 +85,11 @@ Scope {
     running: false
   }
 
+  Process {
+    id: bluetoothDefaultOutput
+    running: false
+  }
+
   Variants {
     model: root.open && root.barScreen ? [root.barScreen] : []
 
@@ -81,7 +104,7 @@ Scope {
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
       WlrLayershell.namespace: "quickshell-bluetooth"
 
-      Keys.onEscapePressed: root.open = false
+      Shortcut { sequence: "Escape"; onActivated: root.open = false }
       exclusionMode: ExclusionMode.Ignore
 
       anchors {
@@ -126,7 +149,7 @@ Scope {
 
             Text {
               text: root.icon
-              color: root.adapter && root.adapter.enabled ? root.theme.accentPrimary : root.theme.textMuted
+              color: root.connectedCount > 0 ? root.theme.accentGreen : root.adapter && root.adapter.enabled ? root.theme.accentPrimary : root.theme.textMuted
               font.pixelSize: root.iconSize + 2
               font.family: root.font
               Layout.alignment: Qt.AlignVCenter
@@ -147,7 +170,7 @@ Scope {
 
               Text {
                 text: root.status
-                color: root.theme.textMuted
+                color: root.connectedCount > 0 ? root.theme.accentGreen : root.adapter && root.adapter.enabled ? root.theme.accentPrimary : root.theme.textMuted
                 font.pixelSize: 11
                 font.family: root.font
               }
@@ -184,7 +207,7 @@ Scope {
 
           Rectangle { width: parent.width; height: 1; color: root.theme.bgBorder }
 
-          Row {
+          Item {
             width: parent.width
             height: 22
 
@@ -259,14 +282,18 @@ Scope {
                 Rectangle {
                   id: deviceCard
                   required property BluetoothDevice modelData
-                  readonly property bool shown: modelData.connected || modelData.paired || modelData.bonded || (root.adapter && root.adapter.discovering)
+                  readonly property bool isConnected: modelData.connected || modelData.state === BluetoothDeviceState.Connected
+                  readonly property bool connectionBusy: modelData.state === BluetoothDeviceState.Connecting || modelData.state === BluetoothDeviceState.Disconnecting || modelData.pairing
+                  readonly property bool shown: isConnected || modelData.paired || modelData.bonded || (root.adapter && root.adapter.discovering)
+                  readonly property bool saved: modelData.paired || modelData.bonded
+                  readonly property color stateColor: isConnected ? root.theme.accentGreen : saved ? root.theme.accentOrange : root.theme.accentRed
                   visible: shown
                   width: deviceColumn.width
                   height: shown ? 58 : 0
                   radius: 10
-                  color: deviceHover.containsMouse ? root.theme.bgHover : root.theme.bgSurface
-                  border.width: 1
-                  border.color: modelData.connected ? root.theme.accentGreen : "transparent"
+                  color: deviceHover.containsMouse ? root.theme.bgHover : Qt.rgba(stateColor.r, stateColor.g, stateColor.b, 0.10)
+                  border.width: isConnected ? 2 : 1
+                  border.color: stateColor
 
                   Behavior on color { ColorAnimation { duration: 120 } }
 
@@ -277,8 +304,8 @@ Scope {
                     spacing: 10
 
                     Text {
-                      text: modelData.connected ? "󰂱" : modelData.paired || modelData.bonded ? "󰂯" : "󰂰"
-                      color: modelData.connected ? root.theme.accentGreen : root.theme.accentPrimary
+                      text: deviceCard.isConnected ? "󰂱" : deviceCard.saved ? "󰂯" : "󰂰"
+                      color: deviceCard.stateColor
                       font.pixelSize: root.iconSize
                       font.family: root.font
                       Layout.alignment: Qt.AlignVCenter
@@ -304,13 +331,13 @@ Scope {
                           if (deviceCard.modelData.pairing) return "Pairing…";
                           if (deviceCard.modelData.state === BluetoothDeviceState.Connecting) return "Connecting…";
                           if (deviceCard.modelData.state === BluetoothDeviceState.Disconnecting) return "Disconnecting…";
-                          if (deviceCard.modelData.connected && deviceCard.modelData.batteryAvailable)
+                          if (deviceCard.isConnected && deviceCard.modelData.batteryAvailable)
                             return "Connected · " + Math.round(deviceCard.modelData.battery * 100) + "% battery";
-                          if (deviceCard.modelData.connected) return "Connected";
-                          if (deviceCard.modelData.paired || deviceCard.modelData.bonded) return "Paired";
-                          return deviceCard.modelData.address;
+                          if (deviceCard.isConnected) return "Connected";
+                          if (deviceCard.saved) return "Paired · Disconnected";
+                          return "Disconnected · Not paired";
                         }
-                        color: deviceCard.modelData.connected ? root.theme.accentGreen : root.theme.textMuted
+                        color: deviceCard.stateColor
                         font.pixelSize: 11
                         font.family: root.font
                       }
@@ -321,13 +348,18 @@ Scope {
                       Layout.preferredHeight: 26
                       Layout.alignment: Qt.AlignVCenter
                       radius: 8
-                      color: deviceCard.modelData.connected ? root.theme.accentRed : root.theme.accentGreen
-                      opacity: actionHover.containsMouse ? 1 : 0.82
+                      color: deviceCard.isConnected ? root.theme.accentGreen : deviceCard.saved ? root.theme.accentOrange : root.theme.accentPrimary
+                      opacity: deviceCard.connectionBusy ? 0.55 : actionHover.containsMouse ? 1 : 0.82
 
                       Text {
                         id: actionText
                         anchors.centerIn: parent
-                        text: deviceCard.modelData.connected ? "Disconnect" : deviceCard.modelData.paired || deviceCard.modelData.bonded ? "Connect" : "Pair"
+                        text: {
+                          if (deviceCard.modelData.state === BluetoothDeviceState.Connecting) return "Connecting…";
+                          if (deviceCard.modelData.state === BluetoothDeviceState.Disconnecting) return "Disconnecting…";
+                          if (deviceCard.modelData.pairing) return "Pairing…";
+                          return deviceCard.isConnected ? "Disconnect" : deviceCard.saved ? "Connect" : "Pair";
+                        }
                         color: "white"
                         font.pixelSize: 11
                         font.family: root.font
@@ -337,11 +369,12 @@ Scope {
                       MouseArea {
                         id: actionHover
                         anchors.fill: parent
+                        enabled: !deviceCard.connectionBusy
                         hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
+                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
                         onClicked: root.runDeviceAction(deviceCard.modelData,
-                          deviceCard.modelData.connected ? "disconnect" :
-                          deviceCard.modelData.paired || deviceCard.modelData.bonded ? "connect" : "pair")
+                          deviceCard.isConnected ? "disconnect" :
+                          deviceCard.saved ? "connect" : "pair")
                       }
                     }
 

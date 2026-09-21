@@ -8,6 +8,7 @@ import Quickshell.Services.SystemTray
 import Quickshell.Io
 import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
+import Quickshell.Networking
 import Quickshell.Wayland
 import "../notifications" as Notif
 Scope {
@@ -18,10 +19,10 @@ Scope {
   property int textSize: 16
   property int smallTextSize: 15
   property bool barVisible: true
-  property bool historyOpen: false
-  property bool volumeOpen: false
+  readonly property bool historyOpen: panelCoordinator.isOpen("notifications")
+  readonly property bool volumeOpen: panelCoordinator.isOpen("volume")
   property real volumeAnchorCenterX: 0
-  property bool clipboardOpen: false
+  readonly property bool clipboardOpen: panelCoordinator.isOpen("clipboard")
   property var clipboardItems: []
   property bool keysOpen: false
   property var keybindings: []
@@ -32,21 +33,121 @@ Scope {
   property bool ghosttyKeysOpen: false
   property var ghosttyKeybindings: []
   readonly property color ghosttyAccent: "#bd93f9"
-  property bool systemOpen: false
-  property bool weatherOpen: false
-  property bool vpnOpen: false
+  property bool shellAliasesOpen: false
+  property var shellAliases: []
+  readonly property color shellAliasAccent: root.theme.accentRed
+  property bool kubeCommandsOpen: false
+  property var kubeCommands: []
+  readonly property color kubeAccent: "#326ce5"
+  property bool helpersPinned: false
+  readonly property bool systemOpen: panelCoordinator.isOpen("system")
+  readonly property bool vpnOpen: panelCoordinator.isOpen("vpn")
   property string vpnConnName: ""
   property bool vpnHasFedRAMP: false
   property bool vpnHasCommercial: false
+  property bool netbirdConnected: false
   property var vpnConnections: []
   property bool appgateRunning: false
   property string weatherTemp: "--"
   property string weatherIcon: "󰖐"
+  property string weatherLocation: "Zelienople, PA • 16063"
   property string weatherDesc: ""
   property string weatherFeelsLike: ""
   property string weatherHumidity: ""
   property string weatherWind: ""
   property var weatherForecast: []
+
+  signal vpnRefreshRequested()
+
+  PanelCoordinator {
+    id: panelCoordinator
+  }
+
+  function closeBarDropdowns() {
+    closeHelperPanels();
+    panelCoordinator.close();
+    networkPanel.open = false;
+    bluetoothPanel.open = false;
+  }
+
+  function toggleDropdown(name) {
+    const opening = !panelCoordinator.isOpen(name);
+    closeBarDropdowns();
+    if (opening) panelCoordinator.open(name);
+  }
+
+  function toggleCalendarPanel() {
+    if (!clockPanels.calendarOpen) closeBarDropdowns();
+    clockPanels.toggleCalendar();
+  }
+
+  function toggleWorldClocksPanel() {
+    if (!clockPanels.worldClocksOpen) closeBarDropdowns();
+    clockPanels.toggleWorldClocks();
+  }
+
+  function handleHelperOutsideClick(x, y) {
+    root.closeHelperPanels();
+  }
+
+  function closeHelperPanels() {
+    root.keysOpen = false;
+    root.nvimKeysOpen = false;
+    root.tmuxKeysOpen = false;
+    root.ghosttyKeysOpen = false;
+    root.kubeCommandsOpen = false;
+    root.shellAliasesOpen = false;
+    root.helpersPinned = false;
+  }
+
+  function toggleHelperPanel(name) {
+    panelCoordinator.close();
+    networkPanel.open = false;
+    bluetoothPanel.open = false;
+    // Selecting a helper pins the expanded selector. Selecting another helper
+    // replaces the panel; only Escape or an outside click closes the selector.
+    root.keysOpen = false;
+    root.nvimKeysOpen = false;
+    root.tmuxKeysOpen = false;
+    root.ghosttyKeysOpen = false;
+    root.kubeCommandsOpen = false;
+    root.shellAliasesOpen = false;
+    root.helpersPinned = true;
+
+    if (name === "hyprland") root.keysOpen = true;
+    else if (name === "nvim") root.nvimKeysOpen = true;
+    else if (name === "tmux") root.tmuxKeysOpen = true;
+    else if (name === "ghostty") root.ghosttyKeysOpen = true;
+    else if (name === "kube") root.kubeCommandsOpen = true;
+    else if (name === "aliases") root.shellAliasesOpen = true;
+  }
+
+  ClockPanels {
+    id: clockPanels
+    coordinator: panelCoordinator
+    theme: root.theme
+    barScreen: root.barScreen
+    font: root.font
+    barHeight: root.barHeight
+  }
+
+  NetworkPanel {
+    id: networkPanel
+    theme: root.theme
+    barScreen: root.barScreen
+    font: root.font
+    iconSize: root.curIconSize
+    textSize: root.curTextSize
+    smallTextSize: root.curSmallTextSize
+  }
+
+  Connections {
+    target: networkPanel
+    function onOpenChanged(): void {
+      if (networkPanel.open) panelCoordinator.open("network");
+      else panelCoordinator.close("network");
+    }
+  }
 
   BluetoothPanel {
     id: bluetoothPanel
@@ -56,6 +157,31 @@ Scope {
     iconSize: root.curIconSize
     textSize: root.curTextSize
     smallTextSize: root.curSmallTextSize
+  }
+
+  Connections {
+    target: bluetoothPanel
+    function onOpenChanged(): void {
+      if (bluetoothPanel.open) panelCoordinator.open("bluetooth");
+      else panelCoordinator.close("bluetooth");
+    }
+  }
+
+  CommandListPanel {
+    open: root.kubeCommandsOpen
+    barScreen: root.barScreen
+    commands: root.kubeCommands
+    theme: root.theme
+    font: root.font
+    title: "OpenShift & Kubernetes Commands"
+    subtitle: "(oc / kubectl)"
+    icon: "󱃾"
+    accent: root.kubeAccent
+    iconSize: root.curIconSize
+    textSize: root.curTextSize
+    smallTextSize: root.curSmallTextSize
+    barHeight: root.barHeight
+    onCloseRequested: root.closeHelperPanels()
   }
 
   // MPRIS active player
@@ -73,15 +199,27 @@ Scope {
     function toggle(): void { root.barVisible = !root.barVisible; }
     function clipboard_toggle(): void {
       if (!root.clipboardOpen) {
+        root.closeBarDropdowns();
         clipListIpcProc.running = true;
       } else {
-        root.clipboardOpen = false;
+        panelCoordinator.close("clipboard");
       }
     }
-    function keys_toggle(): void { root.keysOpen = !root.keysOpen; }
-    function nvim_keys_toggle(): void { root.nvimKeysOpen = !root.nvimKeysOpen; }
-    function tmux_keys_toggle(): void { root.tmuxKeysOpen = !root.tmuxKeysOpen; }
-    function ghostty_keys_toggle(): void { root.ghosttyKeysOpen = !root.ghosttyKeysOpen; }
+    function calendar_toggle(): void { root.toggleCalendarPanel(); }
+    function world_clocks_toggle(): void { root.toggleWorldClocksPanel(); }
+    function network_toggle(): void {
+      const opening = !networkPanel.open;
+      root.closeBarDropdowns();
+      bluetoothPanel.open = false;
+      if (opening) networkPanel.open = true;
+    }
+    function keys_toggle(): void { root.toggleHelperPanel("hyprland"); }
+    function nvim_keys_toggle(): void { root.toggleHelperPanel("nvim"); }
+    function tmux_keys_toggle(): void { root.toggleHelperPanel("tmux"); }
+    function ghostty_keys_toggle(): void { root.toggleHelperPanel("ghostty"); }
+    function shell_aliases_toggle(): void { root.toggleHelperPanel("aliases"); }
+    function kube_commands_toggle(): void { root.toggleHelperPanel("kube"); }
+    function helpers_close(): void { root.closeHelperPanels(); }
   }
 
   FileView {
@@ -144,6 +282,36 @@ Scope {
     }
   }
 
+  FileView {
+    id: shellAliasesFile
+    path: Quickshell.env("HOME") + "/.config/quickshell/shell-aliases.json"
+    watchChanges: true
+    onTextChanged: {
+      const raw = shellAliasesFile.text();
+      if (!raw) return;
+      try {
+        root.shellAliases = JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse shell-aliases.json:", e);
+      }
+    }
+  }
+
+  FileView {
+    id: kubeCommandsFile
+    path: Quickshell.env("HOME") + "/.config/quickshell/kube-commands.json"
+    watchChanges: true
+    onTextChanged: {
+      const raw = kubeCommandsFile.text();
+      if (!raw) return;
+      try {
+        root.kubeCommands = JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse kube-commands.json:", e);
+      }
+    }
+  }
+
   Process {
     id: clipListIpcProc
     command: ["cliphist", "list"]
@@ -163,7 +331,7 @@ Scope {
           }
         }
         root.clipboardItems = items;
-        root.clipboardOpen = true;
+        panelCoordinator.open("clipboard");
       }
     }
   }
@@ -218,7 +386,6 @@ Scope {
     }
   }
 
-  function openNmEditor() { nmEditorProc.running = true; }
   function openAppgate() { appgateToggleProc.running = true; }
 
   Process {
@@ -229,14 +396,8 @@ Scope {
   }
 
   Process {
-    id: nmEditorProc
-    command: ["nm-connection-editor"]
-    running: false
-  }
-
-  Process {
     id: appgateToggleProc
-    command: ["sh", "-c", "sudo systemctl start appgatedriver 2>/dev/null; pgrep -x appgate-ui > /dev/null && hyprctl eval 'hl.dsp.focus({ class = \"appgate\" })' || appgate"]
+    command: ["sh", "-c", "sudo systemctl start appgatedriver 2>/dev/null; pgrep -x appgate-ui > /dev/null && hyprctl eval 'hl.dsp.focus({ class = \"appgate\" })' || uwsm app -- appgate"]
     running: false
   }
 
@@ -254,6 +415,7 @@ Scope {
             conns.push({ name: parts[0], active: parts[2] === "yes" });
           }
         }
+        conns.push({ name: "Commercial (NetBird)", active: root.netbirdConnected, netbird: true });
         root.vpnConnections = conns;
       }
     }
@@ -269,21 +431,33 @@ Scope {
   Process {
     id: vpnToggleProc
     running: false
-    onExited: { vpnListProc.running = true; vpnCheck.running = true; }
+    onExited: {
+      vpnListProc.running = true;
+      root.vpnRefreshRequested();
+    }
   }
 
   function vpnConnect(name) { vpnToggleProc.command = ["nmcli", "con", "up", name]; vpnToggleProc.running = true; }
   function vpnDisconnect(name) { vpnToggleProc.command = ["nmcli", "con", "down", name]; vpnToggleProc.running = true; }
+  function netbirdConnect() { vpnToggleProc.command = ["netbird", "up"]; vpnToggleProc.running = true; }
+  function netbirdDisconnect() { vpnToggleProc.command = ["netbird", "down"]; vpnToggleProc.running = true; }
 
   Process {
     id: weatherFetchProc
-    command: ["curl", "-sf", "https://wttr.in/16063?format=j1"]
+    command: ["curl", "-sf", "https://wttr.in/16063,USA?format=j1"]
     running: true
     stdout: StdioCollector {
       onStreamFinished: {
         try {
           const data = JSON.parse(text);
           const cur = data.current_condition[0];
+          const area = data.nearest_area && data.nearest_area[0];
+          if (area) {
+            const town = area.areaName && area.areaName[0] ? area.areaName[0].value : "Zelienople";
+            const region = area.region && area.region[0] ? area.region[0].value : "Pennsylvania";
+            const regionLabel = region === "Pennsylvania" ? "PA" : region;
+            root.weatherLocation = town + ", " + regionLabel + " • 16063";
+          }
           root.weatherTemp = cur.temp_F + "°";
           root.weatherFeelsLike = cur.FeelsLikeF + "°F";
           root.weatherHumidity = cur.humidity + "%";
@@ -509,11 +683,23 @@ Scope {
           }
 
           Text {
+            id: barDateText
             anchors.verticalCenter: parent.verticalCenter
             text: Time.dateString
-            color: root.theme.textSecondary
+            color: barDateMouse.containsMouse || clockPanels.calendarOpen ? root.theme.accentCyan : root.theme.textSecondary
             font.pixelSize: root.curTextSize
             font.family: root.font
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+
+            MouseArea {
+              id: barDateMouse
+              anchors.fill: parent
+              anchors.margins: -5
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: root.toggleCalendarPanel()
+            }
           }
 
           Text {
@@ -523,6 +709,43 @@ Scope {
             font.pixelSize: root.curTextSize
             font.family: root.font
           }
+
+          Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: Time.timeZoneString
+            color: root.theme.accentCyan
+            font.pixelSize: root.curSmallTextSize
+            font.family: root.font
+            font.bold: true
+          }
+
+          Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: "•"
+            color: root.theme.textMuted
+            font.pixelSize: root.curSmallTextSize
+            font.family: root.font
+          }
+
+          Text {
+            id: utcClockText
+            anchors.verticalCenter: parent.verticalCenter
+            text: Time.utcTimeString + " UTC"
+            color: utcClockMouse.containsMouse || clockPanels.worldClocksOpen ? root.theme.accentCyan : root.theme.textSecondary
+            font.pixelSize: root.curSmallTextSize
+            font.family: root.font
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+
+            MouseArea {
+              id: utcClockMouse
+              anchors.fill: parent
+              anchors.margins: -5
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: root.toggleWorldClocksPanel()
+            }
+          }
         }
 
         // Right section: System Info + System Tray
@@ -530,10 +753,15 @@ Scope {
           id: rightSection
           anchors.right: parent.right
           anchors.verticalCenter: parent.verticalCenter
-          spacing: 8
+          spacing: 10
 
-          // Volume
-          Rectangle {
+          // Right-side controls are instantiated in five semantic groups below.
+
+          // Volume is instantiated beside Bluetooth below.
+          Component {
+            id: volumePillComponent
+
+            Rectangle {
             id: volumePill
             height: root.pillHeight
             width: volContent.width + 16
@@ -596,7 +824,7 @@ Scope {
                 } else {
                   const position = volumePill.mapToItem(null, 0, 0);
                   root.volumeAnchorCenterX = position.x + volumePill.width / 2;
-                  root.volumeOpen = !root.volumeOpen;
+                  root.toggleDropdown("volume");
                 }
               }
               onWheel: (wheel) => {
@@ -607,9 +835,13 @@ Scope {
               }
             }
           }
+          }
 
-          // System (battery + CPU + temp + brightness bundled)
-          Rectangle {
+          // System is instantiated at the far right below.
+          Component {
+            id: systemPillComponent
+
+            Rectangle {
             id: sysPill
             height: root.pillHeight
             width: sysPillContent.width + 14
@@ -644,51 +876,16 @@ Scope {
               anchors.fill: parent
               hoverEnabled: true
               cursorShape: Qt.PointingHandCursor
-              onClicked: root.systemOpen = !root.systemOpen
+              onClicked: root.toggleDropdown("system")
             }
           }
-
-          // Weather
-          Rectangle {
-            height: root.pillHeight
-            width: weatherPillContent.width + 14
-            radius: 12
-            color: weatherPillHover.containsMouse || root.weatherOpen ? root.theme.bgHover : root.theme.bgSurface
-
-            Behavior on color { ColorAnimation { duration: 150 } }
-
-            Row {
-              id: weatherPillContent
-              anchors.centerIn: parent
-              spacing: 6
-
-              Text {
-                anchors.verticalCenter: parent.verticalCenter
-                text: root.weatherIcon
-                color: root.theme.accentCyan
-                font.pixelSize: root.curIconSize
-                font.family: root.font
-              }
-              Text {
-                anchors.verticalCenter: parent.verticalCenter
-                text: root.weatherTemp
-                color: root.theme.textPrimary
-                font.pixelSize: root.curSmallTextSize
-                font.family: root.font
-              }
-            }
-
-            MouseArea {
-              id: weatherPillHover
-              anchors.fill: parent
-              hoverEnabled: true
-              cursorShape: Qt.PointingHandCursor
-              onClicked: root.weatherOpen = !root.weatherOpen
-            }
           }
 
-          // Networking group
-          Rectangle {
+          // Networking is instantiated beside System at the far right below.
+          Component {
+            id: networkingGroupComponent
+
+            Rectangle {
             height: root.pillHeight + 4
             width: netGroup.width + 16
             radius: 14
@@ -701,53 +898,6 @@ Scope {
               anchors.centerIn: parent
               spacing: 6
 
-          // NetworkManager and NetBird applets
-          Repeater {
-            model: SystemTray.items
-
-            MouseArea {
-              id: networkTrayDelegate
-              required property SystemTrayItem modelData
-              readonly property bool isNetworkingApplet: modelData.id === "nm-applet" || modelData.id === "NetBird"
-
-              visible: isNetworkingApplet
-              width: isNetworkingApplet ? 26 : 0
-              height: isNetworkingApplet ? root.pillHeight : 0
-              acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-              cursorShape: Qt.PointingHandCursor
-
-              onClicked: (mouse) => {
-                if (mouse.button === Qt.LeftButton) {
-                  modelData.activate()
-                } else if (mouse.button === Qt.RightButton && modelData.hasMenu) {
-                  networkMenuAnchor.open()
-                } else if (mouse.button === Qt.MiddleButton) {
-                  modelData.secondaryActivate()
-                }
-              }
-
-              IconImage {
-                anchors.centerIn: parent
-                source: networkTrayDelegate.modelData.icon
-                implicitSize: 18
-              }
-
-              QsMenuAnchor {
-                id: networkMenuAnchor
-                menu: networkTrayDelegate.modelData.menu
-                anchor.window: networkTrayDelegate.QsWindow.window
-                anchor.adjustment: PopupAdjustment.Flip
-                anchor.onAnchoring: {
-                  const window = networkTrayDelegate.QsWindow.window;
-                  const widgetRect = window.contentItem.mapFromItem(
-                    networkTrayDelegate, 0, networkTrayDelegate.height,
-                    networkTrayDelegate.width, networkTrayDelegate.height);
-                  networkMenuAnchor.anchor.rect = widgetRect;
-                }
-              }
-            }
-          }
-
           // VPN Status
           Rectangle {
             id: vpnPill
@@ -757,6 +907,13 @@ Scope {
             color: vpnHover.containsMouse || root.vpnOpen ? root.theme.bgHover : root.theme.bgSurface
 
             property string vpnType: ""
+
+            function updateVpnType() {
+              if (root.vpnHasFedRAMP && root.vpnHasCommercial) vpnType = "FedRAMP + Commercial";
+              else if (root.vpnHasFedRAMP) vpnType = "FedRAMP";
+              else if (root.vpnHasCommercial) vpnType = "Commercial";
+              else vpnType = "";
+            }
 
             Behavior on color { ColorAnimation { duration: 150 } }
 
@@ -768,11 +925,33 @@ Scope {
                 onStreamFinished: {
                   const out = text.toLowerCase();
                   root.vpnHasFedRAMP = out.includes("fedramp") || out.includes("openshiftusgov");
-                  root.vpnHasCommercial = out.includes("redhat.com");
-                  if (root.vpnHasFedRAMP && root.vpnHasCommercial) vpnPill.vpnType = "FedRAMP + Commercial";
-                  else if (root.vpnHasFedRAMP) vpnPill.vpnType = "FedRAMP";
-                  else if (root.vpnHasCommercial) vpnPill.vpnType = "Commercial";
-                  else vpnPill.vpnType = "";
+                  root.vpnHasCommercial = out.includes("redhat.com") || root.netbirdConnected;
+                  vpnPill.updateVpnType();
+                }
+              }
+            }
+
+            Process {
+              id: netbirdCheck
+              command: ["netbird", "status", "--json"]
+              running: true
+              stdout: StdioCollector {
+                onStreamFinished: {
+                  try {
+                    root.netbirdConnected = JSON.parse(text).daemonStatus === "Connected";
+                  } catch (e) {
+                    root.netbirdConnected = false;
+                  }
+                  root.vpnHasCommercial = root.vpnHasCommercial || root.netbirdConnected;
+                  vpnPill.updateVpnType();
+                  if (root.vpnOpen) vpnListProc.running = true;
+                }
+              }
+              onExited: function(code) {
+                if (code !== 0) {
+                  root.netbirdConnected = false;
+                  vpnCheck.running = true;
+                  if (root.vpnOpen) vpnListProc.running = true;
                 }
               }
             }
@@ -786,11 +965,35 @@ Scope {
               }
             }
 
+            Connections {
+              target: root
+              function onVpnRefreshRequested() {
+                vpnCheck.running = true;
+                netbirdCheck.running = true;
+                vpnConnCheck.running = true;
+                if (root.vpnOpen) {
+                  vpnListProc.running = true;
+                  appgateCheckProc.running = true;
+                }
+              }
+              function onVpnOpenChanged() {
+                if (root.vpnOpen) root.vpnRefreshRequested();
+              }
+            }
+
             Timer {
-              interval: 5000
+              interval: root.vpnOpen ? 5000 : 30000
               running: true
               repeat: true
-              onTriggered: { vpnCheck.running = true; vpnConnCheck.running = true; vpnListProc.running = true; appgateCheckProc.running = true; }
+              onTriggered: {
+                vpnCheck.running = true;
+                netbirdCheck.running = true;
+                vpnConnCheck.running = true;
+                if (root.vpnOpen) {
+                  vpnListProc.running = true;
+                  appgateCheckProc.running = true;
+                }
+              }
             }
 
             Row {
@@ -829,7 +1032,7 @@ Scope {
               anchors.fill: parent
               hoverEnabled: true
               cursorShape: Qt.PointingHandCursor
-              onClicked: root.vpnOpen = !root.vpnOpen
+              onClicked: root.toggleDropdown("vpn")
             }
 
           }
@@ -839,13 +1042,11 @@ Scope {
             height: root.pillHeight
             width: netContent.width + 12
             radius: 12
-            color: root.theme.bgSurface
-            Accessible.role: Accessible.StaticText
-            Accessible.name: {
-              if (SystemInfo.networkType === "ethernet") return "Network: Ethernet"
-              if (SystemInfo.networkType === "wifi") return "Network: WiFi " + SystemInfo.networkInfo
-              return "Network: Disconnected"
-            }
+            color: networkPillHover.containsMouse || networkPanel.open ? root.theme.bgHover : root.theme.bgSurface
+            Accessible.role: Accessible.Button
+            Accessible.name: "Network: " + networkPanel.label
+
+            Behavior on color { ColorAnimation { duration: 150 } }
 
             Row {
               id: netContent
@@ -854,57 +1055,78 @@ Scope {
 
               Text {
                 anchors.verticalCenter: parent.verticalCenter
-                text: {
-                  if (SystemInfo.networkType === "ethernet") return "󰈀"
-                  if (SystemInfo.networkType === "wifi") return "󰖩"
-                  return "󰖪"
-                }
-                color: SystemInfo.networkType === "disconnected" ? root.theme.textMuted : root.theme.accentGreen
+                text: networkPanel.icon
+                color: networkPanel.kind === "disconnected" ? root.theme.textMuted : root.theme.accentGreen
                 font.pixelSize: root.curIconSize
                 font.family: root.font
               }
               Text {
                 anchors.verticalCenter: parent.verticalCenter
-                text: SystemInfo.networkInfo
+                text: networkPanel.label
                 color: root.theme.textPrimary
                 font.pixelSize: root.curSmallTextSize
                 font.family: root.font
+              }
+            }
+
+            MouseArea {
+              id: networkPillHover
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: {
+                const opening = !networkPanel.open;
+                root.closeBarDropdowns();
+                bluetoothPanel.open = false;
+                if (opening) networkPanel.open = true;
               }
             }
           }
 
             } // end netGroup Row
           } // end Networking group
+          }
 
           // Bluetooth
-          Rectangle {
+          Component {
+            id: bluetoothPillComponent
+
+            Rectangle {
+            id: bluetoothPill
             height: root.pillHeight
-            width: bluetoothContent.width + 14
+            width: 32
             radius: 12
             color: bluetoothHover.containsMouse || bluetoothPanel.open ? root.theme.bgHover : root.theme.bgSurface
 
             Behavior on color { ColorAnimation { duration: 150 } }
 
-            Row {
-              id: bluetoothContent
+            Text {
               anchors.centerIn: parent
-              spacing: 6
+              text: bluetoothPanel.icon
+              color: bluetoothPanel.adapter && bluetoothPanel.adapter.enabled ? root.theme.accentPrimary : root.theme.textMuted
+              font.pixelSize: root.curIconSize
+              font.family: root.font
+            }
+
+            Rectangle {
+              visible: bluetoothPanel.connectedCount > 0
+              width: bluetoothBadgeText.width + 6
+              height: 14
+              radius: 7
+              color: root.theme.accentGreen
+              anchors.top: parent.top
+              anchors.right: parent.right
+              anchors.topMargin: 2
+              anchors.rightMargin: 2
 
               Text {
-                anchors.verticalCenter: parent.verticalCenter
-                text: bluetoothPanel.icon
-                color: bluetoothPanel.adapter && bluetoothPanel.adapter.enabled ? root.theme.accentPrimary : root.theme.textMuted
-                font.pixelSize: root.curIconSize
+                id: bluetoothBadgeText
+                anchors.centerIn: parent
+                text: bluetoothPanel.connectedCount > 9 ? "9+" : bluetoothPanel.connectedCount
+                color: root.theme.bgBase
+                font.pixelSize: 9
                 font.family: root.font
-              }
-
-              Text {
-                anchors.verticalCenter: parent.verticalCenter
-                visible: bluetoothPanel.connectedCount > 0
-                text: bluetoothPanel.connectedCount
-                color: root.theme.textPrimary
-                font.pixelSize: root.curSmallTextSize
-                font.family: root.font
+                font.bold: true
               }
             }
 
@@ -917,14 +1139,21 @@ Scope {
               onClicked: (mouse) => {
                 if (mouse.button === Qt.RightButton && bluetoothPanel.adapter)
                   bluetoothPanel.adapter.enabled = !bluetoothPanel.adapter.enabled;
-                else
-                  bluetoothPanel.togglePanel();
+                else {
+                  const opening = !bluetoothPanel.open;
+                  if (opening) root.closeBarDropdowns();
+                  bluetoothPanel.open = opening;
+                }
               }
             }
           }
+          }
 
           // System Tray
-          Rectangle {
+          Component {
+            id: trayComponent
+
+            Rectangle {
             implicitHeight: root.pillHeight
             implicitWidth: trayIcons.implicitWidth + 4
             radius: 12
@@ -989,9 +1218,13 @@ Scope {
               }
             }
           }
+          }
 
           // Clipboard history
-          Rectangle {
+          Component {
+            id: clipboardPillComponent
+
+            Rectangle {
             height: root.pillHeight
             width: 32
             radius: 12
@@ -1014,9 +1247,10 @@ Scope {
               cursorShape: Qt.PointingHandCursor
               onClicked: {
                 if (!root.clipboardOpen) {
+                  root.closeBarDropdowns();
                   clipListProc.running = true;
                 } else {
-                  root.clipboardOpen = false;
+                  panelCoordinator.close("clipboard");
                 }
               }
             }
@@ -1040,14 +1274,18 @@ Scope {
                     }
                   }
                   root.clipboardItems = items;
-                  root.clipboardOpen = true;
+                  panelCoordinator.open("clipboard");
                 }
               }
             }
           }
+          }
 
-          // Notification bell
-          Rectangle {
+          // Notification bell is instantiated beside System at the far right.
+          Component {
+            id: notificationPillComponent
+
+            Rectangle {
             id: bellPill
             height: root.pillHeight
             width: 32
@@ -1059,9 +1297,11 @@ Scope {
             Text {
               anchors.centerIn: parent
               text: Notif.NotificationService.unreadCount > 0 ? "󰂚" : "󰂜"
-              color: Notif.NotificationService.unreadCount > 0 ? root.theme.accentPrimary : root.theme.textMuted
+              color: bellHover.containsMouse ? root.theme.accentCyan : root.theme.accentOrange
               font.pixelSize: root.curIconSize
               font.family: root.font
+
+              Behavior on color { ColorAnimation { duration: 150 } }
             }
 
             Rectangle {
@@ -1092,25 +1332,126 @@ Scope {
               hoverEnabled: true
               cursorShape: Qt.PointingHandCursor
               onClicked: {
-                root.historyOpen = !root.historyOpen;
+                root.toggleDropdown("notifications");
                 if (root.historyOpen) Notif.NotificationService.unreadCount = 0;
               }
             }
           }
+          }
 
-          // Keybinding cheat sheets
-          Rectangle {
+          // Keybinding helpers are instantiated first in this row above.
+          Component {
+            id: keybindingHelpersComponent
+
+            Rectangle {
+            id: keybindingHelpers
+            property bool hoverExpanded: false
+            property bool expanded: hoverExpanded
+                                    || root.helpersPinned
+                                    || root.keysOpen
+                                    || root.nvimKeysOpen
+                                    || root.tmuxKeysOpen
+                                    || root.ghosttyKeysOpen
+                                    || root.kubeCommandsOpen
+                                    || root.shellAliasesOpen
             height: root.pillHeight + 4
             width: keybindingsGroup.width + 12
             radius: 14
             color: Qt.rgba(root.theme.bgSurface.r, root.theme.bgSurface.g, root.theme.bgSurface.b, 0.5)
             border.width: 1
-            border.color: root.theme.bgBorder
+            border.color: keybindingHelpers.expanded ? root.theme.accentPrimary : root.theme.bgBorder
+
+            Behavior on width { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
+
+            HoverHandler {
+              id: helperGroupHover
+              cursorShape: Qt.PointingHandCursor
+              onHoveredChanged: {
+                if (hovered) {
+                  helperCollapseTimer.stop();
+                  helperExpandTimer.restart();
+                } else {
+                  helperExpandTimer.stop();
+                  helperCollapseTimer.restart();
+                }
+              }
+            }
+
+            Timer {
+              id: helperExpandTimer
+              interval: 300
+              onTriggered: keybindingHelpers.hoverExpanded = true
+            }
+
+            Timer {
+              id: helperCollapseTimer
+              interval: 550
+              onTriggered: keybindingHelpers.hoverExpanded = false
+            }
 
             Row {
               id: keybindingsGroup
               anchors.centerIn: parent
               spacing: 5
+
+              Rectangle {
+                width: 54
+                height: root.pillHeight
+                radius: 12
+                color: Qt.rgba(root.theme.accentCyan.r, root.theme.accentCyan.g, root.theme.accentCyan.b,
+                               keybindingHelpers.expanded ? 0.28 : 0.16)
+                border.width: 1
+                border.color: Qt.rgba(root.theme.accentCyan.r, root.theme.accentCyan.g, root.theme.accentCyan.b,
+                                      keybindingHelpers.expanded ? 0.90 : 0.60)
+
+                Behavior on color { ColorAnimation { duration: 150 } }
+                Behavior on border.color { ColorAnimation { duration: 150 } }
+
+                Row {
+                  anchors.centerIn: parent
+                  anchors.horizontalCenterOffset: -2
+                  spacing: 4
+
+                  Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: keybindingHelpers.expanded ? "" : ""
+                    color: root.theme.accentCyan
+                    font.pixelSize: root.curIconSize + 2
+                    font.family: root.font
+                    font.bold: true
+                  }
+
+                  Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: ""
+                    color: root.theme.accentCyan
+                    font.pixelSize: root.curIconSize + 1
+                    font.family: root.font
+                  }
+                }
+
+                MouseArea {
+                  anchors.fill: parent
+                  cursorShape: Qt.PointingHandCursor
+                  onClicked: {
+                    helperExpandTimer.stop();
+                    helperCollapseTimer.stop();
+                    if (keybindingHelpers.expanded) {
+                      keybindingHelpers.hoverExpanded = false;
+                      root.closeHelperPanels();
+                    } else {
+                      root.closeBarDropdowns();
+                      root.helpersPinned = true;
+                      keybindingHelpers.hoverExpanded = true;
+                    }
+                  }
+                }
+              }
+
+              Row {
+                visible: keybindingHelpers.expanded
+                spacing: 5
 
           // Hyprland keybindings cheat sheet
           Rectangle {
@@ -1139,7 +1480,7 @@ Scope {
               anchors.fill: parent
               hoverEnabled: true
               cursorShape: Qt.PointingHandCursor
-              onClicked: root.keysOpen = !root.keysOpen
+              onClicked: root.toggleHelperPanel("hyprland")
             }
           }
 
@@ -1170,7 +1511,7 @@ Scope {
               anchors.fill: parent
               hoverEnabled: true
               cursorShape: Qt.PointingHandCursor
-              onClicked: root.nvimKeysOpen = !root.nvimKeysOpen
+              onClicked: root.toggleHelperPanel("nvim")
             }
           }
 
@@ -1201,7 +1542,7 @@ Scope {
               anchors.fill: parent
               hoverEnabled: true
               cursorShape: Qt.PointingHandCursor
-              onClicked: root.tmuxKeysOpen = !root.tmuxKeysOpen
+              onClicked: root.toggleHelperPanel("tmux")
             }
           }
 
@@ -1230,12 +1571,139 @@ Scope {
               anchors.fill: parent
               hoverEnabled: true
               cursorShape: Qt.PointingHandCursor
-              onClicked: root.ghosttyKeysOpen = !root.ghosttyKeysOpen
+              onClicked: root.toggleHelperPanel("ghostty")
             }
           }
 
+          // OpenShift and Kubernetes command reference
+          Rectangle {
+            height: root.pillHeight
+            width: 34
+            radius: 12
+            color: Qt.rgba(root.kubeAccent.r, root.kubeAccent.g, root.kubeAccent.b,
+                           kubeCommandsPillHover.containsMouse || root.kubeCommandsOpen ? 0.24 : 0.10)
+            border.width: 1
+            border.color: Qt.rgba(root.kubeAccent.r, root.kubeAccent.g, root.kubeAccent.b,
+                                  kubeCommandsPillHover.containsMouse || root.kubeCommandsOpen ? 0.75 : 0.35)
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
+
+            Text {
+              anchors.centerIn: parent
+              text: "󱃾"
+              color: root.kubeAccent
+              font.pixelSize: root.curIconSize + 1
+              font.family: root.font
+            }
+
+            MouseArea {
+              id: kubeCommandsPillHover
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: root.toggleHelperPanel("kube")
+            }
+          }
+
+          // Shell aliases cheat sheet
+          Rectangle {
+            height: root.pillHeight
+            width: 34
+            radius: 12
+            color: Qt.rgba(root.shellAliasAccent.r, root.shellAliasAccent.g, root.shellAliasAccent.b,
+                           shellAliasesPillHover.containsMouse || root.shellAliasesOpen ? 0.24 : 0.10)
+            border.width: 1
+            border.color: Qt.rgba(root.shellAliasAccent.r, root.shellAliasAccent.g, root.shellAliasAccent.b,
+                                  shellAliasesPillHover.containsMouse || root.shellAliasesOpen ? 0.75 : 0.35)
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
+
+            Text {
+              anchors.centerIn: parent
+              text: ""
+              color: root.shellAliasAccent
+              font.pixelSize: root.curIconSize + 1
+              font.family: root.font
+            }
+
+            MouseArea {
+              id: shellAliasesPillHover
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: root.toggleHelperPanel("aliases")
+            }
+          }
+
+              } // end expanded helpers
             } // end keybindingsGroup
           } // end keybinding cheat sheets
+          }
+
+          // Utilities: reference helpers and clipboard history.
+          Rectangle {
+            height: root.pillHeight + 4
+            width: utilityGroup.width + 16
+            radius: 14
+            color: Qt.rgba(root.theme.bgSurface.r, root.theme.bgSurface.g, root.theme.bgSurface.b, 0.5)
+            border.width: 1
+            border.color: root.theme.bgBorder
+
+            Row {
+              id: utilityGroup
+              anchors.centerIn: parent
+              spacing: 6
+
+              Loader { sourceComponent: keybindingHelpersComponent }
+              Loader { sourceComponent: clipboardPillComponent }
+            }
+          }
+
+          // Background application controls.
+          Loader { sourceComponent: trayComponent }
+
+          // Network connectivity: VPN and Wi-Fi.
+          Loader { sourceComponent: networkingGroupComponent }
+
+          // Headset/device and audio controls.
+          Rectangle {
+            height: root.pillHeight + 4
+            width: audioGroup.width + 16
+            radius: 14
+            color: Qt.rgba(root.theme.bgSurface.r, root.theme.bgSurface.g, root.theme.bgSurface.b, 0.5)
+            border.width: 1
+            border.color: root.theme.bgBorder
+
+            Row {
+              id: audioGroup
+              anchors.centerIn: parent
+              spacing: 6
+
+              Loader { sourceComponent: bluetoothPillComponent }
+              Loader { sourceComponent: volumePillComponent }
+            }
+          }
+
+          // General desktop status and administration at the far-right edge.
+          Rectangle {
+            height: root.pillHeight + 4
+            width: statusGroup.width + 16
+            radius: 14
+            color: Qt.rgba(root.theme.bgSurface.r, root.theme.bgSurface.g, root.theme.bgSurface.b, 0.5)
+            border.width: 1
+            border.color: root.theme.bgBorder
+
+            Row {
+              id: statusGroup
+              anchors.centerIn: parent
+              spacing: 6
+
+              Loader { sourceComponent: notificationPillComponent }
+              Loader { sourceComponent: systemPillComponent }
+            }
+          }
         }
       }
 
@@ -1257,77 +1725,80 @@ Scope {
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
       WlrLayershell.namespace: "quickshell-notif-history"
 
-      Keys.onEscapePressed: root.historyOpen = false
+      Shortcut { sequence: "Escape"; onActivated: panelCoordinator.close("notifications") }
 
       exclusionMode: ExclusionMode.Ignore
 
       anchors {
         top: true
+        bottom: true
+        left: true
         right: true
       }
-
-      implicitWidth: 400
-      implicitHeight: Math.min(historyColumn.implicitHeight + 120, 800)
 
       // Click outside to close
       MouseArea {
         anchors.fill: parent
-        onClicked: root.historyOpen = false
+        onClicked: panelCoordinator.close("notifications")
       }
 
       Rectangle {
+        id: historyPanel
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.topMargin: 54
         anchors.rightMargin: 10
-        width: 400
-        height: Math.min(historyColumn.implicitHeight + 64, 740)
+        width: 440
+        height: Math.min(historyPanelContent.implicitHeight + 40, 740)
         radius: 14
         color: Qt.rgba(root.theme.bgBase.r, root.theme.bgBase.g, root.theme.bgBase.b, 0.95)
         border.width: 1
         border.color: root.theme.bgBorder
         clip: true
 
+        // Consume unused panel space without dismissing the dropdown.
+        MouseArea {
+          anchors.fill: parent
+          onClicked: {}
+        }
+
         Column {
+          id: historyPanelContent
           anchors.top: parent.top
           anchors.left: parent.left
           anchors.right: parent.right
-          anchors.margins: 16
-          spacing: 12
+          anchors.margins: 20
+          spacing: 14
 
           // Header
-          Row {
+          RowLayout {
             width: parent.width
-            height: root.pillHeight
+            height: 34
+            spacing: 10
 
-            Row {
-              anchors.verticalCenter: parent.verticalCenter
-              spacing: 8
-
-              Text {
-                text: "󰂚"
-                color: root.theme.accentPrimary
-                font.pixelSize: root.curIconSize
-                font.family: root.font
-                anchors.verticalCenter: parent.verticalCenter
-              }
-
-              Text {
-                text: "Notifications"
-                color: root.theme.textPrimary
-                font.pixelSize: root.curTextSize
-                font.family: root.font
-                font.bold: true
-                anchors.verticalCenter: parent.verticalCenter
-              }
+            Text {
+              text: "󰂚"
+              color: root.theme.accentPrimary
+              font.pixelSize: root.curIconSize + 2
+              font.family: root.font
+              Layout.alignment: Qt.AlignVCenter
             }
 
-            Item { width: parent.width - 220; height: 1 }
+            Text {
+              text: "Notifications"
+              color: root.theme.textPrimary
+              font.pixelSize: root.curTextSize
+              font.family: root.font
+              font.bold: true
+              Layout.alignment: Qt.AlignVCenter
+            }
+
+            Item { Layout.fillWidth: true }
 
             Rectangle {
-              anchors.verticalCenter: parent.verticalCenter
-              width: 80
-              height: 28
+              Layout.preferredWidth: 82
+              Layout.preferredHeight: 28
+              Layout.alignment: Qt.AlignVCenter
               radius: 10
               color: clearHover.containsMouse ? root.theme.accentRed : root.theme.bgSurface
               border.width: 1
@@ -1354,7 +1825,7 @@ Scope {
                 onClicked: {
                   Notif.NotificationService.history = [];
                   Notif.NotificationService.unreadCount = 0;
-                  root.historyOpen = false;
+                  panelCoordinator.close("notifications");
                 }
               }
             }
@@ -1369,7 +1840,7 @@ Scope {
 
           Flickable {
             width: parent.width
-            height: Math.min(historyColumn.implicitHeight, 680)
+            height: Math.min(historyColumn.implicitHeight, 620)
             contentHeight: historyColumn.implicitHeight
             clip: true
             boundsMovement: Flickable.StopAtBounds
@@ -1377,7 +1848,7 @@ Scope {
             Column {
               id: historyColumn
               width: parent.width
-              spacing: 8
+              spacing: 10
 
               Text {
                 visible: Notif.NotificationService.history.length === 0
@@ -1397,7 +1868,7 @@ Scope {
                   id: historyCard
                   required property var modelData
                   width: historyColumn.width
-                  height: historyCardCol.implicitHeight + 20
+                  height: historyCardCol.implicitHeight + 28
                   radius: 10
                   color: cardHover.containsMouse ? root.theme.bgHover : root.theme.bgSurface
                   border.width: 1
@@ -1409,10 +1880,10 @@ Scope {
                   // Urgency accent bar
                   Rectangle {
                     width: 3
-                    height: parent.height - 12
+                    height: parent.height - 16
                     radius: 2
                     anchors.left: parent.left
-                    anchors.leftMargin: 6
+                    anchors.leftMargin: 7
                     anchors.verticalCenter: parent.verticalCenter
                     color: historyCard.modelData.urgency === 2 ? root.theme.accentRed :
                            historyCard.modelData.urgency === 0 ? root.theme.textMuted : root.theme.accentPrimary
@@ -1423,10 +1894,10 @@ Scope {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.top: parent.top
-                    anchors.leftMargin: 16
-                    anchors.rightMargin: 10
-                    anchors.topMargin: 10
-                    spacing: 4
+                    anchors.leftMargin: 20
+                    anchors.rightMargin: 14
+                    anchors.topMargin: 14
+                    spacing: 6
 
                     Text {
                       text: modelData.appName || "Notification"
@@ -1463,7 +1934,7 @@ Scope {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: root.historyOpen = false
+                    onClicked: panelCoordinator.close("notifications")
                   }
                 }
               }
@@ -1489,21 +1960,20 @@ Scope {
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
       WlrLayershell.namespace: "quickshell-clipboard"
 
-      Keys.onEscapePressed: root.clipboardOpen = false
+      Shortcut { sequence: "Escape"; onActivated: panelCoordinator.close("clipboard") }
 
       exclusionMode: ExclusionMode.Ignore
 
       anchors {
         top: true
+        bottom: true
+        left: true
         right: true
       }
 
-      implicitWidth: 420
-      implicitHeight: Math.min(clipColumn.implicitHeight + 120, 600)
-
       MouseArea {
         anchors.fill: parent
-        onClicked: root.clipboardOpen = false
+        onClicked: panelCoordinator.close("clipboard")
       }
 
       Rectangle {
@@ -1518,6 +1988,10 @@ Scope {
         border.width: 1
         border.color: root.theme.bgBorder
         clip: true
+
+        // Consume clicks inside the dropdown; the full-window MouseArea behind
+        // it closes the clipboard only when the click is outside this card.
+        MouseArea { anchors.fill: parent; onClicked: {} }
 
         Column {
           anchors.top: parent.top
@@ -1584,7 +2058,7 @@ Scope {
                 onClicked: {
                   clipWipeProc.running = true;
                   root.clipboardItems = [];
-                  root.clipboardOpen = false;
+                  panelCoordinator.close("clipboard");
                 }
               }
 
@@ -1665,7 +2139,7 @@ Scope {
                     onClicked: {
                       clipDecodeProc.command = ["sh", "-c", "echo '" + clipCard.modelData.raw.replace(/'/g, "'\\''") + "' | cliphist decode | wl-copy"];
                       clipDecodeProc.running = true;
-                      root.clipboardOpen = false;
+                      panelCoordinator.close("clipboard");
                     }
                   }
 
@@ -1697,7 +2171,7 @@ Scope {
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
       WlrLayershell.namespace: "quickshell-vpn"
 
-      Keys.onEscapePressed: root.vpnOpen = false
+      Shortcut { sequence: "Escape"; onActivated: panelCoordinator.close("vpn") }
       exclusionMode: ExclusionMode.Ignore
 
       anchors {
@@ -1709,7 +2183,7 @@ Scope {
 
       MouseArea {
         anchors.fill: parent
-        onClicked: root.vpnOpen = false
+        onClicked: panelCoordinator.close("vpn")
       }
 
       Rectangle {
@@ -1847,10 +2321,16 @@ Scope {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                      if (vpnConnCard.modelData.active)
+                      if (vpnConnCard.modelData.netbird) {
+                        if (vpnConnCard.modelData.active)
+                          root.netbirdDisconnect();
+                        else
+                          root.netbirdConnect();
+                      } else if (vpnConnCard.modelData.active) {
                         root.vpnDisconnect(vpnConnCard.modelData.name);
-                      else
+                      } else {
                         root.vpnConnect(vpnConnCard.modelData.name);
+                      }
                     }
                   }
                 }
@@ -1943,7 +2423,7 @@ Scope {
                   cursorShape: Qt.PointingHandCursor
                   onClicked: {
                     root.openAppgate();
-                    root.vpnOpen = false;
+                    panelCoordinator.close("vpn");
                   }
                 }
               }
@@ -1976,7 +2456,7 @@ Scope {
                   cursorShape: Qt.PointingHandCursor
                   onClicked: {
                     appgateCloseProc.running = true;
-                    root.vpnOpen = false;
+                    panelCoordinator.close("vpn");
                   }
                 }
               }
@@ -2009,7 +2489,7 @@ Scope {
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
       WlrLayershell.namespace: "quickshell-system"
 
-      Keys.onEscapePressed: root.systemOpen = false
+      Shortcut { sequence: "Escape"; onActivated: panelCoordinator.close("system") }
       exclusionMode: ExclusionMode.Ignore
 
       anchors {
@@ -2021,7 +2501,7 @@ Scope {
 
       MouseArea {
         anchors.fill: parent
-        onClicked: root.systemOpen = false
+        onClicked: panelCoordinator.close("system")
       }
 
       Rectangle {
@@ -2068,6 +2548,124 @@ Scope {
           }
 
           Rectangle { width: parent.width; height: 1; color: root.theme.bgBorder }
+
+          // Defined here and placed below the system statistics.
+          Component {
+            id: systemWeatherComponent
+
+            Column {
+            width: parent.width
+            spacing: 10
+
+            Row {
+              width: parent.width
+              spacing: 8
+
+              Text {
+                id: systemWeatherHeaderIcon
+                anchors.verticalCenter: parent.verticalCenter
+                text: root.weatherIcon
+                color: root.theme.accentCyan
+                font.pixelSize: 17
+                font.family: root.font
+              }
+
+              Text {
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width - systemWeatherHeaderIcon.width - parent.spacing
+                text: "Weather  •  " + root.weatherLocation
+                elide: Text.ElideRight
+                color: root.theme.textPrimary
+                font.pixelSize: 14
+                font.family: root.font
+                font.bold: true
+              }
+            }
+
+            Row {
+              width: parent.width
+              spacing: 12
+
+              Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: root.weatherIcon
+                color: root.theme.accentCyan
+                font.pixelSize: 36
+                font.family: root.font
+              }
+
+              Column {
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 2
+
+                Text {
+                  text: root.weatherTemp + "  " + root.weatherDesc
+                  color: root.theme.textPrimary
+                  font.pixelSize: 17
+                  font.family: root.font
+                  font.bold: true
+                }
+
+                Text {
+                  text: "Feels " + root.weatherFeelsLike + "  •  Humidity " + root.weatherHumidity + "  •  Wind " + root.weatherWind
+                  color: root.theme.textMuted
+                  font.pixelSize: 11
+                  font.family: root.font
+                }
+              }
+            }
+
+            Repeater {
+              model: root.weatherForecast
+
+              Rectangle {
+                required property var modelData
+                width: sysColumn.width
+                height: 30
+                radius: 7
+                color: root.theme.bgSurface
+
+                Row {
+                  anchors.fill: parent
+                  anchors.leftMargin: 10
+                  anchors.rightMargin: 10
+                  spacing: 8
+
+                  Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: {
+                      const parts = modelData.date.split("-");
+                      return parts.length === 3 ? parts[1] + "/" + parts[2] : modelData.date;
+                    }
+                    color: root.theme.textSecondary
+                    font.pixelSize: 11
+                    font.family: root.font
+                    width: 42
+                  }
+
+                  Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: modelData.desc
+                    color: root.theme.textPrimary
+                    font.pixelSize: 11
+                    font.family: root.font
+                    elide: Text.ElideRight
+                    width: parent.width - 142
+                  }
+
+                  Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: modelData.high + " / " + modelData.low
+                    color: root.theme.textPrimary
+                    font.pixelSize: 11
+                    font.family: root.font
+                    font.bold: true
+                  }
+                }
+              }
+            }
+          }
+          }
 
           // Battery section
           Column {
@@ -2145,14 +2743,14 @@ Scope {
 
           Rectangle { width: parent.width; height: 1; color: root.theme.bgBorder }
 
-          // Stats row: CPU + Temp
+          // Stats row: CPU + memory + temperature
           Row {
             width: parent.width
             spacing: 0
 
             // CPU
             Row {
-              width: parent.width / 2
+              width: parent.width / 3
               spacing: 8
 
               Text {
@@ -2181,9 +2779,40 @@ Scope {
               }
             }
 
+            // Memory
+            Row {
+              width: parent.width / 3
+              spacing: 8
+
+              Text {
+                text: "󰍛"
+                color: root.theme.accentCyan
+                font.pixelSize: 18
+                font.family: root.font
+                anchors.verticalCenter: parent.verticalCenter
+              }
+
+              Column {
+                anchors.verticalCenter: parent.verticalCenter
+                Text {
+                  text: "Memory"
+                  color: root.theme.textMuted
+                  font.pixelSize: 12
+                  font.family: root.font
+                }
+                Text {
+                  text: SystemInfo.memoryUsage
+                  color: root.theme.textPrimary
+                  font.pixelSize: 15
+                  font.family: root.font
+                  font.bold: true
+                }
+              }
+            }
+
             // Temperature
             Row {
-              width: parent.width / 2
+              width: parent.width / 3
               spacing: 8
 
               Text {
@@ -2286,218 +2915,13 @@ Scope {
               }
             }
           }
-        }
-      }
-    }
-  }
-
-  // Weather dropdown overlay
-  Variants {
-    model: root.weatherOpen && root.barScreen ? [root.barScreen] : []
-
-    PanelWindow {
-      required property var modelData
-      screen: modelData
-      visible: true
-      focusable: true
-      color: "transparent"
-
-      WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-      WlrLayershell.namespace: "quickshell-weather"
-
-      Keys.onEscapePressed: root.weatherOpen = false
-      exclusionMode: ExclusionMode.Ignore
-
-      anchors {
-        top: true
-        bottom: true
-        left: true
-        right: true
-      }
-
-      MouseArea {
-        anchors.fill: parent
-        onClicked: root.weatherOpen = false
-      }
-
-      Rectangle {
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.topMargin: 54
-        anchors.rightMargin: 10
-        width: 340
-        height: weatherColumn.implicitHeight + 40
-        radius: 14
-        color: Qt.rgba(root.theme.bgBase.r, root.theme.bgBase.g, root.theme.bgBase.b, 0.95)
-        border.width: 1
-        border.color: root.theme.bgBorder
-        clip: true
-
-        MouseArea { anchors.fill: parent; onClicked: {} }
-
-        Column {
-          id: weatherColumn
-          anchors.top: parent.top
-          anchors.left: parent.left
-          anchors.right: parent.right
-          anchors.margins: 20
-          spacing: 14
-
-          // Header
-          Row {
-            spacing: 8
-            Text {
-              text: root.weatherIcon
-              color: root.theme.accentCyan
-              font.pixelSize: root.curIconSize
-              font.family: root.font
-              anchors.verticalCenter: parent.verticalCenter
-            }
-            Text {
-              text: "Weather"
-              color: root.theme.textPrimary
-              font.pixelSize: root.curTextSize
-              font.family: root.font
-              font.bold: true
-              anchors.verticalCenter: parent.verticalCenter
-            }
-          }
 
           Rectangle { width: parent.width; height: 1; color: root.theme.bgBorder }
 
-          // Current conditions
-          Row {
+          // Weather summary and forecast
+          Loader {
             width: parent.width
-            spacing: 14
-
-            Text {
-              text: root.weatherIcon
-              color: root.theme.accentCyan
-              font.pixelSize: 42
-              font.family: root.font
-              anchors.verticalCenter: parent.verticalCenter
-            }
-
-            Column {
-              anchors.verticalCenter: parent.verticalCenter
-              spacing: 2
-
-              Text {
-                text: root.weatherTemp
-                color: root.theme.textPrimary
-                font.pixelSize: 28
-                font.family: root.font
-                font.bold: true
-              }
-
-              Text {
-                text: root.weatherDesc
-                color: root.theme.textSecondary
-                font.pixelSize: 13
-                font.family: root.font
-              }
-            }
-          }
-
-          // Details
-          Row {
-            width: parent.width
-            spacing: 0
-
-            Column {
-              width: parent.width / 2
-              spacing: 4
-              Row {
-                spacing: 6
-                Text { text: "Feels like"; color: root.theme.textMuted; font.pixelSize: 12; font.family: root.font }
-                Text { text: root.weatherFeelsLike; color: root.theme.textPrimary; font.pixelSize: 12; font.family: root.font; font.bold: true }
-              }
-              Row {
-                spacing: 6
-                Text { text: "Humidity"; color: root.theme.textMuted; font.pixelSize: 12; font.family: root.font }
-                Text { text: root.weatherHumidity; color: root.theme.textPrimary; font.pixelSize: 12; font.family: root.font; font.bold: true }
-              }
-            }
-
-            Column {
-              width: parent.width / 2
-              spacing: 4
-              Row {
-                spacing: 6
-                Text { text: "Wind"; color: root.theme.textMuted; font.pixelSize: 12; font.family: root.font }
-                Text { text: root.weatherWind; color: root.theme.textPrimary; font.pixelSize: 12; font.family: root.font; font.bold: true }
-              }
-            }
-          }
-
-          Rectangle { width: parent.width; height: 1; color: root.theme.bgBorder }
-
-          // Forecast
-          Column {
-            width: parent.width
-            spacing: 6
-
-            Text {
-              text: "Forecast"
-              color: root.theme.textMuted
-              font.pixelSize: 12
-              font.family: root.font
-              font.bold: true
-            }
-
-            Repeater {
-              model: root.weatherForecast
-
-              Rectangle {
-                required property var modelData
-                width: weatherColumn.width - 40
-                height: 36
-                radius: 8
-                color: root.theme.bgSurface
-
-                Row {
-                  anchors.fill: parent
-                  anchors.leftMargin: 10
-                  anchors.rightMargin: 10
-                  spacing: 8
-
-                  Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: {
-                      const parts = modelData.date.split("-");
-                      const d = parts.length === 3 ? parts[1] + "/" + parts[2] : modelData.date;
-                      return d;
-                    }
-                    color: root.theme.textSecondary
-                    font.pixelSize: 12
-                    font.family: root.font
-                    width: 40
-                  }
-
-                  Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: modelData.desc
-                    color: root.theme.textPrimary
-                    font.pixelSize: 12
-                    font.family: root.font
-                    elide: Text.ElideRight
-                    width: parent.width - 130
-                  }
-
-                  Item { width: 1; height: 1 }
-
-                  Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: modelData.high + " / " + modelData.low
-                    color: root.theme.textPrimary
-                    font.pixelSize: 12
-                    font.family: root.font
-                    font.bold: true
-                  }
-                }
-              }
-            }
+            sourceComponent: systemWeatherComponent
           }
         }
       }
@@ -2521,7 +2945,7 @@ Scope {
 
       exclusionMode: ExclusionMode.Ignore
 
-      Keys.onEscapePressed: root.volumeOpen = false
+      Shortcut { sequence: "Escape"; onActivated: panelCoordinator.close("volume") }
 
       anchors {
         top: true
@@ -2532,7 +2956,7 @@ Scope {
 
       MouseArea {
         anchors.fill: parent
-        onClicked: root.volumeOpen = false
+        onClicked: panelCoordinator.close("volume")
       }
 
       Rectangle {
@@ -2813,15 +3237,15 @@ Scope {
       color: "transparent"
 
       WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
       WlrLayershell.namespace: "quickshell-keybindings"
 
-      Keys.onEscapePressed: root.keysOpen = false
+      Shortcut { sequence: "Escape"; onActivated: root.closeHelperPanels() }
 
       exclusionMode: ExclusionMode.Ignore
+      implicitHeight: modelData.height - root.barHeight
 
       anchors {
-        top: true
         bottom: true
         left: true
         right: true
@@ -2829,13 +3253,13 @@ Scope {
 
       MouseArea {
         anchors.fill: parent
-        onClicked: root.keysOpen = false
+        onClicked: (mouse) => root.handleHelperOutsideClick(mouse.x, mouse.y)
       }
 
       Rectangle {
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.topMargin: 54
+        anchors.topMargin: 6
         anchors.rightMargin: 10
         width: 400
         height: Math.min(keysColumn.implicitHeight + 64, 640)
@@ -2973,6 +3397,182 @@ Scope {
     }
   }
 
+  // Shell aliases dropdown overlay
+  Variants {
+    model: root.shellAliasesOpen && root.barScreen ? [root.barScreen] : []
+
+    PanelWindow {
+      required property var modelData
+      screen: modelData
+      visible: true
+      focusable: true
+      color: "transparent"
+
+      WlrLayershell.layer: WlrLayer.Overlay
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+      WlrLayershell.namespace: "quickshell-shell-aliases"
+
+      Shortcut { sequence: "Escape"; onActivated: root.closeHelperPanels() }
+      exclusionMode: ExclusionMode.Ignore
+      implicitHeight: modelData.height - root.barHeight
+
+      anchors {
+        bottom: true
+        left: true
+        right: true
+      }
+
+      MouseArea {
+        anchors.fill: parent
+        onClicked: (mouse) => root.handleHelperOutsideClick(mouse.x, mouse.y)
+      }
+
+      Rectangle {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: 6
+        anchors.rightMargin: 10
+        width: 440
+        height: Math.min(shellAliasesColumn.implicitHeight + 64, 700)
+        radius: 14
+        color: Qt.rgba(root.theme.bgBase.r, root.theme.bgBase.g, root.theme.bgBase.b, 0.95)
+        border.width: 1
+        border.color: root.theme.bgBorder
+        clip: true
+
+        MouseArea { anchors.fill: parent; onClicked: {} }
+
+        Column {
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          anchors.margins: 16
+          spacing: 12
+
+          Row {
+            width: parent.width
+            height: root.pillHeight
+            spacing: 8
+
+            Text {
+              text: ""
+              color: root.shellAliasAccent
+              font.pixelSize: root.curIconSize + 2
+              font.family: root.font
+              anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+              text: "Shell Aliases"
+              color: root.theme.textPrimary
+              font.pixelSize: root.curTextSize
+              font.family: root.font
+              font.bold: true
+              anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+              text: "(~/.aliases)"
+              color: root.theme.textMuted
+              font.pixelSize: root.curSmallTextSize
+              font.family: root.font
+              anchors.verticalCenter: parent.verticalCenter
+            }
+          }
+
+          Rectangle {
+            width: parent.width
+            height: 1
+            color: root.theme.bgBorder
+          }
+
+          Flickable {
+            width: parent.width
+            height: Math.min(shellAliasesColumn.implicitHeight, 600)
+            contentHeight: shellAliasesColumn.implicitHeight
+            clip: true
+            boundsMovement: Flickable.StopAtBounds
+
+            Column {
+              id: shellAliasesColumn
+              width: parent.width
+              spacing: 16
+
+              Repeater {
+                model: root.shellAliases
+
+                Column {
+                  required property var modelData
+                  width: shellAliasesColumn.width
+                  spacing: 6
+
+                  Text {
+                    text: modelData.category
+                    color: root.shellAliasAccent
+                    font.pixelSize: root.curSmallTextSize
+                    font.family: root.font
+                    font.bold: true
+                  }
+
+                  Repeater {
+                    model: modelData.bindings
+
+                    Rectangle {
+                      required property var modelData
+                      width: shellAliasesColumn.width
+                      height: 32
+                      radius: 8
+                      property bool hovered: false
+                      color: hovered ? root.theme.bgHover : root.theme.bgSurface
+
+                      Behavior on color { ColorAnimation { duration: 100 } }
+
+                      Row {
+                        anchors.fill: parent
+                        anchors.leftMargin: 12
+                        anchors.rightMargin: 12
+                        spacing: 12
+
+                        Text {
+                          anchors.verticalCenter: parent.verticalCenter
+                          width: 105
+                          text: modelData.key
+                          color: root.shellAliasAccent
+                          font.pixelSize: 12
+                          font.family: root.font
+                          font.bold: true
+                          elide: Text.ElideRight
+                        }
+
+                        Text {
+                          anchors.verticalCenter: parent.verticalCenter
+                          width: parent.width - 117
+                          text: modelData.desc
+                          color: root.theme.textPrimary
+                          font.pixelSize: 13
+                          font.family: root.font
+                          elide: Text.ElideRight
+                        }
+                      }
+
+                      MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        acceptedButtons: Qt.NoButton
+                        onEntered: parent.hovered = true
+                        onExited: parent.hovered = false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   // Ghostty keybindings dropdown overlay
   Variants {
     model: root.ghosttyKeysOpen && root.barScreen ? [root.barScreen] : []
@@ -2985,14 +3585,14 @@ Scope {
       color: "transparent"
 
       WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
       WlrLayershell.namespace: "quickshell-ghostty-keybindings"
 
-      Keys.onEscapePressed: root.ghosttyKeysOpen = false
+      Shortcut { sequence: "Escape"; onActivated: root.closeHelperPanels() }
       exclusionMode: ExclusionMode.Ignore
+      implicitHeight: modelData.height - root.barHeight
 
       anchors {
-        top: true
         bottom: true
         left: true
         right: true
@@ -3000,13 +3600,13 @@ Scope {
 
       MouseArea {
         anchors.fill: parent
-        onClicked: root.ghosttyKeysOpen = false
+        onClicked: (mouse) => root.handleHelperOutsideClick(mouse.x, mouse.y)
       }
 
       Rectangle {
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.topMargin: 54
+        anchors.topMargin: 6
         anchors.rightMargin: 10
         width: 400
         height: Math.min(ghosttyKeysColumn.implicitHeight + 64, 640)
@@ -3158,14 +3758,14 @@ Scope {
       color: "transparent"
 
       WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
       WlrLayershell.namespace: "quickshell-tmux-keybindings"
 
-      Keys.onEscapePressed: root.tmuxKeysOpen = false
+      Shortcut { sequence: "Escape"; onActivated: root.closeHelperPanels() }
       exclusionMode: ExclusionMode.Ignore
+      implicitHeight: modelData.height - root.barHeight
 
       anchors {
-        top: true
         bottom: true
         left: true
         right: true
@@ -3173,13 +3773,13 @@ Scope {
 
       MouseArea {
         anchors.fill: parent
-        onClicked: root.tmuxKeysOpen = false
+        onClicked: (mouse) => root.handleHelperOutsideClick(mouse.x, mouse.y)
       }
 
       Rectangle {
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.topMargin: 54
+        anchors.topMargin: 6
         anchors.rightMargin: 10
         width: 400
         height: Math.min(tmuxKeysColumn.implicitHeight + 64, 640)
@@ -3333,15 +3933,15 @@ Scope {
       color: "transparent"
 
       WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
       WlrLayershell.namespace: "quickshell-nvim-keybindings"
 
-      Keys.onEscapePressed: root.nvimKeysOpen = false
+      Shortcut { sequence: "Escape"; onActivated: root.closeHelperPanels() }
 
       exclusionMode: ExclusionMode.Ignore
+      implicitHeight: modelData.height - root.barHeight
 
       anchors {
-        top: true
         bottom: true
         left: true
         right: true
@@ -3349,13 +3949,13 @@ Scope {
 
       MouseArea {
         anchors.fill: parent
-        onClicked: root.nvimKeysOpen = false
+        onClicked: (mouse) => root.handleHelperOutsideClick(mouse.x, mouse.y)
       }
 
       Rectangle {
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.topMargin: 54
+        anchors.topMargin: 6
         anchors.rightMargin: 10
         width: 400
         height: Math.min(nvimKeysColumn.implicitHeight + 64, 640)

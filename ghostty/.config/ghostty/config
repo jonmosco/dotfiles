@@ -1,4 +1,5 @@
 theme = dracula-pro
+#theme = Rose Pine
 font-family = Hack Nerd Font Mono
 font-size = 14
 gtk-single-instance = true

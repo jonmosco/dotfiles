@@ -8,12 +8,12 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import "bar"
-import "app-launcher"
+import "appLauncher"
 import "notifications"
-import "theme-switcher"
+import "themeSwitcher"
 import "wallpaper"
 import "osd"
-import "monitor-manager"
+import "monitorManager"
 
 Scope {
   ThemeSwitcher { id: ts }

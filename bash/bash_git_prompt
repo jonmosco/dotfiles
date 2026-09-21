@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Configuration for magicmonty/bash-git-prompt.
+# The upstream checkout supplies status collection and rendering; the existing
+# ~/.bash_prompt supplies everything before and after the Git segment.
+
+BASH_GIT_PROMPT_DIR="${HOME}/.bash-git-prompt"
+
+if [[ -r "${BASH_GIT_PROMPT_DIR}/gitprompt.sh" ]]; then
+  __GIT_PROMPT_DIR="${BASH_GIT_PROMPT_DIR}"
+  GIT_PROMPT_THEME="Default"
+
+  # Use local tracking refs without performing background network fetches.
+  GIT_PROMPT_FETCH_REMOTE_STATUS=0
+  GIT_PROMPT_SHOW_UPSTREAM=0
+
+  # Show exact staged, conflicted, changed, untracked, and stash counts.
+  GIT_PROMPT_SHOW_CHANGED_FILES_COUNT=1
+  GIT_PROMPT_SHOW_UNTRACKED_FILES="normal"
+  GIT_PROMPT_IGNORE_SUBMODULES=0
+
+  # Preserve the existing custom prompt around bash-git-prompt's Git status.
+  GIT_PROMPT_WITH_VIRTUAL_ENV=0
+  GIT_PROMPT_START="${PS1}"
+  GIT_PROMPT_END="${BASH_PROMPT_SUFFIX}"
+  GIT_PROMPT_LEADING_SPACE=1
+  GIT_PROMPT_PREFIX=" "
+  GIT_PROMPT_SUFFIX=""
+  GIT_PROMPT_SEPARATOR=" "
+
+  # shellcheck disable=SC1090
+  source "${BASH_GIT_PROMPT_DIR}/gitprompt.sh"
+else
+  PS1+="${BASH_PROMPT_SUFFIX}"
+fi

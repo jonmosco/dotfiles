@@ -51,7 +51,10 @@ Scope {
   }
 
   function launchApp(entry) {
-    entry.execute();
+    // Keep applications out of quickshell.service's cgroup. gtk-launch
+    // preserves the desktop entry's startup and terminal semantics while
+    // UWSM gives the application its own graphical scope.
+    Quickshell.execDetached(["uwsm", "app", "--", "gtk-launch", entry.id]);
     launcherPanel.visible = false;
   }
 

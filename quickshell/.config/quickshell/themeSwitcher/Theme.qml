@@ -121,7 +121,7 @@ Singleton {
         if (!wallpaperFeatureEnabled)
             return;
         if (img && img.length > 0) {
-            generateProc.command = ["sh", Quickshell.env("HOME") + "/.config/quickshell/theme-switcher/wallpaper-theme/set.sh", img];
+            generateProc.command = ["sh", Quickshell.env("HOME") + "/.config/quickshell/themeSwitcher/wallpaper-theme/set.sh", img];
             generateProc.running = true;
         }
         setWallpaperMode();
@@ -236,7 +236,7 @@ Singleton {
     // wallpaper (and a fresh wallpaper-theme.json) repaints the shell instantly.
     FileView {
         id: wallpaperThemeFile
-        path: Quickshell.env("HOME") + "/.config/quickshell/theme-switcher/wallpaper-theme.json"
+        path: Quickshell.env("HOME") + "/.config/quickshell/themeSwitcher/wallpaper-theme.json"
         watchChanges: true
 
         // True only for live, on-disk rewrites (set.sh executed) — not the initial
@@ -264,7 +264,7 @@ Singleton {
 
     FileView {
         id: themesFile
-        path: Quickshell.env("HOME") + "/.config/quickshell/theme-switcher/themes.json"
+        path: Quickshell.env("HOME") + "/.config/quickshell/themeSwitcher/themes.json"
         onTextChanged: {
             const raw = themesFile.text();
             if (!raw) return;

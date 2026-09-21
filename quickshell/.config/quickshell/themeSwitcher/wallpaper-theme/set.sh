@@ -12,7 +12,7 @@
 # This script is the lower-level entry point if you only want to refresh the
 # palette without changing mode (e.g. a wallpaper-daemon hook). For awws:
 #     [daemon]
-#     on_change = "~/.config/quickshell/theme-switcher/wallpaper-theme/set.sh %w"
+#     on_change = "~/.config/quickshell/themeSwitcher/wallpaper-theme/set.sh %w"
 #
 # Force a specific tool with WALLPAPER_THEME_TOOL=matugen|wallust (default: auto).
 set -eu

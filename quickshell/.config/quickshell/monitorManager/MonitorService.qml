@@ -114,7 +114,8 @@ Singleton {
   Process {
     id: sourceCheck
     command: ["sh", "-c",
-      "grep -q 'source.*monitors\\.conf' \"$HOME/.config/hypr/hyprland.conf\" && echo yes || echo no"]
+      "config=\"$HOME/.config/hypr/hyprland.conf\"; " +
+      "if [ -f \"$config\" ] && grep -q 'source.*monitors\\.conf' \"$config\"; then echo yes; else echo no; fi"]
     running: true
     stdout: StdioCollector {
       onStreamFinished: {

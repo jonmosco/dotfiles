@@ -21,6 +21,84 @@ fi
 # Fat finger mistakes
 alias valut='vault'
 
+# Select a shared AppSRE Vault and authenticate through OIDC. This is a
+# function (rather than a subprocess) so VAULT_ADDR remains set in this shell.
+vlogin() {
+  local target=${1:-}
+
+  if [[ -z "$target" ]]; then
+    local choices=(
+      commercial-stage
+      commercial-prod
+      fedramp-stage
+      fedramp-prod
+    )
+
+    if command -v fzf &>/dev/null; then
+      target=$(printf '%s\n' "${choices[@]}" | fzf \
+        --height=40% --layout=reverse --border \
+        --prompt='Vault environment> ')
+      [[ -n "$target" ]] || return 130
+    else
+      local PS3='Vault environment (blank to cancel): '
+      select target in "${choices[@]}"; do
+        [[ -n "$target" ]] && break
+        return 130
+      done
+    fi
+  fi
+
+  local chrome_profile
+  case "$target" in
+    commercial-stage|cs)
+      export VAULT_ADDR=https://vault.stage.devshift.net
+      chrome_profile='Profile 1'
+      ;;
+    commercial-prod|cp)
+      export VAULT_ADDR=https://vault.devshift.net
+      chrome_profile='Profile 1'
+      ;;
+    fedramp-stage|fs)
+      export VAULT_ADDR=https://vault.stage.appsre.devshiftusgov.com
+      chrome_profile='Profile 3'
+      ;;
+    fedramp-prod|fp)
+      export VAULT_ADDR=https://vault.appsre.devshiftusgov.com
+      chrome_profile='Profile 3'
+      ;;
+    *)
+      printf 'Usage: vlogin {commercial-stage|commercial-prod|fedramp-stage|fedramp-prod}\n' >&2
+      return 2
+      ;;
+  esac
+
+  # Vault's OIDC plugin calls xdg-open directly and ignores $BROWSER. Put a
+  # private xdg-open shim first in PATH for this login only, so Chrome receives
+  # the profile directory along with the authorization URL.
+  local launcher_dir launcher_status
+  launcher_dir=$(mktemp -d "${XDG_RUNTIME_DIR:-/tmp}/vault-browser.XXXXXX") || return
+  cat >"$launcher_dir/xdg-open" <<'EOF'
+#!/bin/sh
+exec /opt/google/chrome/google-chrome \
+  --profile-directory="$VAULT_CHROME_PROFILE" "$@"
+EOF
+  chmod 700 "$launcher_dir/xdg-open"
+
+  printf 'Logging into %s with Chrome profile %s\n' "$VAULT_ADDR" "$chrome_profile"
+  VAULT_CHROME_PROFILE="$chrome_profile" \
+    PATH="$launcher_dir:$PATH" \
+    command vault login -method=oidc
+  launcher_status=$?
+
+  rm -rf "$launcher_dir"
+  return "$launcher_status"
+}
+
+alias vcs='vlogin commercial-stage'
+alias vcp='vlogin commercial-prod'
+alias vfs='vlogin fedramp-stage'
+alias vfp='vlogin fedramp-prod'
+
 # kubectl aliases
 alias k='kubectl'
 alias ka='kubectl apply -f'

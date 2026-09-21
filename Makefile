@@ -5,7 +5,7 @@ XDG_CONFIG_HOME ?= $(HOME)/.config
 
 # Active packages stowed on Linux. Desktop WM configs (sway, i3, alacritty, wofi)
 # live under legacy/ and are not deployed.
-STOW_PACKAGES = bash git tmux nvim bin systemd gnupg ghostty hyprland quickshell
+STOW_PACKAGES = bash git tmux nvim bin systemd gnupg ghostty chrome hyprland quickshell autostart uwsm
 
 .PHONY: clean vim shell stow unstow linux check links restow-desktop
 
@@ -28,6 +28,7 @@ shell:
 	mkdir -p $(HOME)/.third_party
 	git clone https://github.com/olivierverdier/zsh-git-prompt.git ${HOME}/.third_party/zsh-git-prompt
 	git clone https://github.com/jonmosco/kube-ps1.git ${HOME}/.third_party/kube-ps1
+	test -d ${HOME}/.bash-git-prompt/.git || git clone --depth=1 https://github.com/magicmonty/bash-git-prompt.git ${HOME}/.bash-git-prompt
 
 stow: links restow-desktop
 	stow --verbose --target=$$HOME --restow $(STOW_PACKAGES)
@@ -51,3 +52,4 @@ links:
 	ln -sf $(CURDIR)/.path $(HOME)/.path
 	ln -sf $(CURDIR)/exports $(HOME)/.exports
 	ln -sf $(CURDIR)/aliases $(HOME)/.aliases
+	ln -sf $(CURDIR)/bash/bash_git_prompt $(HOME)/.bash_git_prompt

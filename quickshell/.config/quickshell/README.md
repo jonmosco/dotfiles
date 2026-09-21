@@ -85,11 +85,11 @@ qs ipc call bar toggle
 
 a rofi drun-style launcher overlay. searches by name, description, keywords, and categories. keyboard navigation with arrow keys, enter, and escape.
 
-1. copy `app-launcher/` into your quickshell config directory
+1. copy `appLauncher/` into your quickshell config directory
 2. in your `shell.qml`, add:
 
 ```qml
-import "app-launcher"
+import "appLauncher"
 
 AppLauncher {}
 ```
@@ -154,11 +154,11 @@ a theme picker overlay with 206 themes across 6 families. selected theme persist
 
 **extra dependencies:** `gnome-themes-extra`
 
-1. copy `theme-switcher/` into your quickshell config directory
+1. copy `themeSwitcher/` into your quickshell config directory
 2. in your `shell.qml`, create the switcher and wire its theme into other modules:
 
 ```qml
-import "theme-switcher"
+import "themeSwitcher"
 
 ThemeSwitcher {
     id: ts
@@ -232,11 +232,11 @@ bind = SUPER, W, exec, qs ipc call wallpaper toggle
 
 an ARandR-style visual monitor editor for Hyprland. it queries `hyprctl -j monitors all`, draws the current layout, and lets you adjust resolution, scale, rotation, position, mirroring, and enabled state before applying a batched `hyprctl keyword monitor ...` layout. persists across reboots to `~/.config/hypr/monitors.conf`.
 
-1. copy `monitor-manager/` into your quickshell config directory
+1. copy `monitorManager/` into your quickshell config directory
 2. in your `shell.qml`, add:
 
 ```qml
-import "monitor-manager"
+import "monitorManager"
 
 MonitorManager {}
 ```
@@ -260,7 +260,7 @@ features:
 
 ## tweaking
 
-- **colors** — all colors live in `theme-switcher/Theme.qml`. pick a theme via the switcher, or add your own by appending to the `themes` array.
+- **colors** — all colors live in `themeSwitcher/Theme.qml`. pick a theme via the switcher, or add your own by appending to the `themes` array.
 - **font** — edit the default `font: "Your Font"` at the top of the entry file.   
 - **layout** — rearrange widgets in `bar/Bar.qml`.
 - **polling rate** — change the interval in `bar/SystemInfo.qml` (default 2s).

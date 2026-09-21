@@ -4,5 +4,5 @@
 [config]
 
 [templates.quickshell]
-input_path = '~/.config/quickshell/theme-switcher/wallpaper-theme/matugen/template.json'
-output_path = '~/.config/quickshell/theme-switcher/wallpaper-theme.json'
+input_path = '~/.config/quickshell/themeSwitcher/wallpaper-theme/matugen/template.json'
+output_path = '~/.config/quickshell/themeSwitcher/wallpaper-theme.json'
