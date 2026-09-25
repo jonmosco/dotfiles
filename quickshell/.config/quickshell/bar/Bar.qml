@@ -39,6 +39,12 @@ Scope {
   property bool kubeCommandsOpen: false
   property var kubeCommands: []
   readonly property color kubeAccent: "#326ce5"
+  property bool codexCommandsOpen: false
+  property var codexCommands: []
+  readonly property color codexAccent: "#10a37f"
+  property bool claudeCommandsOpen: false
+  property var claudeCommands: []
+  readonly property color claudeAccent: "#d97757"
   property bool helpersPinned: false
   readonly property bool systemOpen: panelCoordinator.isOpen("system")
   readonly property bool vpnOpen: panelCoordinator.isOpen("vpn")
@@ -96,6 +102,8 @@ Scope {
     root.tmuxKeysOpen = false;
     root.ghosttyKeysOpen = false;
     root.kubeCommandsOpen = false;
+    root.codexCommandsOpen = false;
+    root.claudeCommandsOpen = false;
     root.shellAliasesOpen = false;
     root.helpersPinned = false;
   }
@@ -111,6 +119,8 @@ Scope {
     root.tmuxKeysOpen = false;
     root.ghosttyKeysOpen = false;
     root.kubeCommandsOpen = false;
+    root.codexCommandsOpen = false;
+    root.claudeCommandsOpen = false;
     root.shellAliasesOpen = false;
     root.helpersPinned = true;
 
@@ -119,6 +129,8 @@ Scope {
     else if (name === "tmux") root.tmuxKeysOpen = true;
     else if (name === "ghostty") root.ghosttyKeysOpen = true;
     else if (name === "kube") root.kubeCommandsOpen = true;
+    else if (name === "codex") root.codexCommandsOpen = true;
+    else if (name === "claude") root.claudeCommandsOpen = true;
     else if (name === "aliases") root.shellAliasesOpen = true;
   }
 
@@ -184,6 +196,40 @@ Scope {
     onCloseRequested: root.closeHelperPanels()
   }
 
+  CommandListPanel {
+    open: root.codexCommandsOpen
+    barScreen: root.barScreen
+    commands: root.codexCommands
+    theme: root.theme
+    font: root.font
+    title: "Codex CLI & Slash Commands"
+    subtitle: "(codex / …)"
+    icon: "󰚩"
+    accent: root.codexAccent
+    iconSize: root.curIconSize
+    textSize: root.curTextSize
+    smallTextSize: root.curSmallTextSize
+    barHeight: root.barHeight
+    onCloseRequested: root.closeHelperPanels()
+  }
+
+  CommandListPanel {
+    open: root.claudeCommandsOpen
+    barScreen: root.barScreen
+    commands: root.claudeCommands
+    theme: root.theme
+    font: root.font
+    title: "Claude Code CLI & Slash Commands"
+    subtitle: "(claude / …)"
+    icon: "✦"
+    accent: root.claudeAccent
+    iconSize: root.curIconSize
+    textSize: root.curTextSize
+    smallTextSize: root.curSmallTextSize
+    barHeight: root.barHeight
+    onCloseRequested: root.closeHelperPanels()
+  }
+
   // MPRIS active player
   property var activePlayer: {
     const players = Mpris.players.values;
@@ -197,6 +243,7 @@ Scope {
   IpcHandler {
     target: "bar"
     function toggle(): void { root.barVisible = !root.barVisible; }
+    function volume_toggle(): void { root.toggleDropdown("volume"); }
     function clipboard_toggle(): void {
       if (!root.clipboardOpen) {
         root.closeBarDropdowns();
@@ -219,6 +266,8 @@ Scope {
     function ghostty_keys_toggle(): void { root.toggleHelperPanel("ghostty"); }
     function shell_aliases_toggle(): void { root.toggleHelperPanel("aliases"); }
     function kube_commands_toggle(): void { root.toggleHelperPanel("kube"); }
+    function codex_commands_toggle(): void { root.toggleHelperPanel("codex"); }
+    function claude_commands_toggle(): void { root.toggleHelperPanel("claude"); }
     function helpers_close(): void { root.closeHelperPanels(); }
   }
 
@@ -312,6 +361,36 @@ Scope {
     }
   }
 
+  FileView {
+    id: codexCommandsFile
+    path: Quickshell.env("HOME") + "/.config/quickshell/codex-commands.json"
+    watchChanges: true
+    onTextChanged: {
+      const raw = codexCommandsFile.text();
+      if (!raw) return;
+      try {
+        root.codexCommands = JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse codex-commands.json:", e);
+      }
+    }
+  }
+
+  FileView {
+    id: claudeCommandsFile
+    path: Quickshell.env("HOME") + "/.config/quickshell/claude-commands.json"
+    watchChanges: true
+    onTextChanged: {
+      const raw = claudeCommandsFile.text();
+      if (!raw) return;
+      try {
+        root.claudeCommands = JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse claude-commands.json:", e);
+      }
+    }
+  }
+
   Process {
     id: clipListIpcProc
     command: ["cliphist", "list"]
@@ -336,8 +415,82 @@ Scope {
     }
   }
 
+  readonly property var outputSinks: {
+    const nodes = Pipewire.nodes ? Pipewire.nodes.values : [];
+    const sinks = [];
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+      if (node && node.isSink && !node.isStream) sinks.push(node);
+    }
+    return sinks;
+  }
+
+  // Keep the default output plus every currently connected Bluetooth output.
+  // Bluetooth sink nodes exist only while their devices are connected, avoiding
+  // a list full of inactive HDMI and dock profiles.
+  readonly property var connectedOutputSinks: {
+    const result = [];
+    const defaultSink = Pipewire.defaultAudioSink;
+    if (defaultSink) result.push(defaultSink);
+    for (let i = 0; i < outputSinks.length; i++) {
+      const node = outputSinks[i];
+      const name = String(node.name || "");
+      if (name.startsWith("bluez_output.") && node !== defaultSink) result.push(node);
+    }
+    return result;
+  }
+
   PwObjectTracker {
-    objects: [Pipewire.defaultAudioSink]
+    objects: root.outputSinks
+  }
+
+  // Quickshell's PipeWire volume setter does not currently commit changes on
+  // this system, so serialize writes through wpctl while retaining the native
+  // PipeWire model for live state and device updates.
+  property real pendingOutputVolume: 0
+  property string pendingOutputTarget: "@DEFAULT_AUDIO_SINK@"
+  property bool outputVolumePending: false
+
+  function requestOutputVolume(value, target) {
+    pendingOutputVolume = Math.max(0, Math.min(1, value));
+    pendingOutputTarget = target === undefined || target === null
+                          ? "@DEFAULT_AUDIO_SINK@" : String(target);
+    outputVolumePending = true;
+    if (!outputVolumeSetProc.running) outputVolumeFlushTimer.restart();
+  }
+
+  function flushOutputVolume() {
+    if (!outputVolumePending || outputVolumeSetProc.running) return;
+    outputVolumeSetProc.command = ["wpctl", "set-volume", pendingOutputTarget,
+                                   pendingOutputVolume.toFixed(4)];
+    outputVolumePending = false;
+    outputVolumeSetProc.running = true;
+  }
+
+  function toggleOutputMute(target) {
+    const output = target === undefined || target === null
+                   ? "@DEFAULT_AUDIO_SINK@" : String(target);
+    Quickshell.execDetached(["wpctl", "set-mute", output, "toggle"]);
+  }
+
+  function unmuteOutput(target) {
+    const output = target === undefined || target === null
+                   ? "@DEFAULT_AUDIO_SINK@" : String(target);
+    Quickshell.execDetached(["wpctl", "set-mute", output, "0"]);
+  }
+
+  Timer {
+    id: outputVolumeFlushTimer
+    interval: 1
+    onTriggered: root.flushOutputVolume()
+  }
+
+  Process {
+    id: outputVolumeSetProc
+    running: false
+    onExited: function(code) {
+      if (root.outputVolumePending) outputVolumeFlushTimer.restart();
+    }
   }
 
   // Brightness state
@@ -820,7 +973,7 @@ Scope {
               onClicked: (mouse) => {
                 if (mouse.button === Qt.RightButton) {
                   const sink = Pipewire.defaultAudioSink;
-                  if (sink && sink.audio) sink.audio.muted = !sink.audio.muted;
+                  if (sink && sink.audio) root.toggleOutputMute();
                 } else {
                   const position = volumePill.mapToItem(null, 0, 0);
                   root.volumeAnchorCenterX = position.x + volumePill.width / 2;
@@ -831,7 +984,7 @@ Scope {
                 const sink = Pipewire.defaultAudioSink;
                 if (!sink || !sink.audio) return;
                 const delta = wheel.angleDelta.y > 0 ? 0.05 : -0.05;
-                sink.audio.volume = Math.max(0, Math.min(1.5, sink.audio.volume + delta));
+                root.requestOutputVolume(Math.max(0, Math.min(1, sink.audio.volume + delta)));
               }
             }
           }
@@ -1353,6 +1506,8 @@ Scope {
                                     || root.tmuxKeysOpen
                                     || root.ghosttyKeysOpen
                                     || root.kubeCommandsOpen
+                                    || root.codexCommandsOpen
+                                    || root.claudeCommandsOpen
                                     || root.shellAliasesOpen
             height: root.pillHeight + 4
             width: keybindingsGroup.width + 12
@@ -1572,6 +1727,69 @@ Scope {
               hoverEnabled: true
               cursorShape: Qt.PointingHandCursor
               onClicked: root.toggleHelperPanel("ghostty")
+            }
+          }
+
+          // Codex CLI command reference
+          Rectangle {
+            height: root.pillHeight
+            width: 34
+            radius: 12
+            color: Qt.rgba(root.codexAccent.r, root.codexAccent.g, root.codexAccent.b,
+                           codexCommandsPillHover.containsMouse || root.codexCommandsOpen ? 0.24 : 0.10)
+            border.width: 1
+            border.color: Qt.rgba(root.codexAccent.r, root.codexAccent.g, root.codexAccent.b,
+                                  codexCommandsPillHover.containsMouse || root.codexCommandsOpen ? 0.75 : 0.35)
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
+
+            Text {
+              anchors.centerIn: parent
+              text: "󰚩"
+              color: root.codexAccent
+              font.pixelSize: root.curIconSize + 1
+              font.family: root.font
+            }
+
+            MouseArea {
+              id: codexCommandsPillHover
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: root.toggleHelperPanel("codex")
+            }
+          }
+
+          // Claude Code CLI and slash-command reference
+          Rectangle {
+            height: root.pillHeight
+            width: 34
+            radius: 12
+            color: Qt.rgba(root.claudeAccent.r, root.claudeAccent.g, root.claudeAccent.b,
+                           claudeCommandsPillHover.containsMouse || root.claudeCommandsOpen ? 0.24 : 0.10)
+            border.width: 1
+            border.color: Qt.rgba(root.claudeAccent.r, root.claudeAccent.g, root.claudeAccent.b,
+                                  claudeCommandsPillHover.containsMouse || root.claudeCommandsOpen ? 0.75 : 0.35)
+
+            Behavior on color { ColorAnimation { duration: 150 } }
+            Behavior on border.color { ColorAnimation { duration: 150 } }
+
+            Text {
+              anchors.centerIn: parent
+              text: "✦"
+              color: root.claudeAccent
+              font.pixelSize: root.curIconSize + 2
+              font.family: root.font
+              font.bold: true
+            }
+
+            MouseArea {
+              id: claudeCommandsPillHover
+              anchors.fill: parent
+              hoverEnabled: true
+              cursorShape: Qt.PointingHandCursor
+              onClicked: root.toggleHelperPanel("claude")
             }
           }
 
@@ -3036,187 +3254,47 @@ Scope {
 
           Column {
             width: parent.width
-            spacing: 8
+            spacing: 14
 
             Text {
-              width: parent.width
-              text: {
-                const sink = Pipewire.defaultAudioSink;
-                if (!sink) return "No audio output selected";
-                return "Adjusting: " + (sink.description || sink.nickname || sink.name || "Unknown output");
-              }
-              color: root.theme.textSecondary
+              visible: root.connectedOutputSinks.length === 0
+              text: "No connected audio outputs"
+              color: root.theme.textMuted
               font.pixelSize: 12
               font.family: root.font
-              elide: Text.ElideRight
             }
 
-            Row {
-              width: parent.width
-              height: 34
-              spacing: 12
+            Repeater {
+              model: root.connectedOutputSinks
 
-              Rectangle {
-                anchors.verticalCenter: parent.verticalCenter
-                width: 30
-                height: 30
-                radius: 9
-                color: volumeMuteHover.containsMouse ? root.theme.bgHover : root.theme.bgSurface
-                border.width: 1
-                border.color: root.theme.bgBorder
+              Column {
+                required property var modelData
+                required property int index
+                width: parent.width
+                spacing: 14
 
-                Text {
-                  anchors.centerIn: parent
-                  text: {
-                    const sink = Pipewire.defaultAudioSink;
-                    return !sink || !sink.audio || sink.audio.muted ? "󰖁" : "󰕾";
+                OutputDeviceSlider {
+                  width: parent.width
+                  node: modelData
+                  theme: root.theme
+                  font: root.font
+                  iconSize: root.curIconSize
+                  textSize: root.curTextSize
+                  isDefault: modelData === Pipewire.defaultAudioSink
+                  onVolumeRequested: function(value) {
+                    root.requestOutputVolume(value, modelData.id);
+                    if (modelData.audio && modelData.audio.muted && value > 0)
+                      root.unmuteOutput(modelData.id);
                   }
-                  color: {
-                    const sink = Pipewire.defaultAudioSink;
-                    return !sink || !sink.audio || sink.audio.muted ? root.theme.textMuted : root.theme.accentPrimary;
-                  }
-                  font.pixelSize: root.curIconSize
-                  font.family: root.font
-                }
-
-                MouseArea {
-                  id: volumeMuteHover
-                  anchors.fill: parent
-                  enabled: Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio
-                  hoverEnabled: true
-                  cursorShape: Qt.PointingHandCursor
-                  onClicked: {
-                    const sink = Pipewire.defaultAudioSink;
-                    if (sink && sink.audio) sink.audio.muted = !sink.audio.muted;
-                  }
-                }
-              }
-
-              // Use an explicit pointer-driven slider rather than Controls.Slider.
-              // This follows Omarchy's PanelSlider approach and ensures the full
-              // track receives clicks, drags, and wheel events in a layer window.
-              Item {
-                id: volDropSlider
-                anchors.verticalCenter: parent.verticalCenter
-                width: 260
-                height: 34
-                enabled: !!(Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio)
-
-                readonly property real sinkValue: {
-                  const sink = Pipewire.defaultAudioSink;
-                  return sink && sink.audio ? sink.audio.volume : 0;
-                }
-                property real liveValue: sinkValue
-                property bool dragging: false
-                readonly property real progress: Math.max(0, Math.min(1, liveValue))
-
-                onSinkValueChanged: if (!dragging) liveValue = sinkValue
-
-                function volumeFromX(x): real {
-                  return Math.max(0, Math.min(1, x / width));
-                }
-
-                function setVolume(value): void {
-                  liveValue = value;
-                  const sink = Pipewire.defaultAudioSink;
-                  if (sink && sink.audio) {
-                    sink.audio.volume = value;
-                    if (sink.audio.muted && value > 0) sink.audio.muted = false;
-                  }
+                  onMuteRequested: root.toggleOutputMute(modelData.id)
                 }
 
                 Rectangle {
-                  id: volumeTrack
-                  anchors.left: parent.left
-                  anchors.right: parent.right
-                  anchors.verticalCenter: parent.verticalCenter
-                  height: 7
-                  radius: 4
+                  visible: index < root.connectedOutputSinks.length - 1
+                  width: parent.width
+                  height: 1
                   color: root.theme.bgBorder
                 }
-
-                Rectangle {
-                  anchors.left: volumeTrack.left
-                  anchors.verticalCenter: volumeTrack.verticalCenter
-                  width: volumeTrack.width * volDropSlider.progress
-                  height: volumeTrack.height
-                  radius: volumeTrack.radius
-                  color: root.theme.accentPrimary
-
-                  Behavior on width {
-                    enabled: !volDropSlider.dragging
-                    NumberAnimation { duration: 100; easing.type: Easing.OutCubic }
-                  }
-                }
-
-                Rectangle {
-                  width: 18
-                  height: 18
-                  radius: 9
-                  anchors.verticalCenter: volumeTrack.verticalCenter
-                  x: Math.max(0, Math.min(volumeTrack.width - width,
-                                          volumeTrack.width * volDropSlider.progress - width / 2))
-                  color: volumeSliderMouse.pressed ? root.theme.accentCyan : root.theme.accentPrimary
-                  border.width: 2
-                  border.color: root.theme.bgBase
-                  scale: volumeSliderMouse.containsMouse || volDropSlider.dragging ? 1.12 : 1
-
-                  Behavior on x {
-                    enabled: !volDropSlider.dragging
-                    NumberAnimation { duration: 100; easing.type: Easing.OutCubic }
-                  }
-                  Behavior on scale { NumberAnimation { duration: 100 } }
-                }
-
-                MouseArea {
-                  id: volumeSliderMouse
-                  anchors.fill: parent
-                  z: 10
-                  hoverEnabled: true
-                  preventStealing: true
-                  acceptedButtons: Qt.LeftButton
-                  cursorShape: Qt.PointingHandCursor
-
-                  onPressed: (mouse) => {
-                    volDropSlider.dragging = true;
-                    volDropSlider.setVolume(volDropSlider.volumeFromX(mouse.x));
-                  }
-                  onPositionChanged: (mouse) => {
-                    if (volDropSlider.dragging)
-                      volDropSlider.setVolume(volDropSlider.volumeFromX(mouse.x));
-                  }
-                  onReleased: {
-                    volDropSlider.dragging = false;
-                    volDropSlider.liveValue = volDropSlider.sinkValue;
-                  }
-                  onCanceled: {
-                    volDropSlider.dragging = false;
-                    volDropSlider.liveValue = volDropSlider.sinkValue;
-                  }
-                  onWheel: (wheel) => {
-                    const next = Math.max(0, Math.min(1,
-                      volDropSlider.liveValue + (wheel.angleDelta.y > 0 ? 0.05 : -0.05)));
-                    volDropSlider.setVolume(next);
-                  }
-                }
-              }
-
-              Text {
-                anchors.verticalCenter: parent.verticalCenter
-                width: 46
-                horizontalAlignment: Text.AlignRight
-                text: {
-                  const sink = Pipewire.defaultAudioSink;
-                  if (!sink || !sink.audio) return "–";
-                  return Math.round(sink.audio.volume * 100) + "%";
-                }
-                color: {
-                  const sink = Pipewire.defaultAudioSink;
-                  return sink && sink.audio && sink.audio.volume > 1 ? root.theme.accentOrange : root.theme.textPrimary;
-                }
-                font.pixelSize: root.curTextSize
-                font.family: root.font
-                font.bold: true
               }
             }
           }

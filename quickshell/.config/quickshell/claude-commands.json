@@ -1,0 +1,163 @@
+[
+  {
+    "category": "Start and continue sessions",
+    "bindings": [
+      { "key": "claude", "desc": "Start an interactive Claude Code session" },
+      { "key": "claude \"PROMPT\"", "desc": "Start with an initial request" },
+      { "key": "claude -c", "desc": "Continue the latest conversation in this directory" },
+      { "key": "claude -r", "desc": "Choose a previous conversation to resume" },
+      { "key": "claude -r SESSION_ID", "desc": "Resume a specific conversation" },
+      { "key": "claude -r SESSION_ID --fork-session", "desc": "Fork a resumed conversation into a new session" },
+      { "key": "claude -n NAME", "desc": "Give the session a display name" },
+      { "key": "claude -w [NAME]", "desc": "Start the session in a new Git worktree" }
+    ]
+  },
+  {
+    "category": "Models, context, and integrations",
+    "bindings": [
+      { "key": "claude --model MODEL", "desc": "Use a model alias or full model name" },
+      { "key": "claude --effort LEVEL", "desc": "Set low, medium, high, xhigh, or max effort" },
+      { "key": "claude --add-dir DIR", "desc": "Allow access to another directory" },
+      { "key": "claude --agent AGENT", "desc": "Use a configured agent for this session" },
+      { "key": "claude --ide", "desc": "Connect to the available IDE" },
+      { "key": "claude --chrome", "desc": "Enable Claude in Chrome integration" },
+      { "key": "claude --mcp-config FILE", "desc": "Load MCP servers from a configuration file" },
+      { "key": "claude --plugin-dir DIR", "desc": "Load a plugin for this session" }
+    ]
+  },
+  {
+    "category": "Non-interactive automation",
+    "bindings": [
+      { "key": "claude -p \"PROMPT\"", "desc": "Print a non-interactive response" },
+      { "key": "cat FILE | claude -p \"PROMPT\"", "desc": "Include standard input in the request" },
+      { "key": "claude -p --output-format json \"PROMPT\"", "desc": "Return one structured JSON result" },
+      { "key": "claude -p --output-format stream-json \"PROMPT\"", "desc": "Stream JSON events as they occur" },
+      { "key": "claude -p --json-schema SCHEMA \"PROMPT\"", "desc": "Validate output against a JSON Schema" },
+      { "key": "claude -p --max-budget-usd N \"PROMPT\"", "desc": "Limit API spending for the invocation" },
+      { "key": "claude -p --no-session-persistence \"PROMPT\"", "desc": "Run without saving a resumable session" }
+    ]
+  },
+  {
+    "category": "Permissions and troubleshooting",
+    "bindings": [
+      { "key": "claude --permission-mode plan", "desc": "Start in read-only planning mode" },
+      { "key": "claude --permission-mode acceptEdits", "desc": "Automatically accept file edits" },
+      { "key": "claude --allowedTools \"Bash(git *) Edit\"", "desc": "Allow selected tools or command patterns" },
+      { "key": "claude --disallowedTools TOOL", "desc": "Deny selected tools" },
+      { "key": "claude --restricted", "desc": "Disable code-running tools and restrict file access" },
+      { "key": "claude --safe-mode", "desc": "Disable customizations to diagnose configuration problems" },
+      { "key": "claude --bare", "desc": "Start with minimal integrations and discovery" },
+      { "key": "claude doctor", "desc": "Check Claude Code installation health" }
+    ]
+  },
+  {
+    "category": "Background and cloud sessions",
+    "bindings": [
+      { "key": "claude --bg [PROMPT]", "desc": "Start in the background and print its ID" },
+      { "key": "claude agents", "desc": "List and manage background agents" },
+      { "key": "claude attach ID", "desc": "Attach this terminal to a background session" },
+      { "key": "claude logs ID", "desc": "Show recent background-session output" },
+      { "key": "claude stop ID", "desc": "Stop a background session but keep its conversation" },
+      { "key": "claude rm ID", "desc": "Delete a stopped background session" },
+      { "key": "claude respawn ID", "desc": "Restart a background session with the current version" },
+      { "key": "claude --cloud [DESCRIPTION]", "desc": "Create or attach to a cloud session" }
+    ]
+  },
+  {
+    "category": "Management and diagnostics",
+    "bindings": [
+      { "key": "claude auth", "desc": "Manage Claude Code authentication" },
+      { "key": "claude mcp", "desc": "Configure and manage MCP servers" },
+      { "key": "claude plugin", "desc": "Manage Claude Code plugins" },
+      { "key": "claude project", "desc": "Manage Claude Code project state" },
+      { "key": "claude ultrareview [TARGET]", "desc": "Run a cloud-hosted multi-agent code review" },
+      { "key": "claude update", "desc": "Check for and install Claude Code updates" },
+      { "key": "claude --version", "desc": "Show the installed Claude Code version" }
+    ]
+  },
+  {
+    "category": "Slash commands — session and model",
+    "bindings": [
+      { "key": "/help", "desc": "Show help and available commands" },
+      { "key": "/model", "desc": "Choose the model for this session" },
+      { "key": "/effort", "desc": "Set the model effort level" },
+      { "key": "/permissions", "desc": "Manage tool permission rules" },
+      { "key": "/plan", "desc": "Enable Plan mode or view the current plan" },
+      { "key": "/status", "desc": "Show version, model, account, API, and tool status" },
+      { "key": "/usage", "desc": "Show session cost, plan usage, and activity" },
+      { "key": "/context", "desc": "Visualize current context usage" },
+      { "key": "/autocompact", "desc": "Choose when automatic context compaction occurs" }
+    ]
+  },
+  {
+    "category": "Slash commands — conversation lifecycle",
+    "bindings": [
+      { "key": "/clear", "desc": "Start a new session with empty context" },
+      { "key": "/compact [INSTRUCTIONS]", "desc": "Summarize the conversation to free context" },
+      { "key": "/recap", "desc": "Generate a one-line session recap" },
+      { "key": "/resume", "desc": "Resume a previous conversation" },
+      { "key": "/rename NAME", "desc": "Rename the current conversation" },
+      { "key": "/branch", "desc": "Create a branch of the conversation at this point" },
+      { "key": "/rewind", "desc": "Restore code or conversation to a previous point" },
+      { "key": "/copy [N]", "desc": "Copy a recent Claude response" },
+      { "key": "/export", "desc": "Export the conversation to a file or clipboard" }
+    ]
+  },
+  {
+    "category": "Slash commands — project and tools",
+    "bindings": [
+      { "key": "/add-dir DIR", "desc": "Add another working directory" },
+      { "key": "/cd DIR", "desc": "Move the session to another working directory" },
+      { "key": "/memory", "desc": "Edit CLAUDE.md files and memory settings" },
+      { "key": "/init", "desc": "Create project CLAUDE.md instructions" },
+      { "key": "/skills", "desc": "List available skills" },
+      { "key": "/mcp", "desc": "Manage MCP servers" },
+      { "key": "/hooks", "desc": "View tool-event hook configurations" },
+      { "key": "/plugin", "desc": "Manage Claude Code plugins" },
+      { "key": "/reload-plugins", "desc": "Activate pending plugin changes" },
+      { "key": "/reload-skills", "desc": "Load skills changed during this session" }
+    ]
+  },
+  {
+    "category": "Slash commands — agents and background work",
+    "bindings": [
+      { "key": "/list-agents", "desc": "List subagents, teammates, and Claude sessions" },
+      { "key": "/subtask", "desc": "Send a subagent away with the current context" },
+      { "key": "/fork", "desc": "Copy this conversation into a background session" },
+      { "key": "/btw QUESTION", "desc": "Ask a side question without interrupting the main task" },
+      { "key": "/tasks", "desc": "Manage everything running in the background" },
+      { "key": "/background", "desc": "Send this session to the background" },
+      { "key": "/stop", "desc": "Stop this background session" },
+      { "key": "/goal", "desc": "Set a goal Claude checks before stopping" },
+      { "key": "/workflows", "desc": "Browse running and completed workflows" }
+    ]
+  },
+  {
+    "category": "Slash commands — configuration and interface",
+    "bindings": [
+      { "key": "/config", "desc": "Open Claude Code settings" },
+      { "key": "/keybindings", "desc": "Open the keyboard shortcuts file" },
+      { "key": "/theme", "desc": "Change the terminal theme" },
+      { "key": "/color", "desc": "Set the prompt-bar color for this session" },
+      { "key": "/output-style", "desc": "List or change output styles" },
+      { "key": "/statusline", "desc": "Configure the status line" },
+      { "key": "/scroll-speed", "desc": "Adjust mouse-wheel scrolling" },
+      { "key": "/tui", "desc": "Choose the default or fullscreen renderer" },
+      { "key": "/ide", "desc": "Manage IDE integrations" },
+      { "key": "/chrome", "desc": "Open Claude in Chrome settings" }
+    ]
+  },
+  {
+    "category": "Slash commands — support and account",
+    "bindings": [
+      { "key": "/doctor", "desc": "Diagnose and fix Claude Code setup problems" },
+      { "key": "/bug", "desc": "Report a bug or share the conversation" },
+      { "key": "/feedback", "desc": "Send feedback to Anthropic" },
+      { "key": "/release-notes", "desc": "View release notes" },
+      { "key": "/powerup", "desc": "Explore Claude Code features interactively" },
+      { "key": "/login", "desc": "Sign in with an Anthropic account" },
+      { "key": "/logout", "desc": "Sign out from the current account" },
+      { "key": "/update", "desc": "Switch to the latest Claude Code version" }
+    ]
+  }
+]

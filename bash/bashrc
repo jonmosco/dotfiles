@@ -110,17 +110,18 @@ command -v zoxide &>/dev/null && eval "$(zoxide init bash)"
 # Lazy-load NVM on first use
 export NVM_DIR="$HOME/.nvm"
 if [[ -s "$NVM_DIR/nvm.sh" ]]; then
-  nvm() {
+  __nvm_load() {
     unset -f nvm node npm npx
-  # shellcheck disable=SC1090
+    # shellcheck disable=SC1090
     . "$NVM_DIR/nvm.sh"
-  # shellcheck disable=SC1090
+    # shellcheck disable=SC1090
     [[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"
-    nvm "$@"
   }
-  node() { unset -f nvm node npm npx; nvm; node "$@"; }
-  npm() { unset -f nvm node npm npx; nvm; npm "$@"; }
-  npx() { unset -f nvm node npm npx; nvm; npx "$@"; }
+
+  nvm()  { __nvm_load; nvm "$@"; }
+  node() { __nvm_load; command node "$@"; }
+  npm()  { __nvm_load; command npm "$@"; }
+  npx()  { __nvm_load; command npx "$@"; }
 fi
 
 # Confirm we want to exit when in a container to avoid losing all the work

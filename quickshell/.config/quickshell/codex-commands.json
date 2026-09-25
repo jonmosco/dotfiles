@@ -1,0 +1,153 @@
+[
+  {
+    "category": "Start and continue sessions",
+    "bindings": [
+      { "key": "codex", "desc": "Start an interactive Codex session" },
+      { "key": "codex \"PROMPT\"", "desc": "Start with an initial request" },
+      { "key": "codex resume", "desc": "Choose a previous session to resume" },
+      { "key": "codex resume --last", "desc": "Resume the most recent session" },
+      { "key": "codex fork", "desc": "Choose a session and fork it" },
+      { "key": "codex fork --last", "desc": "Fork the most recent session" }
+    ]
+  },
+  {
+    "category": "Model, files, and workspace",
+    "bindings": [
+      { "key": "codex -m MODEL", "desc": "Run with a specific model" },
+      { "key": "codex -i IMAGE [PROMPT]", "desc": "Attach one or more images" },
+      { "key": "codex -C DIR [PROMPT]", "desc": "Use a different working directory" },
+      { "key": "codex --add-dir DIR", "desc": "Add another writable directory" },
+      { "key": "codex -p PROFILE", "desc": "Load a named configuration profile" },
+      { "key": "codex --oss", "desc": "Use an open-source model provider" }
+    ]
+  },
+  {
+    "category": "Non-interactive automation",
+    "bindings": [
+      { "key": "codex exec \"PROMPT\"", "desc": "Run a task non-interactively" },
+      { "key": "echo \"PROMPT\" | codex exec -", "desc": "Read task instructions from standard input" },
+      { "key": "codex exec -C DIR \"PROMPT\"", "desc": "Run a task in another directory" },
+      { "key": "codex exec --ephemeral \"PROMPT\"", "desc": "Run without saving session files" },
+      { "key": "codex exec --worktree \"PROMPT\"", "desc": "Run in a managed Git worktree" },
+      { "key": "codex exec resume --last \"PROMPT\"", "desc": "Continue the latest automated session" }
+    ]
+  },
+  {
+    "category": "Code review",
+    "bindings": [
+      { "key": "codex review --uncommitted", "desc": "Review all local uncommitted changes" },
+      { "key": "codex review --base BRANCH", "desc": "Review changes against a base branch" },
+      { "key": "codex review --commit SHA", "desc": "Review a specific commit" },
+      { "key": "codex review --uncommitted \"PROMPT\"", "desc": "Review with custom instructions" },
+      { "key": "codex exec review --uncommitted", "desc": "Run review through non-interactive exec" },
+      { "key": "codex apply", "desc": "Apply the latest Codex-generated diff" }
+    ]
+  },
+  {
+    "category": "Account, MCP, and diagnostics",
+    "bindings": [
+      { "key": "codex login", "desc": "Authenticate Codex" },
+      { "key": "codex login status", "desc": "Show authentication status" },
+      { "key": "codex mcp list", "desc": "List configured MCP servers" },
+      { "key": "codex mcp get NAME", "desc": "Show an MCP server configuration" },
+      { "key": "codex features", "desc": "Inspect available feature flags" },
+      { "key": "codex doctor", "desc": "Diagnose installation and runtime health" },
+      { "key": "codex update", "desc": "Update the Codex CLI" }
+    ]
+  },
+  {
+    "category": "Safety and configuration",
+    "bindings": [
+      { "key": "codex -s read-only", "desc": "Prevent workspace modifications" },
+      { "key": "codex -s workspace-write", "desc": "Allow changes within the workspace" },
+      { "key": "codex -c key=value", "desc": "Override one configuration value" },
+      { "key": "codex --enable FEATURE", "desc": "Enable a feature for this invocation" },
+      { "key": "codex --disable FEATURE", "desc": "Disable a feature for this invocation" },
+      { "key": "codex --strict-config", "desc": "Reject unknown configuration keys" }
+    ]
+  },
+  {
+    "category": "Slash commands — model and interaction",
+    "bindings": [
+      { "key": "/model", "desc": "Choose the model and reasoning effort" },
+      { "key": "/fast", "desc": "Toggle faster responses with increased usage" },
+      { "key": "/permissions", "desc": "Choose what Codex is allowed to do" },
+      { "key": "/plan", "desc": "Switch to Plan mode" },
+      { "key": "/personality", "desc": "Choose a communication style" },
+      { "key": "/keymap", "desc": "Remap TUI shortcuts" },
+      { "key": "/vim", "desc": "Toggle Vim mode for the composer" },
+      { "key": "/voice", "desc": "Start or stop a live voice conversation" },
+      { "key": "/experimental", "desc": "Toggle experimental features" },
+      { "key": "/approve", "desc": "Approve one retry of an auto-review denial" }
+    ]
+  },
+  {
+    "category": "Slash commands — session lifecycle",
+    "bindings": [
+      { "key": "/new", "desc": "Start a new chat" },
+      { "key": "/resume", "desc": "Resume a saved chat" },
+      { "key": "/fork", "desc": "Fork the current chat" },
+      { "key": "/rename NAME", "desc": "Rename the current thread" },
+      { "key": "/compact", "desc": "Summarize history to preserve context space" },
+      { "key": "/recap", "desc": "Summarize the current conversation now" },
+      { "key": "/archive", "desc": "Archive the current session" },
+      { "key": "/delete", "desc": "Permanently delete the session and exit" },
+      { "key": "/clear", "desc": "Clear the terminal and start a new chat" },
+      { "key": "/quit  or  /exit", "desc": "Exit Codex" }
+    ]
+  },
+  {
+    "category": "Slash commands — project context and tools",
+    "bindings": [
+      { "key": "/mention FILE", "desc": "Add a file to the conversation" },
+      { "key": "/ide", "desc": "Include selection and open-file context from the IDE" },
+      { "key": "/init", "desc": "Create an AGENTS.md instruction file" },
+      { "key": "/skills", "desc": "Browse and use installed skills" },
+      { "key": "/mcp", "desc": "List configured MCP tools" },
+      { "key": "/mcp verbose", "desc": "Show detailed MCP tool information" },
+      { "key": "/apps", "desc": "Manage connected apps" },
+      { "key": "/plugins", "desc": "Browse plugins" },
+      { "key": "/hooks", "desc": "View and manage lifecycle hooks" },
+      { "key": "/memories", "desc": "Configure memory use and generation" }
+    ]
+  },
+  {
+    "category": "Slash commands — inspect and share",
+    "bindings": [
+      { "key": "/status", "desc": "Show session configuration and token usage" },
+      { "key": "/usage", "desc": "View account usage and limit resets" },
+      { "key": "/diff", "desc": "Show the Git diff, including untracked files" },
+      { "key": "/copy", "desc": "Copy the last response or part of it" },
+      { "key": "/export", "desc": "Export the conversation as Markdown" },
+      { "key": "/raw", "desc": "Toggle copy-friendly raw scrollback" },
+      { "key": "/pwd", "desc": "Show the current working directory" },
+      { "key": "/cd DIR", "desc": "Change the current working directory" },
+      { "key": "/rollout", "desc": "Print the rollout file path" },
+      { "key": "/feedback", "desc": "Send logs and feedback to maintainers" }
+    ]
+  },
+  {
+    "category": "Slash commands — agents and background work",
+    "bindings": [
+      { "key": "/agents", "desc": "View and switch between active agent sessions" },
+      { "key": "/subagents", "desc": "Switch between this session's subagents" },
+      { "key": "/side  or  /btw", "desc": "Start an ephemeral side conversation" },
+      { "key": "/goal", "desc": "Set or view the long-running task goal" },
+      { "key": "/worktree", "desc": "Continue a conversation in a new worktree" },
+      { "key": "/ps", "desc": "List background terminals" },
+      { "key": "/stop", "desc": "Stop all background terminals" },
+      { "key": "/app", "desc": "Continue the session in the desktop app" }
+    ]
+  },
+  {
+    "category": "Slash commands — appearance and account",
+    "bindings": [
+      { "key": "/theme", "desc": "Choose a syntax-highlighting theme" },
+      { "key": "/title", "desc": "Configure terminal-title items" },
+      { "key": "/statusline", "desc": "Configure status-line items" },
+      { "key": "/pets", "desc": "Choose or hide the terminal pet" },
+      { "key": "/debug-config", "desc": "Show configuration layers and requirements" },
+      { "key": "/logout", "desc": "Log out of Codex" }
+    ]
+  }
+]
