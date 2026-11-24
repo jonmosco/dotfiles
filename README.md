@@ -72,13 +72,18 @@ make stow
 The Makefile wraps common setup tasks:
 
 ```bash
-make          # stow active packages + vim/shell setup
+make          # stow active packages + vim/shell/agents setup
 make stow     # symlink active packages (see STOW_PACKAGES in Makefile)
 make unstow   # remove active symlinks
 make check    # dry-run stow
 make vim      # set up Vim/Vundle
 make shell    # clone shell dependencies (kube-ps1, zsh-git-prompt)
+make agents   # clone AI agent plugin dependencies (elephant-goldfish-model)
 ```
+
+Any package listed in `STOW_PACKAGES` that is not present in the checkout is
+skipped rather than failing the run. The `agents` package (AI agent instruction
+files) is gitignored and local-only, so it is absent on a fresh clone.
 
 ## Submodules
 

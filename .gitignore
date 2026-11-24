@@ -22,6 +22,11 @@ nvim/.local/
 ghostty/.config/ghostty/themes/dracula-pro
 ghostty/.config/ghostty/theme-local.conf
 
+# Local-only stow package: AI agent instruction files. Kept out of this public
+# repo because the skills reference internal workflows. The Makefile skips any
+# package that is absent, so `make stow` still works without it.
+agents/
+
 # Local overrides (may contain secrets — never commit)
 .work_env
 work_env

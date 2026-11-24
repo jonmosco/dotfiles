@@ -5,11 +5,18 @@ XDG_CONFIG_HOME ?= $(HOME)/.config
 
 # Active packages stowed on Linux. Desktop WM configs (sway, i3, alacritty, wofi)
 # live under legacy/ and are not deployed.
-STOW_PACKAGES = bash git tmux nvim bin systemd gnupg ghostty chrome hyprland quickshell autostart uwsm
+STOW_PACKAGES = bash git tmux nvim bin systemd gnupg ghostty chrome chatgpt hyprland quickshell autostart uwsm
 
-.PHONY: clean vim shell stow unstow linux check links restow-desktop
+# Only stow what this checkout actually has. The agents package is gitignored
+# (local AI instruction files) and others may be uncommitted, and stow aborts
+# with "does not contain package" on a missing directory, which would break
+# `make stow` on a fresh clone.
+PRESENT_PACKAGES = $(foreach p,$(STOW_PACKAGES),$(if $(wildcard $(p)),$(p),))
+ABSENT_PACKAGES = $(filter-out $(PRESENT_PACKAGES),$(STOW_PACKAGES))
 
-all: stow vim shell
+.PHONY: clean vim shell agents stow unstow linux check links restow-desktop
+
+all: stow vim shell agents
 clean: unstow
 
 vim:
@@ -30,16 +37,28 @@ shell:
 	test -d ${HOME}/.third_party/kube-ps1/.git || git clone --depth=1 https://github.com/jonmosco/kube-ps1.git ${HOME}/.third_party/kube-ps1
 	test -d ${HOME}/.bash-git-prompt/.git || git clone --depth=1 https://github.com/magicmonty/bash-git-prompt.git ${HOME}/.bash-git-prompt
 
+agents:
+	mkdir -p $(HOME)/.gemini/config/plugins $(HOME)/.agents/skills
+	test -d $(HOME)/.gemini/config/plugins/egm/.git || git clone --depth=1 https://github.com/google/elephant-goldfish-model.git $(HOME)/.gemini/config/plugins/egm
+
 stow: links restow-desktop
-	stow --verbose --target=$$HOME --restow $(STOW_PACKAGES)
+	@test -z "$(ABSENT_PACKAGES)" || echo "absent from this checkout - skipping: $(ABSENT_PACKAGES)"
+	stow --verbose --target=$$HOME --restow $(PRESENT_PACKAGES)
+	@if [ -d agents ]; then stow --no-folding --verbose --target=$$HOME --restow agents; \
+	else echo "agents: not in this checkout, skipping"; fi
 
 unstow:
-	stow --verbose --target=$$HOME --delete $(STOW_PACKAGES)
+	stow --verbose --target=$$HOME --delete $(PRESENT_PACKAGES)
+	@if [ -d agents ]; then stow --no-folding --verbose --target=$$HOME --delete agents; \
+	else echo "agents: not in this checkout, skipping"; fi
 
 linux: stow
 
 check: links
-	stow --verbose --simulate --target=$$HOME --restow $(STOW_PACKAGES)
+	@test -z "$(ABSENT_PACKAGES)" || echo "absent from this checkout - skipping: $(ABSENT_PACKAGES)"
+	stow --verbose --simulate --target=$$HOME --restow $(PRESENT_PACKAGES)
+	@if [ -d agents ]; then stow --no-folding --verbose --simulate --target=$$HOME --restow agents; \
+	else echo "agents: not in this checkout, skipping"; fi
 
 # Remove manual absolute symlinks that block stow, then restow desktop configs
 restow-desktop:
@@ -48,6 +67,7 @@ restow-desktop:
 	stow --verbose --target=$$HOME --restow hyprland quickshell
 
 links:
+	mkdir -p $(HOME)/.gemini/config $(HOME)/.agents/skills
 	ln -sf $(CURDIR)/dircolors $(HOME)/.dircolors
 	ln -sf $(CURDIR)/.path $(HOME)/.path
 	ln -sf $(CURDIR)/exports $(HOME)/.exports
