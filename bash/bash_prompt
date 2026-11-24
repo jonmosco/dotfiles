@@ -41,8 +41,10 @@ PS1+='\[${white}\] in \[${reset}\]'
 PS1+='\[${green}\]\w\[${reset}\]'
 
 BASH_PROMPT_SUFFIX=""
-if [[ -f "${HOME}/repos/gh/kube-ps1/kube-ps1.sh" ]]; then
-  source "${HOME}/repos/gh/kube-ps1/kube-ps1.sh"
+# DOTFILES_KUBE_PS1_DIR is resolved in ~/.exports, which bashrc sources first.
+if [[ -r "${DOTFILES_KUBE_PS1_DIR:-}/kube-ps1.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "${DOTFILES_KUBE_PS1_DIR}/kube-ps1.sh"
   BASH_PROMPT_SUFFIX+=' $(kube_ps1) \[${reset}\]'
 fi
 BASH_PROMPT_SUFFIX+="\\n"

@@ -9,10 +9,24 @@ secure_delete() {
   shred -f -n 4 "$1"
 }
 
+# The prompt_* helpers below are kube-ps1 maintainer tools: issue
+# reproductions, prompt variants, and a benchmark loop. They each load
+# kube-ps1 on demand from wherever ~/.exports resolved it, rather than
+# hardcoding a path. Optional $1 names a subdirectory, e.g. kube-ps1-devel.
+_source_kube_ps1() {
+  local sh="${DOTFILES_KUBE_PS1_DIR:-}${1:+/$1}/kube-ps1.sh"
+  if [[ ! -r "$sh" ]]; then
+    printf 'kube-ps1 not found at %s; run `make shell` or clone it to ~/repos/gh/kube-ps1\n' \
+      "${sh:-<unset>}" >&2
+    return 1
+  fi
+  # shellcheck disable=SC1090
+  source "$sh"
+}
+
 # Docker prompt
 function prompt_docker() {
-  # shellcheck disable=SC1090
-  source ~/repos/kube-ps1/kube-ps1.sh
+  _source_kube_ps1 || return 1
 
   # if [ -f /.dockerenv ]; then
     orange=$(tput setaf 166);
@@ -42,7 +56,7 @@ function prompt_issue_27() {
   KUBE_PS1_PREFIX=''
   KUBE_PS1_SUFFIX=''
   KUBE_PS1_NS_ENABLE=false
-  source ~/repos/kube-ps1/kube-ps1.sh
+  _source_kube_ps1 || return 1
   source ~/.zsh/prompt/agnoster.zsh
   PROMPT='$(kube_ps1) ' $PROMPT
 }
@@ -59,8 +73,7 @@ function prompt_default () {
 
 # kubectl context
 function prompt_k8s () {
-  # shellcheck disable=SC1090
-  source ~/repos/kube-ps1/kube-ps1.sh
+  _source_kube_ps1 || return 1
   # shellcheck disable=SC2125
   PROMPT=$'
 %F{166}%n${PR_RST} $fg[white]%}at${PR_RST} %{$orange%}%m${PR_RST} $fg[white]%}in${PR_RST} %{$limegreen%}%~ ${PR_RST}$(virtualenv_info)${PR_RST}$(kube_ps1)${PR_RST}
@@ -98,7 +111,7 @@ function prompt_simple_k8s () {
   #KUBE_PS1_NS_ENABLE=false
   # shellcheck disable=SC1090
   # KUBE_PS1_DEFAULT_LABEL_IMG=false
-  source ~/repos/kube-ps1/kube-ps1-devel/kube-ps1.sh
+  _source_kube_ps1 kube-ps1-devel || return 1
   # ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
   local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
   # shellcheck disable=SC2016
@@ -110,15 +123,14 @@ function prompt_simple_k8s_img () {
   # shellcheck disable=SC1090
   # KUBE_PS1_DEFAULT_LABEL_IMG=true
   KUBE_PS1_LABEL_USE_IMG=true
-  source ~/repos/kube-ps1/kube-ps1.sh
+  _source_kube_ps1 || return 1
   ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
   # shellcheck disable=SC2016
   PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%}%f$(git_super_status)%f$(kube_ps1) '
 }
 
 function prompt_k8s_eval () {
-  # shellcheck disable=SC1090
-  source ~/repos/kube-ps1/kube-ps1.sh
+  _source_kube_ps1 || return 1
   # shellcheck disable=SC2034
   ret_status="%(?:%F{166}➜ :%{$fg_no_bold[red]%}➜ )"
   while :; do
@@ -132,7 +144,7 @@ function prompt_bash_k8s () {
 
   # shellcheck disable=SC1090
   bash -l
-  source ~/repos/kube-ps1/kube-ps1.sh
+  _source_kube_ps1 || return 1
   PS1='\u@\h:\w\ $(kube_ps1) $ '
   export PS1
 }

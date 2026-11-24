@@ -6,6 +6,23 @@ export HISTFILESIZE=150000
 export HISTSIZE=150000
 export HISTTIMEFORMAT="%D %I:%M "
 export PAGER=less
-export GREP_COLORS='1;37;41'
+# GREP_COLORS takes a colon-separated list of capability=value pairs; a bare
+# SGR string is the old GREP_COLOR syntax and is not guaranteed to apply.
+export GREP_COLORS='mt=1;37;41'
 export MAIL=$HOME/.mail
 export XAUTHORITY=~/.Xauthority
+
+# kube-ps1 (github.com/jonmosco/kube-ps1). Resolve the checkout once, taking
+# the local dev clone first and falling back to where `make shell` puts it.
+# bash_prompt and the prompt_* maintainer helpers in ~/.functions read this
+# instead of each hardcoding a different path.
+for _kube_ps1_dir in \
+  "${HOME}/repos/gh/kube-ps1" \
+  "${HOME}/repos/kube-ps1" \
+  "${HOME}/.third_party/kube-ps1"; do
+  if [[ -r "${_kube_ps1_dir}/kube-ps1.sh" ]]; then
+    export DOTFILES_KUBE_PS1_DIR="${_kube_ps1_dir}"
+    break
+  fi
+done
+unset _kube_ps1_dir

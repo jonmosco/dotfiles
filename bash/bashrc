@@ -73,6 +73,15 @@ for files in ~/.{aliases,dockerfunctions,functions}; do
 done
 
 # =============================================================================
+# 4a. Interactive-only guard
+# =============================================================================
+# Everything above (PATH, env, aliases, functions) is wanted by non-interactive
+# shells too, e.g. `ssh host cmd`, so the guard sits here rather than at the top
+# of the file. Everything below it is interactive-only and not free: tput calls
+# in the prompt, the bash-completion framework, and the fzf/zoxide evals.
+[[ $- != *i* ]] && return
+
+# =============================================================================
 # 5. Prompt
 # =============================================================================
 if [[ -r ~/.bash_prompt ]] && [[ -f ~/.bash_prompt ]]; then
@@ -99,8 +108,10 @@ if [[ -r ~/.dircolors ]]; then
   alias ls='ls -F --color=auto'
 fi
 
+# `fzf --bash` emits key bindings *and* completion. Sourcing the distro's
+# key-bindings.bash alone gave Ctrl-R/Ctrl-T but no `**<TAB>` completion.
 if command -v fzf &>/dev/null; then
-  source /usr/share/fzf/shell/key-bindings.bash
+  eval "$(fzf --bash)"
 fi
 
 [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
