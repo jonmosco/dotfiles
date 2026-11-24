@@ -1,4 +1,4 @@
-theme = dracula-pro
+theme = Dracula+
 #theme = Rose Pine
 font-family = Hack Nerd Font Mono
 font-size = 14
@@ -9,4 +9,10 @@ class = ghostty
 window-padding-x = 8
 window-padding-y = 8
 window-padding-balance = true
-scrollback-limit = 50000
+
+# Dracula Pro is a paid theme and cannot be committed to this public repo, so
+# the theme above is a built-in fallback. The optional include below (the "?"
+# suppresses the error when it is absent) overrides it with Pro on machines
+# that have it. Included files load after this one, so the override wins
+# regardless of where this line sits.
+config-file = ?theme-local.conf
