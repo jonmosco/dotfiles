@@ -15,7 +15,7 @@ clean: unstow
 vim:
 	mkdir -p $(HOME)/.backups
 	mkdir -p $(HOME)/.vim/bundle
-	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+	test -d $(HOME)/.vim/bundle/Vundle.vim/.git || git clone --depth=1 https://github.com/VundleVim/Vundle.vim.git $(HOME)/.vim/bundle/Vundle.vim
 
 # Run this only when on MacOS
 ifeq ($(UNAME), Darwin)
@@ -26,8 +26,8 @@ endif
 # TODO: use git submodules here
 shell:
 	mkdir -p $(HOME)/.third_party
-	git clone https://github.com/olivierverdier/zsh-git-prompt.git ${HOME}/.third_party/zsh-git-prompt
-	git clone https://github.com/jonmosco/kube-ps1.git ${HOME}/.third_party/kube-ps1
+	test -d ${HOME}/.third_party/zsh-git-prompt/.git || git clone --depth=1 https://github.com/olivierverdier/zsh-git-prompt.git ${HOME}/.third_party/zsh-git-prompt
+	test -d ${HOME}/.third_party/kube-ps1/.git || git clone --depth=1 https://github.com/jonmosco/kube-ps1.git ${HOME}/.third_party/kube-ps1
 	test -d ${HOME}/.bash-git-prompt/.git || git clone --depth=1 https://github.com/magicmonty/bash-git-prompt.git ${HOME}/.bash-git-prompt
 
 stow: links restow-desktop

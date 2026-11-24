@@ -1,13 +1,16 @@
 #!/bin/bash
 
 battery() {
-  local batt discharging percentage
+  local batt discharging percentage color status_icon level
+  local batt_dirs
 
   if [[ $(uname) == "Linux" ]]; then
-    batt=$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -1)
-    [[ -z "$batt" ]] && return 1
-    discharging=$(grep -qi "discharging" ${batt}/status && echo "true" || echo "false")
-    percentage=$(cat $batt/capacity)
+    # Glob rather than parsing ls; an unmatched glob stays literal and fails -d.
+    batt_dirs=(/sys/class/power_supply/BAT*)
+    batt="${batt_dirs[0]}"
+    [[ -d "$batt" ]] || return 1
+    discharging=$(grep -qi "discharging" "${batt}/status" && echo "true" || echo "false")
+    percentage=$(<"${batt}/capacity")
   elif [[ $(uname) == "Darwin" ]]; then
     batt="$(pmset -g batt)"
     discharging="$(echo "${batt}" | grep -qi "discharging" && echo "true" || echo "false")"
@@ -30,7 +33,7 @@ battery() {
   # Status icon
   if [[ "$discharging" == "true" ]]; then
     status_icon="󰂌"
-  elif [[ $(uname) == "Linux" ]] && grep -qi "^charging$" ${batt}/status 2>/dev/null; then
+  elif [[ $(uname) == "Linux" ]] && grep -qi "^charging$" "${batt}/status" 2>/dev/null; then
     status_icon="󰂄"
   else
     status_icon="󰁹"
