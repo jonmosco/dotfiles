@@ -33,12 +33,21 @@ require("lazy").setup({
        dependencies = { 'nvim-lua/plenary.nvim' }
    },
    {'nvim-telescope/telescope-ui-select.nvim'},
+   -- main branch: README documents build = ':TSUpdate' and parser installation
+   -- via require('nvim-treesitter').install(). Highlighting is started from
+   -- after/plugin/treesitter.lua; this branch does not enable it.
    {"nvim-treesitter/nvim-treesitter", branch = 'main', lazy = false,
-    build = ":TSInstall bash c cpp go hcl json lua python query rust typescript vim vimdoc yaml"},
+    build = ":TSUpdate",
+    config = function()
+        require('nvim-treesitter').install({
+            'bash', 'c', 'cpp', 'go', 'hcl', 'json', 'lua',
+            'python', 'query', 'rust', 'typescript', 'vim', 'vimdoc', 'yaml',
+        })
+    end},
    {'mbbill/undotree'},
    {'neovim/nvim-lspconfig'},
-   {'williamboman/mason.nvim'},
-   {'williamboman/mason-lspconfig.nvim'},
+   {'mason-org/mason.nvim'},
+   {'mason-org/mason-lspconfig.nvim'},
    {'hrsh7th/nvim-cmp'},
    {'hrsh7th/cmp-nvim-lsp'},
    {'L3MON4D3/LuaSnip'},

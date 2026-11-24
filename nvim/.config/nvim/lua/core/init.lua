@@ -43,10 +43,12 @@ vim.opt.listchars = {
 vim.cmd([[autocmd FileType * set formatoptions-=ro]])
 
 require("mason").setup()
+-- mason-lspconfig v2 enables every server in ensure_installed by default
+-- (automatic_enable), so the explicit vim.lsp.enable() call that used to
+-- follow duplicated this list and enabled each server twice.
 require("mason-lspconfig").setup({
     ensure_installed = { 'gopls', 'pyright', 'lua_ls', 'bashls', 'yamlls', 'helm_ls' },
 })
-vim.lsp.enable({ 'gopls', 'pyright', 'lua_ls', 'bashls', 'yamlls', 'helm_ls' })
 
 vim.filetype.add({
     pattern = {

@@ -9,20 +9,9 @@ vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", { desc = "To
 
 vim.keymap.set("t", "<C-]>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
 
-vim.api.nvim_create_autocmd("TermOpen", {
-    callback = function()
-        local buf = vim.api.nvim_get_current_buf()
-        local name = vim.api.nvim_buf_get_name(buf)
-        if name:match("claude") then
-            vim.keymap.set("t", "<Esc>", "<Esc>", { buffer = buf, desc = "Pass Escape to Claude" })
-        end
-    end,
-})
-
-vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
-vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", { desc = "Live grep" })
-vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers" })
-vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help tags" })
+-- Terminal <Esc> and the Telescope <leader>f* maps both used to live here as
+-- well as in after/plugin/, so each was set twice with the later file silently
+-- winning. Both now have a single owner: toggleterm.lua and telescope.lua.
 
 -- vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics" })
 -- vim.keymap.set("n", "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Buffer diagnostics" })

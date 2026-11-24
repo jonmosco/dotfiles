@@ -1,13 +1,5 @@
-vim.api.nvim_create_autocmd("TermOpen", {
-  pattern = "term://*",
-  callback = function()
-    local buf_name = vim.api.nvim_buf_get_name(0)
-    if buf_name:find("claude") then
-      vim.keymap.set("t", "<Esc>", "<Esc>", { buffer = true, noremap = true })
-    end
-  end,
-})
-
+-- Terminal-mode <Esc> is handled in after/plugin/toggleterm.lua, which skips
+-- claude buffers so Esc passes through. This file used to re-map it too.
 vim.api.nvim_create_autocmd("User", {
   pattern = "ClaudeCodeSendComplete",
   callback = function(ev)
