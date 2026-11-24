@@ -26,7 +26,9 @@ vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.writebackup = false
 
-vim.opt.undodir = vim.fn.expand('~/.vim/undodir')
+-- Only real safety net, since swap/backup are disabled above. Nvim's default
+-- undodir is ~/.local/state/nvim/undo// and is created automatically.
+vim.opt.undofile = true
 vim.opt.signcolumn = "yes"
 
 vim.opt.termguicolors = true
