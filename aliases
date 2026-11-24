@@ -159,3 +159,7 @@ alias vd='vagrant destroy --force'
 alias vgs='vagrant global-status'
 alias vssh='vagrant ssh'
 alias vp='vagrant provision'
+
+# removing GOOGLE_APPLICATION_CREDENTIALS is important to not run into gemini-cli credentials that don't work with vertex
+alias claudev=". ~/.bashrc.claude-vertex; GOOGLE_APPLICATION_CREDENTIALS= claude '/color green'"
+alias claudeb=". ~/.bashrc.claude-bedrock; GOOGLE_APPLICATION_CREDENTIALS= claude --settings ~/bedrock.settings.json '/color red' "
