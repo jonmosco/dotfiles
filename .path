@@ -15,13 +15,19 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 # tfenv
 export PATH="${HOME}/.tfenv/bin:$PATH"
 
-# neovim
-export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
+# neovim (tarball install only; a packaged nvim is already on PATH)
+[[ -d /opt/nvim-linux-x86_64/bin ]] && export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 
 # macOS coreutils
 if [[ "$(uname)" == "Darwin" ]] && [[ -d /usr/local/opt/coreutils ]]; then
     export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 fi
+
+# Hunk (https://hunk.dev). Added by its installer to bashrc with a hardcoded
+# /home/jmosco path; moved here so it is $HOME-relative and guarded. Note this
+# sits ahead of the other entries here but behind anything ~/.work_env
+# prepends, since that is sourced later in bashrc.
+[[ -d "${HOME}/.hunk/bin" ]] && export PATH="${HOME}/.hunk/bin:${PATH}"
 
 # KUBECONFIG
 export KUBECONFIG=$HOME/.kube/config
