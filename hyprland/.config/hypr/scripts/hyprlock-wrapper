@@ -1,0 +1,25 @@
+#!/bin/sh
+# Restart hyprlock if it crashes while the session is still locked.
+# Prevents the "locked desktop with no input field" scenario that
+# forces a hard reboot.
+
+set -eu
+
+MAX_RETRIES=5
+attempt=0
+
+pidof hyprlock >/dev/null 2>&1 && exit 0
+
+hyprlock "$@" && exit 0
+
+# hyprlock crashed - retry without grace period
+while [ "$attempt" -lt "$MAX_RETRIES" ]; do
+    attempt=$((attempt + 1))
+    logger -t hyprlock-wrapper "hyprlock crashed, restarting (attempt $attempt/$MAX_RETRIES)"
+    sleep 2
+    pidof hyprlock >/dev/null 2>&1 && exit 0
+    hyprlock --immediate 2>/dev/null && exit 0
+done
+
+logger -t hyprlock-wrapper "all retries exhausted, unlocking session as last resort"
+loginctl unlock-sessions 2>/dev/null || true
