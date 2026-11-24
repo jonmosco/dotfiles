@@ -10,8 +10,17 @@ vim/bundle/
 third_party/*
 
 nvim/.config/nvim/lua/personal-projects/
-nvim/.local/share/nvim/site/pack/themes/start/dracula_pro/
+
+# Machine-generated nvim runtime state. ~/.local/share/nvim/site is stowed
+# into this repo, so :TSUpdate writes compiled parsers (13 MB) and
+# absolute-path query symlinks straight into the working tree. Parsers are
+# rebuilt by the nvim-treesitter build step, so none of it belongs in git.
+nvim/.local/
+
+# Dracula Pro is a paid theme; never commit it to this public repo.
+# (The nvim copy sits under the ignored nvim/.local/ tree above.)
 ghostty/.config/ghostty/themes/dracula-pro
+ghostty/.config/ghostty/theme-local.conf
 
 # Local overrides (may contain secrets — never commit)
 .work_env
