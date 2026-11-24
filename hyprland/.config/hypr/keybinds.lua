@@ -86,17 +86,25 @@ local categories = {
 	{
 		category = "Screenshots",
 		bindings = {
+			-- mkdir -p so the bind still works if ~/Pictures/screenshots is
+			-- missing, and "$f" quoted rather than bare.
 			bind(
 				"Print",
 				"Screenshot (full screen)",
 				"PRINT",
-				hl.dsp.exec_cmd("f=~/Pictures/screenshots/$(date +'%Y%m%d-%H%M%S').png && grim $f && wl-copy < $f")
+				hl.dsp.exec_cmd(
+					"d=~/Pictures/screenshots && mkdir -p \"$d\" && f=\"$d/$(date +'%Y%m%d-%H%M%S').png\" && grim \"$f\" && wl-copy < \"$f\""
+				)
 			),
+			-- Capture the region first: slurp exits non-zero when cancelled with
+			-- Escape, which previously still ran grim over the whole screen.
 			bind(
 				m .. " + SHIFT + X",
 				"Screenshot (region)",
 				m .. " + SHIFT + X",
-				hl.dsp.exec_cmd("f=~/Pictures/screenshots/$(date +'%Y%m%d-%H%M%S').png && grim -g \"$(slurp)\" $f && wl-copy < $f")
+				hl.dsp.exec_cmd(
+					"g=$(slurp) || exit 0; d=~/Pictures/screenshots && mkdir -p \"$d\" && f=\"$d/$(date +'%Y%m%d-%H%M%S').png\" && grim -g \"$g\" \"$f\" && wl-copy < \"$f\""
+				)
 			),
 		},
 	},
@@ -164,7 +172,9 @@ local categories = {
 M.categories = categories
 
 local function json_escape(value)
-	return value:gsub("\\", "\\\\"):gsub('"', '\\"'):gsub("\n", "\\n")
+	-- Tabs and carriage returns are invalid raw inside a JSON string just like
+	-- newlines, so escape them too rather than emitting a broken file.
+	return (value:gsub("\\", "\\\\"):gsub('"', '\\"'):gsub("\n", "\\n"):gsub("\r", "\\r"):gsub("\t", "\\t"))
 end
 
 function M.register_all()
